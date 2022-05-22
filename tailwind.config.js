@@ -21,7 +21,8 @@ module.exports = {
       stone: colors.stone,
       white: '#DBD9D4',
       black: '#1A0609',
-      accent: '#711c1c'
+      accent: '#711c1c',
+      'accent-dark': '#490900'
     }),
     borderColor: ({ theme }) => ({
       ...theme('colors'),
