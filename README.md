@@ -1,6 +1,8 @@
 # Olson Studio
 
-[![CircleCI](https://circleci.com/gh/William-Olson/olson-studio-www/tree/main.svg?style=svg)](https://circleci.com/gh/William-Olson/olson-studio-www/tree/main)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/53718686-cc88-4faf-b1fa-94f9d9db26bf/deploy-status)](https://app.netlify.com/sites/olson-studio-www/deploys) [![GitHub package.json version](https://img.shields.io/github/package-json/v/William-Olson/olson-studio-www?color=%2331c9c9&logo=netlify)](https://app.netlify.com/sites/olson-studio-www/deploys)
+
+[![CircleCI](https://circleci.com/gh/William-Olson/olson-studio-www/tree/main.svg?style=svg)](https://circleci.com/gh/William-Olson/olson-studio-www/tree/main) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/William-Olson/olson-studio-www.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/William-Olson/olson-studio-www/context:javascript)
 
 Website built with TypeScript, React, Tailwind CSS, & Vite.
 
