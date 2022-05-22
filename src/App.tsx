@@ -3,7 +3,7 @@ import logo from './logo.svg'
 
 function App(): ReactElement {
   return (
-    <div className="border border-gray-50 rounded-xl p-20 shadow-xl">
+    <div className="border-4 border-accent rounded-xl p-20 shadow-xl text-center">
       <header>
         <div className="flex justify-center">
           <img
@@ -12,7 +12,7 @@ function App(): ReactElement {
             alt="logo"
           />
         </div>
-        <p className="text-2xl font-mono pb-3">Olson Studio</p>
+        <h1 className="text-6xl font-mono pb-3">Olson Studio</h1>
         <p></p>
         <p className="text-xs">( More content coming soon )</p>
       </header>
