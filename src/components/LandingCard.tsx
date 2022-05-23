@@ -29,6 +29,7 @@ class LandingCard extends React.Component<LandingCardProps> {
       <a
         href={this.props.destination}
         target="_blank"
+        rel="noopener"
         className="inline-flex items-center aspect-square mx-6"
       >
         <div className={mainBoxClasses}>
