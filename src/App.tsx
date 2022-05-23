@@ -1,7 +1,10 @@
 import { ReactElement } from 'react'
 import LandingCard from './components/LandingCard'
-import logo from './logo.svg'
-// import janasLogo from './janas-logo.svg'
+import logo from './logos/logo.svg'
+import logoWhite from './logos/logoWhite.svg'
+import zinasLogo from './logos/neo-VOLogo.svg'
+import willsLogo from './logos/neo-WOLogoWhite.svg'
+import janasLogo from './logos/neo-JRLogo.svg'
 
 function App(): ReactElement {
   return (
@@ -17,30 +20,30 @@ function App(): ReactElement {
           </div>
           <h1 className="text-6xl font-mono pb-3">Olson Studio</h1>
           <p></p>
-          <p className="text-xs">Curations</p>
+          <p className="font-semibold">Curations</p>
         </header>
       </div>
       <div className="p-9 text-center auto-cols-max">
         <LandingCard
-          logoSrc={logo}
+          logoSrc={willsLogo}
           name="William"
           destination="https://william.olson.studio"
           subText="William's Studio"
         />
         <LandingCard
-          logoSrc={logo}
+          logoSrc={zinasLogo}
           name="Zina"
           destination="https://zina.olson.studio"
           subText="Zina's Studio"
         />
         <LandingCard
-          logoSrc={logo}
+          logoSrc={janasLogo}
           name="Jana"
           destination="https://jana.olson.studio"
           subText="Jana's Studio"
         />
         <LandingCard
-          logoSrc={logo}
+          logoSrc={logoWhite}
           name="More"
           destination="https://family.olson.studio"
           subText="Family Studio"
