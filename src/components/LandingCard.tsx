@@ -35,11 +35,7 @@ class LandingCard extends React.Component<LandingCardProps> {
         <div className={mainBoxClasses}>
           {this.props.logoSrc && (
             <div className="flex justify-center">
-              <img
-                src={this.props.logoSrc}
-                className="h-12 w-12 hover:animate-spin-slow"
-                alt="logo"
-              />
+              <img src={this.props.logoSrc} className="h-12 w-12" alt="logo" />
             </div>
           )}
           <h1 className="text-2xl font-mono pb-3">
