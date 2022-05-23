@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import LandingCard from './components/LandingCard'
 import logo from './logo.svg'
+// import janasLogo from './janas-logo.svg'
 
 function App(): ReactElement {
   return (
