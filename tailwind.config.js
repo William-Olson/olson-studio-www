@@ -11,7 +11,8 @@ module.exports = {
     fontFamily: { sans: ['"Montserrat"'] },
     extend: {
       animation: {
-        'spin-slow': 'spin 6s linear infinite'
+        'spin-slow': 'spin 6s linear infinite',
+        'ping-once': 'ping 1s cubic-bezier(0, 0, 0.2, 1) 1'
       }
     },
     colors: ({ colors }) => ({
@@ -19,6 +20,9 @@ module.exports = {
       current: colors.current,
       neutral: colors.neutral,
       stone: colors.stone,
+      // light: 'rgb(240 237 227)',
+      // light: 'rgb(171 170 167 / 80%)',
+      dark: 'rgb(16 12 13 / 91%)',
       white: '#DBD9D4',
       black: '#1A0609',
       accent: '#711c1c',

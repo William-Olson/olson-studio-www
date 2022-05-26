@@ -1,15 +1,15 @@
 import { ReactElement } from 'react'
 import LandingCard from './components/LandingCard'
 import logo from './logos/logo.svg'
-import logoWhite from './logos/logoWhite.svg'
-import zinasLogo from './logos/neo-VOLogo.svg'
-import willsLogo from './logos/neo-WOLogoWhite.svg'
-import janasLogo from './logos/neo-JRLogo.svg'
+// import logoColor from './logos/logoColor.svg'
+import zinasLogo from './logos/neo-VOLogoColor.svg'
+import willsLogo from './logos/neo-WOLogoColor.svg'
+import janasLogo from './logos/neo-JRLogoColor.svg'
 
 function App(): ReactElement {
   return (
-    <div className="xl:w-1/2">
-      <div className="p-20 w-90 text-center border-b-2 border-accent">
+    <div className="md:w-[900px] max-w-[900px] opacity-95">
+      <div className="p-20 w-90 text-center border-b-8 border-white">
         <header>
           <div className="flex justify-center">
             <img
@@ -20,13 +20,13 @@ function App(): ReactElement {
           </div>
           <h1 className="text-6xl font-mono pb-3">Olson Studio</h1>
           <p></p>
-          <p className="font-semibold">Curations</p>
+          <p className="font-thin">Portal</p>
         </header>
       </div>
-      <div className="p-9 text-center auto-cols-max">
+      <div className="p-9 text-center auto-cols-max md:border-l-8 md:border-r-8 border-white max-w-[650px] m-auto">
         <LandingCard
           logoSrc={willsLogo}
-          name="William"
+          name="Will"
           destination="https://william.olson.studio"
           subText="William's Studio"
         />
@@ -43,7 +43,7 @@ function App(): ReactElement {
           subText="Jana's Studio"
         />
         <LandingCard
-          logoSrc={logoWhite}
+          logoSrc={logo}
           name="More"
           destination="https://family.olson.studio"
           subText="Family Studio"

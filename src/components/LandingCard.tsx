@@ -11,15 +11,17 @@ class LandingCard extends React.Component<LandingCardProps> {
   public render(): ReactElement {
     const mainBoxClasses: string = [
       'hover:animate-pulse',
-      'bg-accent',
-      'text-white',
-      'border-4',
-      'border-accent-dark',
+      'bg-white',
+      'hover:bg-dark',
+      'hover:text-light',
+      'text-black',
+      'group',
+      'h-[192px]',
+      'rounded',
       'mb-9',
-      'border-collapse',
-      'rounded-xl',
+      'border-4',
+      'border-dark',
       'p-9',
-      'shadow-xl',
       'w-48',
       'cursor-pointer',
       'text-center'
@@ -35,10 +37,13 @@ class LandingCard extends React.Component<LandingCardProps> {
         <div className={mainBoxClasses}>
           {this.props.logoSrc && (
             <div className="flex justify-center">
-              <img src={this.props.logoSrc} className="h-12 w-12" alt="logo" />
+              <img src={this.props.logoSrc} className="h-32 w-32" alt="logo" />
             </div>
           )}
-          <h1 className="text-2xl font-mono pb-3">
+          <h1 className="text-4xl -mt-24 text-white hidden group-hover:block pb-12">
+            {this.props.name || 'Frankie'}
+          </h1>
+          {/* <h1 className="text-2xl font-mono pb-3">
             {this.props.name || 'Frankie'}
           </h1>
           <p></p>
@@ -46,7 +51,7 @@ class LandingCard extends React.Component<LandingCardProps> {
             {this.props.subText ||
               this.props.destination ||
               'frankie.olson.studio'}
-          </p>
+          </p> */}
         </div>
       </a>
     )
