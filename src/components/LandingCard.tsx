@@ -1,7 +1,7 @@
-import React, { ReactElement, ReactSVGElement } from 'react';
+import React, { ReactElement } from 'react';
 
 interface LandingCardProps {
-  logoSrc?: any;
+  logo?: ReactElement;
   destination: string;
   name?: string;
   subText?: string;
@@ -11,16 +11,19 @@ class LandingCard extends React.Component<LandingCardProps> {
   public render(): ReactElement {
     const mainBoxClasses: string = [
       'hover:animate-pulse',
-      'bg-white',
+      // 'bg-white',
       'hover:bg-dark',
       'hover:text-light',
-      'text-black',
+      'dark:hover:bg-light',
+      'dark:hover:text-black',
+      'text-white',
       'group',
       'h-[192px]',
       'rounded',
       'mb-9',
       'border-4',
       'border-dark',
+      'dark:border-white',
       'p-9',
       'w-48',
       'cursor-pointer',
@@ -36,12 +39,10 @@ class LandingCard extends React.Component<LandingCardProps> {
         className="inline-flex items-center aspect-square mx-6"
       >
         <div className={mainBoxClasses}>
-          {this.props.logoSrc && (
-            <div className="flex justify-center" style={{ fill: 'red' }}>
-              {this.props.logoSrc}
-            </div>
+          {this.props.logo && (
+            <div className="flex justify-center">{this.props.logo}</div>
           )}
-          <h1 className="text-4xl -mt-24 text-white hidden group-hover:block pb-12">
+          <h1 className="text-4xl -mt-24 hidden group-hover:block pb-12">
             {this.props.name || 'Frankie'}
           </h1>
         </div>

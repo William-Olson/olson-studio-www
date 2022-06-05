@@ -5,7 +5,7 @@ import { CustomLogo } from './CustomLogo';
 export class Banner extends React.Component {
   public render() {
     return (
-      <div className="p-20 w-90 text-center border-b-8 border-white">
+      <div className="p-20 w-90 text-center">
         <header>
           <div className="flex justify-center">
             <div className="h-32 w-32">

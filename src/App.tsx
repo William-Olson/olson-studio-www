@@ -1,8 +1,6 @@
 import { ReactElement } from 'react';
 import { Banner } from './components/Banner';
 import { CardArea } from './components/CardArea';
-import { CustomLogo } from './components/CustomLogo';
-import { LogoTypes } from './types/LogoTypes';
 
 function App(): ReactElement {
   return (

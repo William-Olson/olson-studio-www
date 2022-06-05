@@ -6,7 +6,7 @@ module.exports = {
       opacity: ['disabled']
     }
   },
-  darkMode: 'media',
+  darkMode: 'class',
   theme: {
     fontFamily: { sans: ['"Montserrat"'] },
     extend: {
@@ -21,7 +21,7 @@ module.exports = {
       neutral: colors.neutral,
       stone: colors.stone,
       geek: 'rgb(15 26 6)',
-      // light: 'rgb(240 237 227)',
+      light: 'rgb(240 237 227)',
       // light: 'rgb(171 170 167 / 80%)',
       dark: 'rgb(16 12 13 / 91%)',
       white: '#DBD9D4',
