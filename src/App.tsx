@@ -1,7 +1,8 @@
-import React, { ReactElement } from 'react'
-// import logoColor from './logos/logoColor.svg'
-import { Banner } from './components/Banner'
-import { CardArea } from './components/CardArea'
+import { ReactElement } from 'react';
+import { Banner } from './components/Banner';
+import { CardArea } from './components/CardArea';
+import { CustomLogo } from './components/CustomLogo';
+import { LogoTypes } from './types/LogoTypes';
 
 function App(): ReactElement {
   return (
@@ -9,7 +10,7 @@ function App(): ReactElement {
       <Banner />
       <CardArea />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

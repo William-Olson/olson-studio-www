@@ -1,10 +1,10 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactSVGElement } from 'react';
 
 interface LandingCardProps {
-  logoSrc?: string
-  destination: string
-  name?: string
-  subText?: string
+  logoSrc?: any;
+  destination: string;
+  name?: string;
+  subText?: string;
 }
 
 class LandingCard extends React.Component<LandingCardProps> {
@@ -25,37 +25,29 @@ class LandingCard extends React.Component<LandingCardProps> {
       'w-48',
       'cursor-pointer',
       'text-center'
-    ].join(' ')
+    ].join(' ');
 
     return (
       <a
         href={this.props.destination}
         target="_blank"
         rel="noopener"
+        aria-label={this.props.subText}
         className="inline-flex items-center aspect-square mx-6"
       >
         <div className={mainBoxClasses}>
           {this.props.logoSrc && (
-            <div className="flex justify-center">
-              <img src={this.props.logoSrc} className="h-32 w-32" alt="logo" />
+            <div className="flex justify-center" style={{ fill: 'red' }}>
+              {this.props.logoSrc}
             </div>
           )}
           <h1 className="text-4xl -mt-24 text-white hidden group-hover:block pb-12">
             {this.props.name || 'Frankie'}
           </h1>
-          {/* <h1 className="text-2xl font-mono pb-3">
-            {this.props.name || 'Frankie'}
-          </h1>
-          <p></p>
-          <p className="text-xs">
-            {this.props.subText ||
-              this.props.destination ||
-              'frankie.olson.studio'}
-          </p> */}
         </div>
       </a>
-    )
+    );
   }
 }
 
-export default LandingCard
+export default LandingCard;
