@@ -46,7 +46,7 @@ customLogoGetters.set(LogoTypes.Zina, (color?: string) => {
       x="0px"
       y="0px"
       viewBox="0 0 512 512"
-      enable-background="new 0 0 512 512"
+      enableBackground="new 0 0 512 512"
       xmlSpace="preserve"
     >
       <g id="base_O" fill={color || '#1A0609'} display="none">
@@ -72,12 +72,10 @@ customLogoGetters.set(LogoTypes.Zina, (color?: string) => {
         </g>
         <polygon
           stroke={color || '#1A0609'}
-          stroke-markerEnd={10}
           points="236.5,343.5 221.5,379.5 235.14,379.5 251.5,345.5 	"
         />
         <polygon
           stroke={color || '#1A0609'}
-          stroke-markerEnd={10}
           points="251.59,344.5 266.59,379.5 252.95,379.5 236.59,345.5 	"
         />
       </g>
@@ -94,7 +92,7 @@ customLogoGetters.set(LogoTypes.Jana, (color?: string) => {
       x="0px"
       y="0px"
       viewBox="0 0 512 512"
-      enable-background="new 0 0 512 512"
+      enableBackground="new 0 0 512 512"
       xmlSpace="preserve"
     >
       <g id="base_O" fill={color || '#1A0609'}>
@@ -125,7 +123,7 @@ customLogoGetters.set(LogoTypes.Jana, (color?: string) => {
 			V76L443,76z M424,379.69l-321-2.5V93h321V379.69L424,379.69z"
           />
         </g>
-        <path stroke={color || '#1A0609'} stroke-miterlimit={10} d="M429,93" />
+        <path stroke={color || '#1A0609'} d="M429,93" />
       </g>
     </svg>
   );
@@ -140,7 +138,7 @@ customLogoGetters.set(LogoTypes.Studio, (color?: string) => {
       x="0px"
       y="0px"
       viewBox="0 0 512 512"
-      enable-background="new 0 0 512 512"
+      enableBackground="new 0 0 512 512"
       xmlSpace="preserve"
     >
       <g id="base_O" fill={color || '#1A0609'}>

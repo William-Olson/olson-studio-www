@@ -41,4 +41,4 @@ module.exports = {
       bounce: 'bounce 1s infinite'
     }
   }
-}
+};

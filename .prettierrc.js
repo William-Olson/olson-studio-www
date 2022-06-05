@@ -9,4 +9,4 @@ module.exports = {
   useTabs: false,
   bracketSameLine: false,
   proseWrap: 'never'
-}
+};
