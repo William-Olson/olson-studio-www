@@ -1,11 +1,5 @@
 import { ReactElement } from 'react';
-
-export enum LogoTypes {
-  Will = 'will',
-  Zina = 'zina',
-  Jana = 'jana',
-  Studio = 'studio'
-}
+import { LogoTypes } from '../../types/AppTypes';
 
 const customLogoGetters: Map<LogoTypes, (color?: string) => ReactElement> =
   new Map();

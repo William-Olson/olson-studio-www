@@ -1,7 +1,7 @@
 import React from 'react';
-import { LogoTypes } from '../types/LogoTypes';
-import { CustomLogo } from './CustomLogo';
-import LandingCard from './LandingCard';
+import { LogoTypes } from '../../types/AppTypes';
+import { CustomLogo } from '../CustomLogo';
+import LandingCard from '../LandingCard';
 
 export class CardArea extends React.Component {
   public render() {

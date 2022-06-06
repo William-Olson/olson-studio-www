@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from 'react';
-import customLogoGetters, { LogoTypes } from '../types/LogoTypes';
+import customLogoGetters from '../util/images/LogoTypes';
 import { isDarkMode } from '../util/DarkMode';
+import { LogoTypes } from '../types/AppTypes';
 
 export interface GetterParams extends React.SVGProps<ReactElement> {
   logo: LogoTypes;

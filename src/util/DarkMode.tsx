@@ -1,8 +1,4 @@
-export enum DarkModeTypes {
-  ON = 'on',
-  OFF = 'off',
-  SYSTEM = 'system'
-}
+import { DarkModeTypes } from '../types/AppTypes';
 
 export const isDarkMode: () => boolean = (): boolean => {
   return document.documentElement.classList.contains('dark');
