@@ -8,6 +8,9 @@ module.exports = {
     document: false,
     window: false
   },
+  rules: {
+    '@typescript-eslint/no-empty-interface': 0
+  },
   env: {
     node: true,
     mocha: true,

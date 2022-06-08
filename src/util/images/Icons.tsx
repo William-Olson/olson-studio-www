@@ -1,8 +1,10 @@
 import { SVGProps } from 'react';
 import { IconTypes } from '../../types/AppTypes';
 
+export type IconProps = SVGProps<SVGSVGElement>;
+
 export const Icons = {
-  [IconTypes.Plus]: (color: string, props: SVGProps<any> = {}) => {
+  [IconTypes.Plus]: (color: string, props: IconProps = {}) => {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +24,7 @@ export const Icons = {
     );
   },
 
-  [IconTypes.Sun]: (color: string, props: SVGProps<any> = {}) => {
+  [IconTypes.Sun]: (color: string, props: IconProps = {}) => {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +44,7 @@ export const Icons = {
     );
   },
 
-  [IconTypes.Moon]: (color: string, props: SVGProps<any> = {}) => {
+  [IconTypes.Moon]: (color: string, props: IconProps = {}) => {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +64,7 @@ export const Icons = {
     );
   },
 
-  [IconTypes.Github]: (color: string, props: SVGProps<any> = {}) => {
+  [IconTypes.Github]: (color: string, props: IconProps = {}) => {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
