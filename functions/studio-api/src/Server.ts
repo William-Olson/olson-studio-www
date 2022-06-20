@@ -3,8 +3,8 @@ import { container, inject, injectable } from 'tsyringe';
 import express, {
   NextFunction,
   Request,
-  Response,
-  static as expressStatic
+  Response
+  // static as expressStatic
 } from 'express';
 import * as bodyParser from 'body-parser';
 import path from 'path';
@@ -59,11 +59,14 @@ export class Server {
       if (mdlwr.length > 0) {
         await this.harness.use(
           path.join(this.BASE_PATH, endpointPath),
-          mdlwr,
-          route
+          mdlwr as express.Handler[],
+          route as RouteClass<unknown>
         );
       } else {
-        await this.harness.use(path.join(this.BASE_PATH, endpointPath), route);
+        await this.harness.use(
+          path.join(this.BASE_PATH, endpointPath),
+          route as RouteClass<unknown>
+        );
       }
     }
 
@@ -81,7 +84,7 @@ export class Server {
     return serverless(this.app);
   }
 
-  public start(port: number = 4774): void {
+  public start(port = 4774): void {
     this.app.listen(port, () =>
       console.log(`starting app at \n\t http://localhost:${port}`)
     );
@@ -98,6 +101,7 @@ export class Server {
         err?: ErrorResponse,
         req?: Request,
         res?: Response,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         next?: NextFunction
       ) => {
         let statusCode = err?.statusCode || 500;

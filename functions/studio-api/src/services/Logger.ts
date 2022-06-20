@@ -2,11 +2,11 @@ import { debug as debugLogger } from 'debug';
 import { singleton } from 'tsyringe';
 
 // the debug function interface type
-export type DebugFn = (...args: any[]) => void;
+export type DebugFn = (...args: unknown[]) => void;
 
 export interface Logger {
-  info(...data: any[]): void;
-  error(...data: any[]): void;
+  info(...data: unknown[]): void;
+  error(...data: unknown[]): void;
 }
 
 /*
@@ -29,17 +29,17 @@ export class LoggerFactory {
   all calls to log something.
 */
 class WrappedLogger implements Logger {
-  private debug: any;
+  private debug: DebugFn;
 
   constructor(loggerScopeName: string) {
     this.debug = debugLogger(loggerScopeName);
   }
 
-  public info(...args: any[]) {
+  public info(...args: unknown[]) {
     this.debug(...args);
   }
 
-  public error(...args: any[]) {
+  public error(...args: unknown[]) {
     this.debug(...args);
   }
 }

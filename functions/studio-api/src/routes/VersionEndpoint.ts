@@ -8,7 +8,7 @@ interface VersionResponse {
 
 @injectable()
 export class VersionEndpoint {
-  private router: any;
+  private router: HarnessDependency;
   constructor(@inject('HarnessDependency') harness: HarnessDependency) {
     // TODO: abstract this logic to a super class with a protected router property??
     this.router = harness.getRouterForClass(VersionEndpoint.name);

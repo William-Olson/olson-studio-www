@@ -16,8 +16,8 @@ export const endpointWrapper: CustomWrapper = (
   const initLogger: Logger = logFactory.getLogger('app:harness:init');
   const logger: Logger = logFactory.getLogger('app:harness');
 
-  const endpointName: string = `${info.method.toUpperCase()} ${info.fullPath}`;
-  const handlerName: string = `${info.routeClass}.'${info.handler}'`;
+  const endpointName = `${info.method.toUpperCase()} ${info.fullPath}`;
+  const handlerName = `${info.routeClass}.'${info.handler}'`;
   initLogger.info(`[harness] mapping: ${endpointName} to ${handlerName}`);
 
   return async (request: Request, response: Response, next: NextFunction) => {

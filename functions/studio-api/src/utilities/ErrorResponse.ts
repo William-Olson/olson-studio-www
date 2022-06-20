@@ -3,7 +3,7 @@
   Custom Error that holds a statusCode property.
 */
 export default class ErrorResponse extends Error {
-  public statusCode: number = 500;
+  public statusCode = 500;
 
   constructor(statusCode?: number, message?: string) {
     super();
