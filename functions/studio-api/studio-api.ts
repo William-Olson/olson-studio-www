@@ -1,0 +1,23 @@
+import { Handler } from '@netlify/functions';
+import { Context } from '@netlify/functions/dist/function/context';
+import { Event } from '@netlify/functions/dist/function/event';
+import { Response } from '@netlify/functions/dist/function/response';
+import 'reflect-metadata';
+
+import { container } from 'tsyringe';
+import { Server } from './src/Server';
+
+// or as a promise
+export const handler: Handler = async (event: Event, context: Context) => {
+  const server = container.resolve(Server);
+
+  // setup express routes etc.
+  await server.init();
+
+  // handle lambda request with express in serverless mode
+  const handlerFn = server.serverless;
+  const resp: Response = (await handlerFn(event, context)) as Response;
+  return resp;
+};
+
+module.exports.handler = handler;
