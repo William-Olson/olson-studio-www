@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
-import { Banner } from './components/layout/Banner';
-import { CardArea } from './components/layout/CardArea';
+import { Outlet } from 'react-router-dom';
 import { Footer } from './components/layout/Footer';
 import { NavBar } from './components/layout/NavBar';
+import { emitter } from './Events';
 import { DarkModeTypes } from './types/AppTypes';
 import { getDarkModeType, isDarkMode } from './util/DarkMode';
 
@@ -22,7 +22,16 @@ class App extends React.Component<AppProps, AppState> {
     };
   }
 
+  componentDidMount() {
+    emitter.on('darkMode', this.updateDarkMode);
+  }
+
+  componentWillUnmount() {
+    emitter.off('darkMode', this.updateDarkMode);
+  }
+
   updateDarkMode() {
+    console.log('in app.tsx update darkMode');
     this.setState({
       darkMode: isDarkMode(),
       darkModeType: getDarkModeType()
@@ -32,18 +41,13 @@ class App extends React.Component<AppProps, AppState> {
   public render(): ReactElement {
     return (
       <div className="w-full h-full">
-        <div className="md:w-90 max-w-90 h-24">
-          <NavBar
-            onChangeDarkMode={this.updateDarkMode}
-            isDark={this.state.darkMode}
-            darkModeType={this.state.darkModeType}
-          />
+        <div className="md:w-90 max-w-90 h-56px">
+          <NavBar />
         </div>
-        <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
-          <Banner />
-          <CardArea />
+        <div className="content-wrapper">
+          <Outlet />
         </div>
-        <div className="footer md:w-full max-w-full text-center p-8 h-24">
+        <div className="footer md:w-full max-w-full text-center p-36px h-24px">
           <Footer />
         </div>
       </div>

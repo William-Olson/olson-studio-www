@@ -86,3 +86,5 @@ ntl open
 - [eslint](https://eslint.org/)
 - [husky](https://typicode.github.io/husky/#/)
 - [Prettier](https://prettier.io/)
+- [Emittery](https://www.npmjs.com/package/emittery)
+- [TSyringe](https://www.npmjs.com/package/tsyringe)
