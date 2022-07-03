@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+require('pg'); // netlify/functions workaround
 import { Handler } from '@netlify/functions';
 import { Context } from '@netlify/functions/dist/function/context';
 import { Event } from '@netlify/functions/dist/function/event';
