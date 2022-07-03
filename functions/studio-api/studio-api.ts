@@ -16,9 +16,13 @@ export const handler: Handler = async (event: Event, context: Context) => {
   // setup express routes etc.
   await server.init();
 
-  // initialize db client
-  const database = container.resolve(DataLayer);
-  await database.init();
+  try {
+    // initialize db client
+    const database = container.resolve(DataLayer);
+    await database.init();
+  } catch (err) {
+    console.error('error connecting to db', err);
+  }
 
   // handle lambda request with express in serverless mode
   const handlerFn = server.serverless;
