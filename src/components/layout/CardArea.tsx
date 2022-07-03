@@ -1,9 +1,9 @@
-import React from 'react';
 import { LogoTypes } from '../../types/AppTypes';
 import { CustomLogo } from '../CustomLogo';
+import { DarkModeComponent } from '../helpers/DarkModeComponent';
 import LandingCard from '../LandingCard';
 
-export class CardArea extends React.Component {
+export class CardArea extends DarkModeComponent {
   public render() {
     return (
       <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto">

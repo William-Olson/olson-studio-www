@@ -15,7 +15,9 @@ export class Banner extends React.Component {
             </div>
             <h1 className="text-6xl font-mono pb-3">Olson Studio</h1>
             <p></p>
-            <p className="font-thin">Portal</p>
+            <p className="font-sans font-bold from-accent-dark to-white">
+              Portal
+            </p>
           </header>
         </div>
       </React.Fragment>

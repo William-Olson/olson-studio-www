@@ -33,16 +33,18 @@ export const toggleDarkMode = (mode: DarkModeTypes): void => {
 
 export const loadDarkModeFromCache = () => {
   let darkMode = false;
-  if (
-    localStorage.theme === 'dark' ||
-    (!('theme' in localStorage) &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
+  // based on system or cache
+  if (!localStorage.theme) {
+    darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } else {
+    darkMode = localStorage.theme === 'dark';
+  }
+
+  // adjust css class
+  if (darkMode) {
     document.documentElement.classList.add('dark');
-    darkMode = true;
   } else {
     document.documentElement.classList.remove('dark');
-    darkMode = false;
   }
 
   signalDarkModeChange({

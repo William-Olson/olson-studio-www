@@ -1,20 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { DarkModeChangeEvent, emitter } from '../../Events';
+// import { Link } from 'react-router-dom';
 import { DarkModeTypes, IconTypes } from '../../types/AppTypes';
-import {
-  getDarkModeType,
-  isDarkMode,
-  toggleDarkMode
-} from '../../util/DarkMode';
+import { toggleDarkMode } from '../../util/DarkMode';
 import { Theme } from '../../util/Theme';
 import { CustomIcon } from '../CustomIcon';
-
-interface NavBarState {
-  darkModeType: DarkModeTypes;
-  isDark: boolean;
-}
-interface NavBarProps {}
+import { DarkModeComponent } from '../helpers/DarkModeComponent';
 
 const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
   const handleMode = (mode: DarkModeTypes) => {
@@ -68,29 +57,10 @@ const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
   }
 };
 
-export class NavBar extends React.Component<NavBarProps, NavBarState> {
-  constructor(props: NavBarProps) {
-    super(props);
-    this.state = {
-      darkModeType: getDarkModeType(),
-      isDark: isDarkMode()
-    };
-  }
-
-  public componentDidMount() {
-    emitter.on('darkMode', (change: DarkModeChangeEvent) => {
-      this.setState({
-        isDark: change.isDarkMode,
-        darkModeType: change.darkModeType
-      });
-    });
-  }
-
+export class NavBar extends DarkModeComponent {
   public render() {
-    console.log(window.location.href);
-
     const darkModeType = this.state.darkModeType;
-    const isDark = this.state.isDark;
+    const isDark = this.state.isDark === true;
 
     return (
       <nav className="flex flex-row">
@@ -99,7 +69,7 @@ export class NavBar extends React.Component<NavBarProps, NavBarState> {
           <div className="flex flex-row p-4">
             <div className="flex-grow"></div>
 
-            <div className="pl-2 pr-4">
+            {/* <div className="pl-2 pr-4">
               <Link to={'/'}>
                 <CustomIcon icon={IconTypes.Home} />
               </Link>
@@ -108,7 +78,7 @@ export class NavBar extends React.Component<NavBarProps, NavBarState> {
               <Link to={'/Login'}>
                 <CustomIcon icon={IconTypes.UserCircle} />
               </Link>
-            </div>
+            </div> */}
             <a
               href="https://github.com/William-Olson/olson-studio-www"
               target="_blank"

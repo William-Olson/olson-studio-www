@@ -1,43 +1,10 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Outlet } from 'react-router-dom';
+import { DarkModeComponent } from './components/helpers/DarkModeComponent';
 import { Footer } from './components/layout/Footer';
 import { NavBar } from './components/layout/NavBar';
-import { emitter } from './Events';
-import { DarkModeTypes } from './types/AppTypes';
-import { getDarkModeType, isDarkMode } from './util/DarkMode';
 
-interface AppProps {}
-interface AppState {
-  darkMode: boolean;
-  darkModeType: DarkModeTypes;
-}
-
-class App extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.updateDarkMode = this.updateDarkMode.bind(this);
-    this.state = {
-      darkMode: isDarkMode(),
-      darkModeType: getDarkModeType()
-    };
-  }
-
-  componentDidMount() {
-    emitter.on('darkMode', this.updateDarkMode);
-  }
-
-  componentWillUnmount() {
-    emitter.off('darkMode', this.updateDarkMode);
-  }
-
-  updateDarkMode() {
-    console.log('in app.tsx update darkMode');
-    this.setState({
-      darkMode: isDarkMode(),
-      darkModeType: getDarkModeType()
-    });
-  }
-
+class App extends DarkModeComponent {
   public render(): ReactElement {
     return (
       <div className="w-full h-full">
