@@ -36,4 +36,9 @@ export class DarkModeComponent<
       isDark: changed.isDarkMode
     });
   }
+
+  public getDarkModeState() {
+    const { darkModeType, isDark } = this.state;
+    return { darkModeType, isDark };
+  }
 }

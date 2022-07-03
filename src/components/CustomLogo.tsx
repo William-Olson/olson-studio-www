@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
 import customLogoGetters from '../util/images/LogoTypes';
-import { getDarkModeType, isDarkMode } from '../util/DarkMode';
+import { isDarkMode } from '../util/DarkMode';
 import { DarkModeTypes, LogoTypes } from '../types/AppTypes';
-import { DarkModeChangeEvent, emitter } from '../Events';
+import { DarkModeComponent } from './helpers/DarkModeComponent';
 
 export interface LogoProps extends React.SVGProps<ReactElement> {
   logo: LogoTypes;
@@ -13,29 +13,7 @@ export interface LogoState extends React.SVGProps<ReactElement> {
   darkModeType: DarkModeTypes;
 }
 
-export class CustomLogo extends React.Component<LogoProps, LogoState> {
-  constructor(props: LogoProps) {
-    super(props);
-    this.handleDarkModeChange = this.handleDarkModeChange.bind(this);
-    this.state = {
-      darkModeType: getDarkModeType()
-    };
-  }
-
-  componentDidMount() {
-    emitter.on('darkMode', this.handleDarkModeChange);
-  }
-
-  componentWillUnmount() {
-    emitter.off('darkMode', this.handleDarkModeChange);
-  }
-
-  public handleDarkModeChange(changed: DarkModeChangeEvent) {
-    this.setState({
-      darkModeType: changed.darkModeType
-    });
-  }
-
+export class CustomLogo extends DarkModeComponent<LogoProps> {
   render() {
     const logoGetter = customLogoGetters.get(this.props.logo);
     let color = this.props.color;

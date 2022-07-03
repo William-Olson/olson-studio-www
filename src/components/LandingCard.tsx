@@ -44,9 +44,7 @@ class LandingCard extends DarkModeComponent<LandingCardProps> {
         className="inline-flex items-center aspect-square mx-6"
       >
         <div className={mainBoxClasses}>
-          <div className="md:flex justify-center">
-            {this.props.logo && this.props.logo}
-          </div>
+          <div className="md:flex justify-center">{this.props.logo}</div>
           <h1 className="text-4xl -mt-24 hidden group-hover:block pb-12">
             {this.props.name || 'Name'}
           </h1>

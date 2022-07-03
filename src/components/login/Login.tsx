@@ -1,38 +1,16 @@
-import React, { ReactElement } from 'react';
-import { DarkModeChangeEvent, emitter } from '../../Events';
-import { DarkModeTypes, LogoTypes } from '../../types/AppTypes';
-import { getDarkModeType } from '../../util/DarkMode';
+import { ReactElement } from 'react';
+import { LogoTypes } from '../../types/AppTypes';
 import { CustomLogo } from '../CustomLogo';
+import { DarkModeComponent } from '../helpers/DarkModeComponent';
 import { getGoogleLoginUrl } from './Google';
 import { GoogleButton } from './GoogleButton';
 
 interface LoginProps {}
-interface LoginState {
-  darkModeType: DarkModeTypes;
-}
 
-export class LoginComponent extends React.Component<LoginProps, LoginState> {
+export class LoginComponent extends DarkModeComponent<LoginProps> {
   constructor(props: LoginProps) {
     super(props);
     this.goToGoogleLogin = this.goToGoogleLogin.bind(this);
-    this.handleDarkModeChange = this.handleDarkModeChange.bind(this);
-    this.state = {
-      darkModeType: getDarkModeType()
-    };
-  }
-
-  public componentDidMount() {
-    emitter.on('darkMode', this.handleDarkModeChange);
-  }
-
-  public componentWillUnmount() {
-    emitter.off('darkMode', this.handleDarkModeChange);
-  }
-
-  private handleDarkModeChange(changed: DarkModeChangeEvent) {
-    this.setState({
-      darkModeType: changed.darkModeType
-    });
   }
 
   private goToGoogleLogin() {
