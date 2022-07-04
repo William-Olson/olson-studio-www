@@ -21,13 +21,19 @@ export const handler: Handler = async (event: Event, context: Context) => {
     const database = container.resolve(DataLayer);
     await database.init();
   } catch (err) {
-    console.error('error connecting to db', err);
+    console.error('error initializing data layer', err);
   }
 
   // handle lambda request with express in serverless mode
-  const handlerFn = server.serverless;
-  const resp: Response = (await handlerFn(event, context)) as Response;
-  return resp;
+  try {
+    const handlerFn = server.serverless;
+    const resp: Response = (await handlerFn(event, context)) as Response;
+
+    return resp;
+  } catch (err) {
+    console.error('error in lambda', err);
+    throw err;
+  }
 };
 
 module.exports.handler = handler;

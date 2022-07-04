@@ -1,5 +1,6 @@
 import serverless from 'serverless-http';
 import { container, inject, injectable } from 'tsyringe';
+import cors from 'cors';
 import express, {
   NextFunction,
   Request,
@@ -16,6 +17,7 @@ import { StatusCodes } from 'http-status-codes';
 import { routes } from './routes';
 import RouteHarness, { HarnessDependency, RouteClass } from 'route-harness';
 import endpointWrapper from './utilities/EndpointWrapper';
+import { getCorsOptions } from './utilities/Cors';
 
 /*
   ExpressServer
@@ -28,11 +30,13 @@ import endpointWrapper from './utilities/EndpointWrapper';
 export class Server {
   private readonly BASE_PATH: string = '/.netlify/functions/studio-api';
   private logger: Logger;
+  private loggerFactory: LoggerFactory;
   private app: express.Application;
   private harness: RouteHarness;
 
   constructor(@inject(LoggerFactory) loggerFactory: LoggerFactory) {
     this.logger = loggerFactory.getLogger('app:server');
+    this.loggerFactory = loggerFactory;
 
     this.app = express();
     this.harness = new RouteHarness(this.app, {
@@ -42,7 +46,7 @@ export class Server {
     });
 
     // register the harness
-    container.register<HarnessDependency>('HarnessDependency', {
+    container.register<HarnessDependency>('RouteHarness', {
       useValue: this.harness.asDependency()
     });
   }
@@ -52,6 +56,9 @@ export class Server {
     this.logger.info('adding middleware...');
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+
+    const corsOpts = getCorsOptions(this.loggerFactory.getLogger('app:cors'));
+    this.app.use(cors(corsOpts));
 
     // add routes
     this.logger.info('adding routes...');
@@ -86,7 +93,7 @@ export class Server {
 
   public start(port = 4774): void {
     this.app.listen(port, () =>
-      console.log(`starting app at \n\t http://localhost:${port}`)
+      this.logger.info(`starting app at \n\t http://localhost:${port}`)
     );
   }
 

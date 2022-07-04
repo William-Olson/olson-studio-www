@@ -7,6 +7,8 @@ import {
 } from 'route-harness';
 import LoggerFactory, { Logger } from '../services/Logger';
 
+const mapped: Set<string> = new Set();
+
 export const endpointWrapper: CustomWrapper = (
   handler: WrappedHandler,
   info: RouteInformation,
@@ -18,7 +20,10 @@ export const endpointWrapper: CustomWrapper = (
 
   const endpointName = `${info.method.toUpperCase()} ${info.fullPath}`;
   const handlerName = `${info.routeClass}.'${info.handler}'`;
-  initLogger.info(`[harness] mapping: ${endpointName} to ${handlerName}`);
+  if (!mapped.has(handlerName)) {
+    initLogger.info(`[harness] mapping: endpoints@${info.routeClass}`);
+    mapped.add(handlerName);
+  }
 
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -30,6 +35,9 @@ export const endpointWrapper: CustomWrapper = (
       );
       const result = await handler(request, response);
       if (result) {
+        if (result.status >= 400 || result.statusCode >= 400) {
+          logger.error(result);
+        }
         response.send(result);
       }
     } catch (error) {

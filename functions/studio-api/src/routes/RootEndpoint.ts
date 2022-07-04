@@ -1,19 +1,15 @@
-import { HarnessDependency } from 'route-harness';
-import { inject, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
+import BaseEndpoint, { RouterClass } from './BaseEndpoint';
 
 @injectable()
-export class RootEndpoint {
-  constructor(@inject('HarnessDependency') harness: HarnessDependency) {
-    const router: HarnessDependency = harness.getRouterForClass(
-      RootEndpoint.name
-    );
-
+export class RootEndpoint extends BaseEndpoint implements RouterClass {
+  mountRoutes() {
     this.getRoot = this.getRoot.bind(this);
     this.healthCheck = this.healthCheck.bind(this);
 
-    router.get('/', this.getRoot);
-    router.post('/', this.getRoot); // for cli: `ntl functions:invoke studio-api`
-    router.get('/health', this.healthCheck);
+    this.router.get('/', this.getRoot);
+    this.router.post('/', this.getRoot); // for cli: `ntl functions:invoke studio-api`
+    this.router.get('/health', this.healthCheck);
   }
 
   getRoot() {

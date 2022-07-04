@@ -1,28 +1,19 @@
 import { Request } from 'express';
-import { HarnessDependency } from 'route-harness';
-import { inject, injectable } from 'tsyringe';
-import LoggerFactory, { Logger } from '../services/Logger';
+import { injectable } from 'tsyringe';
+import BaseEndpoint, { RouterClass } from './BaseEndpoint';
 
 @injectable()
-export class GoogleAuthEndpoint {
-  logger: Logger;
-  constructor(
-    @inject('HarnessDependency') harness: HarnessDependency,
-    @inject(LoggerFactory) loggerFactory: LoggerFactory
-  ) {
-    this.logger = loggerFactory.getLogger('app:route:google-auth-endpoint');
-    const router: HarnessDependency = harness.getRouterForClass(
-      GoogleAuthEndpoint.name
-    );
-
+export class GoogleAuthEndpoint extends BaseEndpoint implements RouterClass {
+  mountRoutes() {
     this.postGoogleAuth = this.postGoogleAuth.bind(this);
-    router.post('/', this.postGoogleAuth);
+    this.router.post('/', this.postGoogleAuth);
   }
 
   postGoogleAuth(request: Request) {
     this.logger.info('Post Google Authentication!');
     // TODO
-    console.dir(request.body);
+    this.logger.info('code: ' + request.body.code);
+    this.logger.info(JSON.stringify(request.body, null, 2));
     return { success: true };
   }
 }

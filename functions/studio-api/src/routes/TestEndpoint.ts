@@ -1,14 +1,11 @@
 import { Request } from 'express';
-import { HarnessDependency } from 'route-harness';
-import { inject, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
+import BaseEndpoint, { RouterClass } from './BaseEndpoint';
 
 @injectable()
-export class TestEndpoint {
-  constructor(@inject('HarnessDependency') harness: HarnessDependency) {
-    const router: HarnessDependency = harness.getRouterForClass(
-      TestEndpoint.name
-    );
-    router.get('/', this.getRoot.bind(this));
+export class TestEndpoint extends BaseEndpoint implements RouterClass {
+  public mountRoutes() {
+    this.router.get('/', this.getRoot.bind(this));
   }
 
   getRoot(req: Request) {
