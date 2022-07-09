@@ -30,7 +30,7 @@ export class DarkModeComponent<
     emitter.off('darkMode', this.handleDarkModeChange);
   }
 
-  private handleDarkModeChange(changed: DarkModeChangeEvent) {
+  protected handleDarkModeChange(changed: DarkModeChangeEvent) {
     this.setState({
       darkModeType: changed.darkModeType,
       isDark: changed.isDarkMode

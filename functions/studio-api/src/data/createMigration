@@ -44,21 +44,21 @@ const filenameTs = `${dateString}-${titelizedName}.ts`;
 
 const templateCodeSnippetTs = `
 import { IMigrationDefinition } from 'db-facade';
-import { QueryInterface, DataTypes } from 'sequelize';
+import { QueryInterface, DataTypes, Transaction } from 'sequelize';
 
 export default {
   name: '${dateString}-${titelizedName}',
 
   up: (queryInterface: QueryInterface): Promise<void> => {
     return queryInterface.sequelize.transaction(
-      async (transaction) => {
+      async (transaction: Transaction) => {
           // TODO: write migration logic
       });
   },
 
   down: (queryInterface: QueryInterface): Promise<void> => {
     return queryInterface.sequelize.transaction(
-      async (transaction) => {
+      async (transaction: Transaction) => {
           // TODO: write rollback logic
       }
     )

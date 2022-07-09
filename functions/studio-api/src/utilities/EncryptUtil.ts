@@ -113,11 +113,12 @@ export const decryptData = (encryptedInput: Buffer, key: crypto.CipherKey) => {
 export class EncryptUtil {
   private key: crypto.CipherKey;
   constructor(encryptionKey: string) {
-    this.key = crypto.scryptSync(encryptionKey, 'salt', 24);
+    this.key = crypto.scryptSync(encryptionKey, 'salt', config.KEY_BYTE_LEN);
   }
 
   encrypt(clearText: string): string {
-    return encryptData(Buffer.from(clearText), this.key).toString('base64');
+    console.log('encrypting text:' + clearText);
+    return encryptData(clearText, this.key).toString('base64');
   }
 
   dencrypt(encryptedText: string): string {

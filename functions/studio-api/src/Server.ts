@@ -14,7 +14,7 @@ import ErrorResponse from './utilities/ErrorResponse';
 import LoggerFactory, { Logger } from './services/Logger';
 
 import { StatusCodes } from 'http-status-codes';
-import { routes } from './routes';
+import { ApiRoutes } from './routes';
 import RouteHarness, { HarnessDependency, RouteClass } from 'route-harness';
 import endpointWrapper from './utilities/EndpointWrapper';
 import { getCorsOptions } from './utilities/Cors';
@@ -62,19 +62,13 @@ export class Server {
 
     // add routes
     this.logger.info('adding routes...');
-    for (const [endpointPath, mdlwr, route] of routes) {
-      if (mdlwr.length > 0) {
-        await this.harness.use(
-          path.join(this.BASE_PATH, endpointPath),
-          mdlwr as express.Handler[],
-          route as RouteClass<unknown>
-        );
-      } else {
-        await this.harness.use(
-          path.join(this.BASE_PATH, endpointPath),
-          route as RouteClass<unknown>
-        );
-      }
+    const apiRoutes = container.resolve(ApiRoutes);
+    for (const [endpointPath, mdlwr, route] of apiRoutes.getRoutes()) {
+      await this.harness.use(
+        path.join(this.BASE_PATH, endpointPath),
+        mdlwr as express.Handler[],
+        route as RouteClass<unknown>
+      );
     }
 
     this.logger.info('adding error handlers...');

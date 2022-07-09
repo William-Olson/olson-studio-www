@@ -1,8 +1,6 @@
 import { IMigrationDefinition } from 'db-facade';
 import { QueryInterface, DataTypes, Transaction } from 'sequelize';
 
-const TOKEN_MAX_LEN = 4000;
-
 export default {
   name: '20220620191016-AddUserTable',
   up: (queryInterface: QueryInterface): Promise<void> => {
@@ -15,6 +13,13 @@ export default {
               primaryKey: true,
               type: DataTypes.INTEGER,
               autoIncrement: true
+            },
+            provider: {
+              type: DataTypes.STRING
+            },
+            sourceId: {
+              type: DataTypes.STRING,
+              field: 'source_id'
             },
             firstName: {
               allowNull: false,
@@ -30,12 +35,15 @@ export default {
               type: DataTypes.STRING,
               field: 'email'
             },
+            avatar: {
+              type: DataTypes.STRING
+            },
             authToken: {
-              type: DataTypes.STRING(TOKEN_MAX_LEN),
+              type: DataTypes.TEXT,
               field: 'auth_token'
             },
             refreshToken: {
-              type: DataTypes.STRING(TOKEN_MAX_LEN),
+              type: DataTypes.TEXT,
               field: 'refresh_token'
             },
             createdAt: {

@@ -28,7 +28,7 @@ export class DataLayer {
       databaseCredentials: this.dbConfig,
       migrationOptions: {
         migrations: await getMigrationFiles(),
-        migrationTableName: 'app_migrations'
+        migrationTableName: '~osdb_migrations'
       }
     });
 
@@ -44,9 +44,11 @@ export class DataLayer {
     await this.connectAndRegisterDependency();
 
     // run the migrations
+    this.logger.info('running migrations...');
     await this.db.runMigrations();
 
     // init models
+    this.logger.info('initializing models...');
     await this.db.initialize(modelInitialization);
   }
 }

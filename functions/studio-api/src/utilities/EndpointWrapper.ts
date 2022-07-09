@@ -20,9 +20,9 @@ export const endpointWrapper: CustomWrapper = (
 
   const endpointName = `${info.method.toUpperCase()} ${info.fullPath}`;
   const handlerName = `${info.routeClass}.'${info.handler}'`;
-  if (!mapped.has(handlerName)) {
-    initLogger.info(`[harness] mapping: endpoints@${info.routeClass}`);
-    mapped.add(handlerName);
+  if (!mapped.has(`${handlerName}-${info.basePath}`)) {
+    initLogger.info(`[harness] mapping: ${info.routeClass}@${info.basePath}`);
+    mapped.add(`${handlerName}-${info.basePath}`);
   }
 
   return async (request: Request, response: Response, next: NextFunction) => {

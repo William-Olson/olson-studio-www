@@ -1,63 +1,40 @@
-// import { Link } from 'react-router-dom';
-import { DarkModeTypes, IconTypes } from '../../types/AppTypes';
-import { toggleDarkMode } from '../../util/DarkMode';
-import { Theme } from '../../util/Theme';
+import { Link } from 'react-router-dom';
+import { emitter, LoginEvent } from '../../Events';
+import { IconTypes } from '../../types/AppTypes';
 import { CustomIcon } from '../CustomIcon';
-import { DarkModeComponent } from '../helpers/DarkModeComponent';
+import {
+  DarkModeComponent,
+  DarkModeComponentState
+} from '../helpers/DarkModeComponent';
+import { getToggleIcon } from '../helpers/DarkModeToggle';
 
-const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
-  const handleMode = (mode: DarkModeTypes) => {
-    toggleDarkMode(mode);
-  };
+interface NavBarProps {}
+interface NavBarState extends DarkModeComponentState {
+  user?: { avatar?: string };
+}
 
-  switch (modeType) {
-    case DarkModeTypes.ON:
-      return (
-        <button onClick={() => handleMode(DarkModeTypes.OFF)}>
-          <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
-            icon={IconTypes.Moon}
-            color={Theme.colors.accent}
-          />
-        </button>
-      );
-    case DarkModeTypes.OFF:
-      return (
-        <button onClick={() => handleMode(DarkModeTypes.SYSTEM)}>
-          <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
-            icon={IconTypes.Sun}
-            color={isDark ? 'accent' : 'currentColor'}
-          />
-        </button>
-      );
-    case DarkModeTypes.SYSTEM:
-      if (isDark) {
-        return (
-          <button onClick={() => handleMode(DarkModeTypes.ON)}>
-            <CustomIcon
-              className="pl-4 h-6 cursor-pointer"
-              icon={IconTypes.Moon}
-              color={'grey'}
-            />
-          </button>
-        );
-      }
-      return (
-        <button onClick={() => handleMode(DarkModeTypes.ON)}>
-          <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
-            icon={IconTypes.Sun}
-            color={'grey'}
-          />
-        </button>
-      );
-    default:
-      console.error('Unsupported dark mode icon type ', modeType);
+export class NavBar extends DarkModeComponent<NavBarProps, NavBarState> {
+  constructor(props: NavBarProps) {
+    super(props);
+    this.handleLogin = this.handleLogin.bind(this);
   }
-};
 
-export class NavBar extends DarkModeComponent {
+  handleLogin(event: LoginEvent) {
+    this.setState({
+      user: { avatar: event.user?.avatar }
+    });
+  }
+
+  public componentDidMount(): void {
+    emitter.on('userLogin', this.handleLogin);
+    emitter.on('darkMode', this.handleDarkModeChange);
+  }
+
+  public componentWillUnmount() {
+    emitter.off('userLogin', this.handleLogin);
+    emitter.off('darkMode', this.handleDarkModeChange);
+  }
+
   public render() {
     const darkModeType = this.state.darkModeType;
     const isDark = this.state.isDark === true;
@@ -69,16 +46,25 @@ export class NavBar extends DarkModeComponent {
           <div className="flex flex-row p-4">
             <div className="flex-grow"></div>
 
-            {/* <div className="pl-2 pr-4">
+            <div className="pl-2 pr-4">
               <Link to={'/'}>
                 <CustomIcon icon={IconTypes.Home} />
               </Link>
             </div>
-            <div className="pr-2">
-              <Link to={'/Login'}>
-                <CustomIcon icon={IconTypes.UserCircle} />
-              </Link>
-            </div> */}
+            {!this.state.user?.avatar && (
+              <div className="pr-2">
+                <Link to={'/Login'}>
+                  <CustomIcon icon={IconTypes.UserCircle} />
+                </Link>
+              </div>
+            )}
+            {!!this.state.user?.avatar && (
+              <div className="pr-2">
+                <Link to={'/Login'}>
+                  <img src={this.state.user.avatar} alt="user avatar" />
+                </Link>
+              </div>
+            )}
             <a
               href="https://github.com/William-Olson/olson-studio-www"
               target="_blank"

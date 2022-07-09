@@ -1,49 +1,104 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import { EncryptUtil } from '../../utilities/EncryptUtil';
 
-interface UserAttributes {
+export interface UserAttributes {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
+  avatar?: string;
+  provider?: string;
+  sourceId?: string;
   authToken?: string;
   refreshToken?: string;
 }
 
-const TOKEN_MAX_LEN = 4000;
+// token encryption key
+const encryptKey: string = process.env.OS_ENCRYPTION_KEY || '';
+const encryptUtil = new EncryptUtil(encryptKey);
+
+// don't return these values in responses
+const PROTECTED_ATTRIBUTES: Array<keyof UserAttributes> = [
+  'authToken',
+  'refreshToken',
+  'sourceId'
+];
 
 export interface UserInput
-  extends Optional<UserAttributes, 'id' | 'firstName' | 'lastName'> {}
-export interface UserOuput extends Required<UserAttributes> {}
+  extends Optional<
+    UserAttributes,
+    'id' | 'firstName' | 'lastName' | 'avatar'
+  > {}
 
-export default class User
+export interface UserOutput
+  extends Omit<UserAttributes, 'authToken' | 'refreshToken' | 'sourceId'> {}
+
+export class User
   extends Model<UserAttributes, UserInput>
   implements UserAttributes
 {
-  public id!: number;
-  public firstName!: string;
-  public lastName!: string;
-  public email!: string;
+  declare id: number;
+  declare firstName: string;
+  declare lastName: string;
+  declare email: string;
+  declare avatar?: string;
+  declare sourceId?: string;
+  declare provider?: string;
+  declare refreshToken?: string;
+  declare authToken?: string;
+
+  // declare Sessions?: Session[];
 
   private _authToken?: string;
   private _refreshToken?: string;
 
   // token setters / getters
-  public get authToken(): string {
+  public getAuthToken(): string {
+    if (!this.authToken) {
+      return '';
+    }
+    if (!this._authToken && !!this.authToken) {
+      this._authToken = encryptUtil.dencrypt(this.authToken);
+    }
     return this._authToken || '';
   }
-  public set authToken(token: string) {
+
+  public setAuthToken(token: string) {
+    console.log('setting auth token ' + token);
     this._authToken = token;
+    this.authToken = token ? encryptUtil.encrypt(token) : '';
   }
-  public get refreshToken(): string {
+
+  public getRefreshToken(): string {
+    if (!this.refreshToken) {
+      return '';
+    }
+    if (!this._refreshToken && !!this.refreshToken) {
+      this._refreshToken = encryptUtil.dencrypt(this.refreshToken);
+    }
     return this._refreshToken || '';
   }
-  public set refreshToken(token: string) {
-    this._refreshToken = token;
+
+  public setRefreshToken(token: string) {
+    // only set refresh token if truthy
+    if (token) {
+      this._refreshToken = token;
+      this.refreshToken = encryptUtil.encrypt(token);
+    }
+  }
+
+  public toJSON(): UserOutput {
+    // hide protected fields
+    const userJson: UserAttributes = Object.assign({}, this.get());
+    for (const attr of PROTECTED_ATTRIBUTES) {
+      delete userJson[attr];
+    }
+    return userJson;
   }
 
   // timestamps!
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 
   public static register(sequelize: Sequelize) {
     User.init(
@@ -52,6 +107,13 @@ export default class User
           primaryKey: true,
           type: DataTypes.INTEGER,
           autoIncrement: true
+        },
+        provider: {
+          type: DataTypes.STRING
+        },
+        sourceId: {
+          type: DataTypes.STRING,
+          field: 'source_id'
         },
         email: {
           allowNull: false,
@@ -66,12 +128,15 @@ export default class User
           type: DataTypes.STRING,
           field: 'last_name'
         },
+        avatar: {
+          type: DataTypes.STRING
+        },
         authToken: {
-          type: DataTypes.STRING(TOKEN_MAX_LEN),
+          type: DataTypes.TEXT,
           field: 'auth_token'
         },
         refreshToken: {
-          type: DataTypes.STRING(TOKEN_MAX_LEN),
+          type: DataTypes.TEXT,
           field: 'refresh_token'
         }
       },
@@ -85,3 +150,5 @@ export default class User
     );
   }
 }
+
+export default User;

@@ -4,8 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Logger } from '../services/Logger';
 
 const whitelist = [
-  'localhost',
-  'http://localhost',
+  'http://localhost:3000',
   'https://olson.studio',
   'https://www.olson.studio',
   'https://zina.olson.studio',

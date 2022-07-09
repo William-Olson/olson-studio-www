@@ -17,7 +17,8 @@ export class RootEndpoint extends BaseEndpoint implements RouterClass {
   }
 
   healthCheck() {
-    return { success: true, statusCode: 200 };
+    const date = new Date();
+    return { success: true, statusCode: 200, timestamp: date.toISOString() };
   }
 }
 
