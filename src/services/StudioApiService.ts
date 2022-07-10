@@ -16,4 +16,16 @@ export class StudioApiService {
       })
     ).data;
   }
+
+  public async getUserInfo(token: string) {
+    return (
+      await axios.request({
+        url: `${STUDIO_API_BASE_URL}/me`,
+        method: 'GET',
+        headers: {
+          Authorization: 'bearer ' + token
+        }
+      })
+    ).data;
+  }
 }

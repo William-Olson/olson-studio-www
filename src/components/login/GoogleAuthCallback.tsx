@@ -1,6 +1,9 @@
 import React from 'react';
-import { emitter } from '../../Events';
+import { emitter, LoginEvent } from '../../Events';
 import { StudioApiService } from '../../services/StudioApiService';
+import { getToken, removeToken, setToken } from '../../util/Auth';
+import { isDarkMode } from '../../util/DarkMode';
+import { getToastTheme, Toast } from '../../util/Toast';
 import { WillNavigate } from '../helpers/WillNavigate';
 
 interface GoogleAuthCallbackProps {}
@@ -24,18 +27,27 @@ export class GoogleAuthCallback extends React.Component<
     if (this.state.loading) {
       return;
     }
-    console.log('exchanging auth code ' + code + ' for access token...');
+    // console.log(`exchanging auth code ${code} for access token...`);
     this.setState({ loading: true });
-    const resp = await this.service.exchangeGoogleAuthToken(code);
+    try {
+      if (getToken()) {
+        // TODO: send delete requrest to delete old session?
+        removeToken();
+      }
+      const resp = await this.service.exchangeGoogleAuthToken(code);
 
-    if (resp && resp.success && resp.user) {
-      console.log('got user from token exchange: ', resp.user);
-      localStorage.setItem('token', resp.token);
-      emitter.emit('userLogin', { user: resp.user, token: resp.token });
-      emitter.emit('shouldNavigate', { location: toPage });
-    } else {
-      // TODO: handle error
-      console.error('Error logging in user');
+      if (resp && resp.success && resp.user) {
+        // console.log('got user from token exchange: ', resp.user);
+        setToken(resp.token);
+        const ev: LoginEvent = { user: resp.user, token: resp.token };
+        emitter.emit('userLogin', ev);
+        emitter.emit('shouldNavigate', { location: toPage });
+      } else {
+        throw new Error('Error logging in user');
+      }
+    } catch (err) {
+      console.error('Error logging in user: ', err);
+      throw err;
     }
   }
 
@@ -47,7 +59,17 @@ export class GoogleAuthCallback extends React.Component<
       const code = queryParams.get('code') || '';
       const state = queryParams.get('state');
       console.log('state param: ' + state);
-      this.loginWithGoogle(code);
+      Toast.showProgress(
+        () => this.loginWithGoogle(code),
+        {
+          pending: 'Logging You In... ',
+          success: 'Login Successful! 👋 ',
+          error: 'Uh Oh, An Unexpected Error Occurred! Unable to login! 😭'
+        },
+        {
+          theme: getToastTheme(isDarkMode())
+        }
+      );
     }
   }
 

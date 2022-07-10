@@ -9,7 +9,7 @@ export interface ShouldNavigateEvent {
   location: string;
 }
 
-export interface LoginEvent {
+export interface UserInfoEvent {
   user?: {
     id: number;
     firstName?: string;
@@ -17,6 +17,8 @@ export interface LoginEvent {
     email?: string;
     avatar?: string;
   };
+}
+export interface LoginEvent extends UserInfoEvent {
   token?: string;
 }
 
@@ -27,6 +29,7 @@ export const emitter =
     darkMode: DarkModeChangeEvent;
     shouldNavigate: ShouldNavigateEvent;
     userLogin: LoginEvent;
+    userInfo: UserInfoEvent;
   }>();
 
 export const signalDarkModeChange = (change: DarkModeChangeEvent) => {

@@ -1,7 +1,7 @@
-import { DarkModeTypes, IconTypes } from '../../types/AppTypes';
-import { toggleDarkMode } from '../../util/DarkMode';
-import { Theme } from '../../util/Theme';
-import { CustomIcon } from '../CustomIcon';
+import { DarkModeTypes, IconTypes } from '../../../types/AppTypes';
+import { toggleDarkMode } from '../../../util/DarkMode';
+import { Theme } from '../../../util/Theme';
+import { CustomIcon } from '../../CustomIcon';
 
 export const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
   const handleMode = (mode: DarkModeTypes) => {
@@ -13,7 +13,7 @@ export const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
       return (
         <button onClick={() => handleMode(DarkModeTypes.OFF)}>
           <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
+            className="pl-4 h-8 w-10 -mt-2 cursor-pointer"
             icon={IconTypes.Moon}
             color={Theme.colors.accent}
           />
@@ -23,7 +23,7 @@ export const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
       return (
         <button onClick={() => handleMode(DarkModeTypes.SYSTEM)}>
           <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
+            className="pl-4 h-8 w-10 -mt-2 cursor-pointer"
             icon={IconTypes.Sun}
             color={isDark ? 'accent' : 'currentColor'}
           />
@@ -34,7 +34,7 @@ export const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
         return (
           <button onClick={() => handleMode(DarkModeTypes.ON)}>
             <CustomIcon
-              className="pl-4 h-6 cursor-pointer"
+              className="pl-4 h-8 w-10 -mt-2 cursor-pointer"
               icon={IconTypes.Moon}
               color={'grey'}
             />
@@ -44,7 +44,7 @@ export const getToggleIcon = (isDark: boolean, modeType: DarkModeTypes) => {
       return (
         <button onClick={() => handleMode(DarkModeTypes.ON)}>
           <CustomIcon
-            className="pl-4 h-6 cursor-pointer"
+            className="pl-4 h-8 w-10 -mt-2 cursor-pointer"
             icon={IconTypes.Sun}
             color={'grey'}
           />

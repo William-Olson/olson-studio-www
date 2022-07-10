@@ -76,6 +76,7 @@ ntl open
 
 - [Jest](https://jestjs.io/)
 - [React](https://reactjs.org/)
+  - [React Toastify](https://fkhadra.github.io/react-toastify/introduction)
 - [tailwindcss](https://tailwindcss.com/)
   - [tailwindcss forms plugin](https://tailwindcss-forms.vercel.app/)
 - [TypeScript](https://www.typescriptlang.org/)

@@ -25,10 +25,15 @@ class LandingCard extends DarkModeComponent<LandingCardProps> {
       'border-dark',
       'group',
       'h-[192px]',
+      'sm:inline-block',
+      'mr-auto',
+      'ml-auto',
+      'sm:mr-2',
+      'sm:ml-2',
+      'w-[192px]',
       'rounded',
       'mb-9',
       'p-9',
-      'w-48',
       'cursor-pointer',
       'text-center'
     ].join(' ');
@@ -36,20 +41,21 @@ class LandingCard extends DarkModeComponent<LandingCardProps> {
     // console.log(this.props.logo);
 
     return (
-      <a
-        href={this.props.destination}
-        target="_blank"
-        rel="noopener"
-        aria-label={this.props.subText}
-        className="inline-flex items-center aspect-square mx-6"
-      >
-        <div className={mainBoxClasses}>
-          <div className="md:flex justify-center">{this.props.logo}</div>
-          <h1 className="text-4xl -mt-24 hidden group-hover:block pb-12">
-            {this.props.name || 'Name'}
+      <div className={mainBoxClasses}>
+        <a
+          href={this.props.destination}
+          target="_blank"
+          rel="noopener"
+          aria-label={this.props.subText}
+        >
+          <div className="w-26">{this.props.logo}</div>
+          <h1 className="text-4xl -mt-24 pb-12">
+            <span className="opacity-0 group-hover:opacity-100">
+              {this.props.name || 'Name'}
+            </span>
           </h1>
-        </div>
-      </a>
+        </a>
+      </div>
     );
   }
 }

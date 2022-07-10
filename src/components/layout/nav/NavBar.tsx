@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { emitter, LoginEvent } from '../../Events';
-import { IconTypes } from '../../types/AppTypes';
-import { CustomIcon } from '../CustomIcon';
+import { emitter, LoginEvent } from '../../../Events';
+import { IconTypes } from '../../../types/AppTypes';
+import { CustomIcon } from '../../CustomIcon';
 import {
   DarkModeComponent,
   DarkModeComponentState
-} from '../helpers/DarkModeComponent';
-import { getToggleIcon } from '../helpers/DarkModeToggle';
+} from '../../helpers/DarkModeComponent';
+import { getToggleIcon } from './DarkModeToggle';
 
 interface NavBarProps {}
 interface NavBarState extends DarkModeComponentState {
@@ -26,12 +26,12 @@ export class NavBar extends DarkModeComponent<NavBarProps, NavBarState> {
   }
 
   public componentDidMount(): void {
-    emitter.on('userLogin', this.handleLogin);
+    emitter.on(['userLogin', 'userInfo'], this.handleLogin);
     emitter.on('darkMode', this.handleDarkModeChange);
   }
 
   public componentWillUnmount() {
-    emitter.off('userLogin', this.handleLogin);
+    emitter.off(['userLogin', 'userInfo'], this.handleLogin);
     emitter.off('darkMode', this.handleDarkModeChange);
   }
 
@@ -40,7 +40,7 @@ export class NavBar extends DarkModeComponent<NavBarProps, NavBarState> {
     const isDark = this.state.isDark === true;
 
     return (
-      <nav className="flex flex-row">
+      <nav className="flex flex-row min-w-full">
         <div className="nav-padding basis-4/5"></div>
         <div className="nav-section basis-1/5">
           <div className="flex flex-row p-4">
@@ -52,16 +52,22 @@ export class NavBar extends DarkModeComponent<NavBarProps, NavBarState> {
               </Link>
             </div>
             {!this.state.user?.avatar && (
-              <div className="pr-2">
+              <div className="pr-2 ">
                 <Link to={'/Login'}>
                   <CustomIcon icon={IconTypes.UserCircle} />
                 </Link>
               </div>
             )}
             {!!this.state.user?.avatar && (
-              <div className="pr-2">
+              <div className="pr-2 min-w-6 w-8 h-8 ">
                 <Link to={'/Login'}>
-                  <img src={this.state.user.avatar} alt="user avatar" />
+                  <img
+                    id="user-avatar"
+                    className="inline object-cover w-6 h-6 rounded-full"
+                    src={this.state.user.avatar}
+                    alt="user avatar"
+                    referrerPolicy="no-referrer"
+                  />
                 </Link>
               </div>
             )}
@@ -70,7 +76,7 @@ export class NavBar extends DarkModeComponent<NavBarProps, NavBarState> {
               target="_blank"
               rel="noopener"
               aria-label={'Github Link'}
-              className="pl-2 h-6 cursor-pointer"
+              className="pl-2 h-8 w-8 cursor-pointer"
             >
               <CustomIcon icon={IconTypes.Github} />
             </a>
