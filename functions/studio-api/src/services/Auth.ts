@@ -75,6 +75,10 @@ export class AuthService {
 
   public async getSession(token: string): Promise<Session | null> {
     try {
+      if (!config.jwtSecret) {
+        throw new Error('Missing JWT secret environment variable');
+      }
+
       // for now, not checking secret, just trusting signed token
       const decodedJwt: jwt.JwtPayload | string = jwt.verify(
         token,
@@ -187,6 +191,9 @@ export class AuthService {
   private createJwt(sub: string, claims: ClaimData, expiresIn = 60 * 60) {
     if (!sub) {
       throw new Error('Missing parameter');
+    }
+    if (!config.jwtSecret) {
+      throw new Error('Missing JWT secret environment variable');
     }
 
     if (claims.sub) {
