@@ -1,9 +1,9 @@
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import { IconTypes } from '../types/AppTypes';
 import { isDarkMode } from '../util/DarkMode';
-import Icons from '../util/images/Icons';
+import Icons, { IconProps } from '../util/images/Icons';
 
-export interface IconParams extends React.SVGProps<ReactElement> {
+export interface IconParams extends IconProps {
   icon: IconTypes;
   color?: string;
 }

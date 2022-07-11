@@ -2,7 +2,9 @@ export enum IconTypes {
   Moon = 'moon',
   Sun = 'sun',
   Plus = 'plus',
-  Github = 'github'
+  Github = 'github',
+  Home = 'home',
+  UserCircle = 'user-circle'
 }
 
 export enum LogoTypes {

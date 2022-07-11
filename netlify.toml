@@ -1,11 +1,16 @@
 # example netlify.toml
 [build]
   command = "yarn build"
-  functions = "functions"
+  functions = "functions/dist/functions"
   publish = "dist"
 
-  # Uncomment to use this redirect for Single Page Applications like create-react-app.
-  # Not needed for static site generators.
+  # shorthand api path redirect
+  [[redirects]]
+   from = "/api/*"
+   to = "/.netlify/functions/studio-api/:splat"
+   status = 200
+
+  # redirect for Single Page Applications
   [[redirects]]
    from = "/*"
    to = "/index.html"
@@ -14,8 +19,9 @@
   # (optional) Settings for Netlify Dev
   # https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
   [dev]
-   command = "yarn dev" # Command to start your dev server
-   port = 3000 # Port that the dev server will be listening on
+   command = "yarn devrun" # Command to start your dev server
+   port = 7447 # Port that the dev server will be listening on
    publish = "dist" # Folder with the static content for _redirect file
+   functionsPort = 8888
 
   # more info on configuring this file: https://www.netlify.com/docs/netlify-toml-reference/

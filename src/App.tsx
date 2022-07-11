@@ -1,49 +1,58 @@
-import React, { ReactElement } from 'react';
-import { Banner } from './components/layout/Banner';
-import { CardArea } from './components/layout/CardArea';
+import { ReactElement } from 'react';
+import { Outlet } from 'react-router-dom';
+import { DarkModeComponent } from './components/helpers/DarkModeComponent';
 import { Footer } from './components/layout/Footer';
-import { NavBar } from './components/layout/NavBar';
-import { DarkModeTypes } from './types/AppTypes';
-import { getDarkModeType, isDarkMode } from './util/DarkMode';
+import { NavBar } from './components/layout/nav/NavBar';
+import { emitter, UserInfoEvent } from './Events';
+import { getToken, removeToken } from './util/Auth';
+import { getToastTheme, Toast } from './util/Toast';
+import { StudioApiService } from './services/StudioApiService';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface AppProps {}
-interface AppState {
-  darkMode: boolean;
-  darkModeType: DarkModeTypes;
-}
+class App extends DarkModeComponent {
+  private service: StudioApiService = new StudioApiService();
+  componentDidMount() {
+    // handle super class behaviour since we override the mount method
+    emitter.on('darkMode', this.handleDarkModeChange);
 
-class App extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.updateDarkMode = this.updateDarkMode.bind(this);
-    this.state = {
-      darkMode: isDarkMode(),
-      darkModeType: getDarkModeType()
-    };
+    // check for token and fetch userInfo if found
+    const token = getToken();
+    if (token) {
+      Toast.showProgress(
+        async () => {
+          try {
+            const user = await this.service.getUserInfo(token);
+            const ev: UserInfoEvent = { user };
+            emitter.emit('userInfo', ev);
+          } catch (err) {
+            console.error('Error fetching user: ', err);
+            removeToken();
+            throw err;
+          }
+        },
+        {
+          pending: 'Authenticating ☝ ... ',
+          success: 'Welcome Back! 👋 ',
+          error: 'Bad Auth Token! 😬'
+        },
+        {
+          theme: getToastTheme(this.state.isDark)
+        }
+      );
+    }
   }
-
-  updateDarkMode() {
-    this.setState({
-      darkMode: isDarkMode(),
-      darkModeType: getDarkModeType()
-    });
-  }
-
   public render(): ReactElement {
     return (
       <div className="w-full h-full">
-        <div className="md:w-90 max-w-90 h-24">
-          <NavBar
-            onChangeDarkMode={this.updateDarkMode}
-            isDark={this.state.darkMode}
-            darkModeType={this.state.darkModeType}
-          />
+        <ToastContainer />
+        <div className="md:w-90 max-w-90 h-56px">
+          <NavBar />
         </div>
-        <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
-          <Banner />
-          <CardArea />
+        <div className="content-wrapper">
+          <Outlet />
         </div>
-        <div className="footer md:w-full max-w-full text-center p-8 h-24">
+        <div className="footer md:w-full max-w-full text-center p-36px h-24px">
           <Footer />
         </div>
       </div>

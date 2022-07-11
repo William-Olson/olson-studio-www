@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+const MIGRATION_PATH = path.join(__dirname, 'migrations/');
+
+// check console args
+if (process.argv.length < 3) {
+  console.error('Missing command line argument: Migration Name');
+  console.warn('\n\tUsage: ./create-migration <Migration Name>\n');
+  process.exit(1);
+}
+const migrationName = `${process.argv[2]}`.replace(/[;&|`$\!<>]/gim, '-');
+
+const withPadding = (s) => `${s}`.padStart(2, '0');
+const titelizeBy = (str, c) =>
+  str
+    .split(c)
+    .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
+    .join('');
+const titelizeSplits = (str, arr) =>
+  arr.reduce((accStr, splitChar) => titelizeBy(accStr, splitChar), str);
+
+const tNow = new Date();
+
+const hour = tNow.getHours();
+const min = new Date().getMinutes();
+const sec = new Date().getSeconds();
+const date = tNow.getDate();
+const month = tNow.getMonth() + 1;
+const year = tNow.getFullYear();
+
+const dateString =
+  `${year}` +
+  `${withPadding(month)}` +
+  `${withPadding(date)}` +
+  `${withPadding(hour)}` +
+  `${withPadding(min)}` +
+  `${withPadding(sec)}`;
+
+const titelizedName = titelizeSplits(migrationName, [' ', '-', '_']);
+const filenameTs = `${dateString}-${titelizedName}.ts`;
+
+const templateCodeSnippetTs = `
+import { IMigrationDefinition } from 'db-facade';
+import { QueryInterface, DataTypes, Transaction } from 'sequelize';
+
+export default {
+  name: '${dateString}-${titelizedName}',
+
+  up: (queryInterface: QueryInterface): Promise<void> => {
+    return queryInterface.sequelize.transaction(
+      async (transaction: Transaction) => {
+          // TODO: write migration logic
+      });
+  },
+
+  down: (queryInterface: QueryInterface): Promise<void> => {
+    return queryInterface.sequelize.transaction(
+      async (transaction: Transaction) => {
+          // TODO: write rollback logic
+      }
+    )
+  }
+} as IMigrationDefinition
+
+`;
+
+fs.writeFileSync(path.join(MIGRATION_PATH, filenameTs), templateCodeSnippetTs, {
+  encoding: 'utf-8'
+});

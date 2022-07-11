@@ -1,3 +1,4 @@
+import { signalDarkModeChange } from '../Events';
 import { DarkModeTypes } from '../types/AppTypes';
 
 export const isDarkMode: () => boolean = (): boolean => {
@@ -31,13 +32,23 @@ export const toggleDarkMode = (mode: DarkModeTypes): void => {
 };
 
 export const loadDarkModeFromCache = () => {
-  if (
-    localStorage.theme === 'dark' ||
-    (!('theme' in localStorage) &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
+  let darkMode = false;
+  // based on system or cache
+  if (!localStorage.theme) {
+    darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } else {
+    darkMode = localStorage.theme === 'dark';
+  }
+
+  // adjust css class
+  if (darkMode) {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
   }
+
+  signalDarkModeChange({
+    isDarkMode: !!darkMode,
+    darkModeType: getDarkModeType()
+  });
 };
