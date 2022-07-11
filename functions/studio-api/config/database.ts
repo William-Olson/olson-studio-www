@@ -10,10 +10,6 @@ export default {
     port: 5432
   },
   prod: {
-    host: env('DB_HOST'),
-    username: env('DB_USER'),
-    password: env('DB_PASSWD'),
-    database: env('DB_NAME'),
-    port: Number(env('DB_PORT'))
+    url: env('OS_DB_CONNECTION_URL')
   }
 };

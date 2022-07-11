@@ -30,10 +30,17 @@ export class GoogleAuthCallback extends React.Component<
     // console.log(`exchanging auth code ${code} for access token...`);
     this.setState({ loading: true });
     try {
-      if (getToken()) {
-        // TODO: send delete requrest to delete old session?
-        removeToken();
+      const oldToken = getToken();
+      if (oldToken) {
+        removeToken(); // from local storage
+        try {
+          // remove session from the server as well
+          await this.service.deleteCurrentSession(oldToken);
+        } catch (rmErr) {
+          console.error('Error removing old session', rmErr);
+        }
       }
+
       const resp = await this.service.exchangeGoogleAuthToken(code);
 
       if (resp && resp.success && resp.user) {

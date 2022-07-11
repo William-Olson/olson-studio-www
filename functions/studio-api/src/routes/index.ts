@@ -7,6 +7,7 @@ import { TestEndpoint } from './TestEndpoint';
 import { RootEndpoint } from './RootEndpoint';
 import { GoogleAuthEndpoint } from './GoogleAuthEndpoint';
 import { UserProfileEndpoint } from './UserProfileEndpoint';
+import UserSessionEndpoint from './UserSessionEndpoint';
 
 @singleton()
 @injectable()
@@ -29,8 +30,9 @@ export class ApiRoutes {
       // auth'ed endpoints
       ['/test', [auth()], TestEndpoint],
       ['/me', [auth()], UserProfileEndpoint],
+      ['/sessions', [auth()], UserSessionEndpoint],
 
-      // optional auth routes
+      // optional auth endpoints
       ['/version', [auth(false)], VersionEndpoint],
 
       // no-auth endpoints
