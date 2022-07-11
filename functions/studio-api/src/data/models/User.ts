@@ -64,7 +64,6 @@ export class User
   }
 
   public setAuthToken(token: string) {
-    console.log('setting auth token ' + token);
     this._authToken = token;
     this.authToken = token ? encryptUtil.encrypt(token) : '';
   }

@@ -117,7 +117,6 @@ export class EncryptUtil {
   }
 
   encrypt(clearText: string): string {
-    console.log('encrypting text:' + clearText);
     return encryptData(clearText, this.key).toString('base64');
   }
 

@@ -18,30 +18,37 @@ export const endpointWrapper: CustomWrapper = (
   const initLogger: Logger = logFactory.getLogger('app:harness:init');
   const logger: Logger = logFactory.getLogger('app:harness');
 
-  const endpointName = `${info.method.toUpperCase()} ${info.fullPath}`;
-  const handlerName = `${info.routeClass}.'${info.handler}'`;
+  const endpointName = `${info.method.toUpperCase()}:  ${info.fullPath}`;
+  const handlerName = `${info.routeClass}.${info.handler
+    .replace('bound', '')
+    .trim()}`;
   if (!mapped.has(`${handlerName}-${info.basePath}`)) {
-    initLogger.info(`[harness] mapping: ${info.routeClass}@${info.basePath}`);
+    initLogger.info(`mapping: ${info.routeClass}@${info.basePath}`);
     mapped.add(`${handlerName}-${info.basePath}`);
   }
 
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       logger.info(
-        `[harness] route hit: ${endpointName} ${handlerName}` +
-          `, Params: ${JSON.stringify(request.params)}` +
+        `[ ${endpointName} ] ${handlerName}.Request:` +
+          ` { Params: ${JSON.stringify(request.params)}` +
           `, Query: ${JSON.stringify(request.query)}` +
-          `, Body: ${JSON.stringify(request.body)}`
+          `, Body: ${JSON.stringify(request.body)} }`
       );
       const result = await handler(request, response);
       if (result) {
         if (result.status >= 400 || result.statusCode >= 400) {
           logger.error(result);
         }
+        logger.info(
+          `[ ${endpointName} ] ${handlerName}.Response: ${JSON.stringify(
+            result
+          )}`
+        );
         response.send(result);
       }
     } catch (error) {
-      logger.error(`[harness] error in route ${endpointName} ${handlerName}`);
+      logger.error(`Error in route ${endpointName} ${handlerName}`);
       next(error);
     }
   };

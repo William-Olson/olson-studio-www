@@ -1,11 +1,11 @@
-import { VersionEndpoint } from './VersionEndpoint';
-import { TestEndpoint } from './TestEndpoint';
-import { RootEndpoint } from './RootEndpoint';
-import GoogleAuthEndpoint from './GoogleAuthEndpoint';
 import { inject, injectable, singleton } from 'tsyringe';
 import LoggerFactory, { Logger } from '../services/Logger';
 import { AuthService } from '../services/Auth';
 import { RequestHandler } from 'express';
+import { VersionEndpoint } from './VersionEndpoint';
+import { TestEndpoint } from './TestEndpoint';
+import { RootEndpoint } from './RootEndpoint';
+import { GoogleAuthEndpoint } from './GoogleAuthEndpoint';
 import { UserProfileEndpoint } from './UserProfileEndpoint';
 
 @singleton()
@@ -22,14 +22,18 @@ export class ApiRoutes {
   }
 
   getRoutes(): [string, RequestHandler[], unknown][] {
-    const auth: () => RequestHandler = () => this.auth.getMiddleware();
+    const auth: (required?: boolean) => RequestHandler = (required = true) =>
+      this.auth.getMiddleware(required);
+
     return [
       // auth'ed endpoints
       ['/test', [auth()], TestEndpoint],
       ['/me', [auth()], UserProfileEndpoint],
 
+      // optional auth routes
+      ['/version', [auth(false)], VersionEndpoint],
+
       // no-auth endpoints
-      ['/version', [], VersionEndpoint],
       ['/oauth2/redirect/google', [], GoogleAuthEndpoint],
       ['/', [], RootEndpoint]
     ];

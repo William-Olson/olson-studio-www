@@ -110,12 +110,13 @@ export class GoogleAuthEndpoint extends BaseEndpoint implements RouterClass {
       );
     }
 
-    // update auth & avatar picture
-    this.logger.info(
-      'updating auth for user with sourceId' + googleUser.googleId
-    );
-    this.logger.info('replacing auth token:  ' + user.getAuthToken());
-    this.logger.info('with new auth token:  ' + googleUser.accessToken);
+    if (user.getRefreshToken() && googleUser.refreshToken) {
+      this.logger.info(
+        'updating refreshToken for user with sourceId' + googleUser.googleId
+      );
+    }
+
+    // update user information to latest from provider
     user.setAuthToken(googleUser.accessToken);
     user.setRefreshToken(googleUser.refreshToken);
     user.avatar = googleUser.picture;
@@ -142,8 +143,8 @@ export class GoogleAuthEndpoint extends BaseEndpoint implements RouterClass {
 
     const decodedJwt: GoogleJwt = jwtDecode(tokenResponse.data.id_token);
 
-    console.log('decodedJwt', JSON.stringify(decodedJwt));
-    console.log('fullGoogleUser', JSON.stringify(tokenResponse.data));
+    // console.log('decodedJwt', JSON.stringify(decodedJwt));
+    // console.log('fullGoogleUser', JSON.stringify(tokenResponse.data));
 
     return {
       googleId: decodedJwt.sub,
