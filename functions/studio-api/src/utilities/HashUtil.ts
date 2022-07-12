@@ -4,7 +4,7 @@ import crypto from 'crypto';
 
 const PASSWORD_LENGTH = 256;
 const SALT_LENGTH = 64;
-const DIGEST = 'sha256';
+const DIGEST = 'sha512';
 const ENCODING_FORMAT = 'base64';
 
 /**
@@ -59,6 +59,22 @@ export function verifyPassword(
   passwordAttempt: string
 ): Promise<boolean> {
   return new Promise<boolean>((resolve, reject) => {
+    console.log(
+      'hash check params:',
+      passwordAttempt,
+      hashedPassword.salt,
+      hashedPassword.iterations,
+      PASSWORD_LENGTH,
+      DIGEST
+    );
+    console.log(
+      'param types:',
+      typeof passwordAttempt,
+      typeof hashedPassword.salt,
+      typeof hashedPassword.iterations,
+      typeof PASSWORD_LENGTH,
+      typeof DIGEST
+    );
     crypto.pbkdf2(
       passwordAttempt,
       hashedPassword.salt,
