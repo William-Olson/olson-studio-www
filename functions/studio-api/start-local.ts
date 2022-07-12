@@ -17,5 +17,11 @@ import { Server } from './src/Server';
   }
 
   // run the express server like normal
-  (await studioApiServer.init()).start();
+  const base = 10;
+  let port: number | undefined;
+  if (process.env.APP_PORT) {
+    port = parseInt(process.env.APP_PORT, base);
+  }
+
+  (await studioApiServer.init()).start(port);
 })();

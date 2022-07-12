@@ -4,14 +4,15 @@ import { Handler } from '@netlify/functions';
 import { Context } from '@netlify/functions/dist/function/context';
 import { Event } from '@netlify/functions/dist/function/event';
 import { Response } from '@netlify/functions/dist/function/response';
-
 import { container } from 'tsyringe';
 import { DataLayer } from './src/data/DataLayer';
 import { Server } from './src/Server';
+import { LoggerFactory } from './src/services/Logger';
 
-// or as a promise
 export const handler: Handler = async (event: Event, context: Context) => {
   const server = container.resolve(Server);
+  const loggerFactory = container.resolve(LoggerFactory);
+  const logger = loggerFactory.getLogger('app:boot');
 
   // setup express routes etc.
   await server.init();
@@ -21,7 +22,7 @@ export const handler: Handler = async (event: Event, context: Context) => {
     const database = container.resolve(DataLayer);
     await database.init();
   } catch (err) {
-    console.error('error initializing data layer', err);
+    logger.error('error initializing data layer', err);
   }
 
   // handle lambda request with express in serverless mode
@@ -31,7 +32,7 @@ export const handler: Handler = async (event: Event, context: Context) => {
 
     return resp;
   } catch (err) {
-    console.error('error in lambda', err);
+    logger.error('error in lambda', err);
     throw err;
   }
 };
