@@ -8,6 +8,7 @@ import { Options } from 'sequelize';
 import { container, inject, singleton } from 'tsyringe';
 import config from '../../config/database';
 import LoggerFactory, { Logger } from '../services/Logger';
+import { isDev } from '../utilities/isDev';
 import { modelInitialization } from './init';
 import { getMigrationFiles } from './migrations';
 
@@ -31,11 +32,12 @@ export class DataLayer {
 
   constructor(@inject(LoggerFactory) loggerFactory: LoggerFactory) {
     this.logger = loggerFactory.getLogger('app:db');
-    this.logger.info(
-      'setting DB_CONFIG via node environment: ' + process.env.NODE_ENV
-    );
-    this.dbConfig =
-      process.env.NODE_ENV !== 'production' ? config.dev : config.prod;
+
+    if (!isDev) {
+      this.dbConfig = config.prod as ProdDbConfig;
+    } else {
+      this.dbConfig = config.dev;
+    }
   }
 
   private async defaultConnect() {
@@ -51,12 +53,12 @@ export class DataLayer {
   }
 
   private async prodConnect() {
-    this.logger.info('Connecting with production credentials');
+    this.logger.info('Connecting with production database credentials');
     const connectionString = (this.dbConfig as ProdDbConfig).url;
     const showFrom = 0;
     const showTo = 8;
     this.logger.info(
-      'Connecting with url: ' +
+      'Beginning of connection url: ' +
         (connectionString || 'XXXXXXXX').slice(showFrom, showTo) +
         '**'
     );

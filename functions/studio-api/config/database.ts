@@ -1,5 +1,4 @@
-const env = (str: string) =>
-  process.env[str] || `<Replace via ${str} environment variable>`;
+const env = (str: string) => process.env[str] || undefined;
 
 export default {
   dev: {

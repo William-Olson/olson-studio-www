@@ -1911,10 +1911,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-db-facade@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/db-facade/-/db-facade-1.1.5.tgz#a36294fff421f35950e8696b1fa3cfefdf42172c"
-  integrity sha512-H84VIyzLaZMHH856oHX5u1wYELH6y6tMQ8MIqg9mhmcFADOufOzFGrCmSjqj25e8JRIPYMSDmoAOpZYNIgTbGg==
+db-facade@1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/db-facade/-/db-facade-1.1.8.tgz#ba46593f844b659855a35e1302fca59be7f6e41c"
+  integrity sha512-l6sWbil0OG32gmptKGws46thS3PLNDOOX3epgRv12KhGQCH05gvBQ6EOUHDkZ+GQYEP7haFA0KJo4lkgKCZV5g==
 
 debug@2.6.9, debug@^2.6.9:
   version "2.6.9"
