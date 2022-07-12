@@ -31,11 +31,15 @@ export class DataLayer {
 
   constructor(@inject(LoggerFactory) loggerFactory: LoggerFactory) {
     this.logger = loggerFactory.getLogger('app:db');
+    this.logger.info(
+      'setting DB_CONFIG via node environment: ' + process.env.NODE_ENV
+    );
     this.dbConfig =
       process.env.NODE_ENV !== 'production' ? config.dev : config.prod;
   }
 
   private async defaultConnect() {
+    this.logger.info('Connecting with dev credentials');
     this.db = DbLayerFactory.newDbLayer({
       dialectType: DialectTypes.POSTGRES,
       databaseCredentials: this.dbConfig as IDbAuthConfig,
@@ -47,8 +51,17 @@ export class DataLayer {
   }
 
   private async prodConnect() {
+    this.logger.info('Connecting with production credentials');
+    const connectionString = (this.dbConfig as ProdDbConfig).url;
+    const showFrom = 0;
+    const showTo = 8;
+    this.logger.info(
+      'Connecting with url: ' +
+        (connectionString || 'XXXXXXXX').slice(showFrom, showTo) +
+        '**'
+    );
     this.db = DbLayerFactory.newDbLayer({
-      dbConnectionString: (this.dbConfig as ProdDbConfig).url,
+      dbConnectionString: connectionString,
       sequelizeOptions: PROD_DEFAULTS,
       migrationOptions: {
         migrations: await getMigrationFiles(),
