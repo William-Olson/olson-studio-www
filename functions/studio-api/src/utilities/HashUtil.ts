@@ -5,7 +5,7 @@ import crypto from 'crypto';
 const PASSWORD_LENGTH = 256;
 const SALT_LENGTH = 64;
 const DIGEST = 'sha256';
-const ENCODING_FORMAT = 'base64url';
+const ENCODING_FORMAT = 'base64';
 
 /**
  * The information about the password that is stored in the database

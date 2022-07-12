@@ -105,6 +105,9 @@ export class AuthService {
       }
 
       // verify that the session secret matches the hash
+      this.logger.info(
+        `checking session with id ${decodedJwt.sub} and secret ${decodedJwt.secret} against hash ${session.hash}`
+      );
       const matches = await verifyPassword(
         {
           hash: session.hash,
