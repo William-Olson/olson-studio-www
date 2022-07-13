@@ -59,26 +59,12 @@ export function verifyPassword(
   passwordAttempt: string
 ): Promise<boolean> {
   return new Promise<boolean>((resolve, reject) => {
-    console.log(
-      'hash check params:',
-      passwordAttempt,
-      hashedPassword.salt,
-      hashedPassword.iterations,
-      PASSWORD_LENGTH,
-      DIGEST
-    );
-    console.log(
-      'param types:',
-      typeof passwordAttempt,
-      typeof hashedPassword.salt,
-      typeof hashedPassword.iterations,
-      typeof PASSWORD_LENGTH,
-      typeof DIGEST
-    );
+    const decimalBase = 10;
+    const iterations = parseInt(`${hashedPassword.iterations}`, decimalBase);
     crypto.pbkdf2(
       passwordAttempt,
       hashedPassword.salt,
-      hashedPassword.iterations,
+      iterations,
       PASSWORD_LENGTH,
       DIGEST,
       (error, hash) => {

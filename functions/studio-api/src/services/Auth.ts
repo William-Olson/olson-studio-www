@@ -87,7 +87,6 @@ export class AuthService {
 
       if (typeof decodedJwt === 'string') {
         this.logger.info('DecodedJWT Payload as string:', decodedJwt);
-        // const decodedPayload = JSON.parse(decodedJwt); // ?
         return null;
       }
 
@@ -105,9 +104,6 @@ export class AuthService {
       }
 
       // verify that the session secret matches the hash
-      this.logger.info(
-        `checking session with id ${decodedJwt.sub} and secret ${decodedJwt.secret} against hash ${session.hash}`
-      );
       try {
         const matches = await verifyPassword(
           {
