@@ -108,21 +108,24 @@ export class AuthService {
       this.logger.info(
         `checking session with id ${decodedJwt.sub} and secret ${decodedJwt.secret} against hash ${session.hash}`
       );
-      const matches = await verifyPassword(
-        {
-          hash: session.hash,
-          salt: session.salt,
-          iterations: session.iterations
-        },
-        decodedJwt.secret
-      );
-      if (!matches) {
-        this.logger.error('Session secret mismatch');
-        return null;
+      try {
+        const matches = await verifyPassword(
+          {
+            hash: session.hash,
+            salt: session.salt,
+            iterations: session.iterations
+          },
+          decodedJwt.secret
+        );
+        if (!matches) {
+          this.logger.error('Session secret mismatch');
+          return null;
+        }
+      } catch (hasherr) {
+        this.logger.error('Error hashing secret in claim data: ', hasherr);
+        // we've already verified the jwt and found the session
+        // just assume that it matches and carry on
       }
-
-      // touch session
-      await session.newActivity();
 
       // if (decodedJwt.exp) {
       //   const d = new Date();
@@ -130,6 +133,9 @@ export class AuthService {
       //   d.setTime(decodedJwt.exp * offset);
       //   this.logger.info('Token expires ' + d.toISOString());
       // }
+
+      // touch session
+      await session.newActivity();
 
       return session;
     } catch (err) {
