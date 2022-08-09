@@ -71,7 +71,7 @@ export class Server {
       );
     }
 
-    this.logger.info('adding error handlers...');
+    this.logger.info('adding fallthrough handlers...');
     this.addErrorHandlers();
 
     return this;

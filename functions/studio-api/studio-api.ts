@@ -8,10 +8,12 @@ import { container } from 'tsyringe';
 import { DataLayer } from './src/data/DataLayer';
 import { Server } from './src/Server';
 import { LoggerFactory } from './src/services/Logger';
+import { RemoteLogger } from './src/services/RemoteLogger';
 
 export const handler: Handler = async (event: Event, context: Context) => {
   const server = container.resolve(Server);
   const loggerFactory = container.resolve(LoggerFactory);
+  const remoteLogger = container.resolve(RemoteLogger);
   const logger = loggerFactory.getLogger('app:boot');
 
   // setup express routes etc.
@@ -34,6 +36,9 @@ export const handler: Handler = async (event: Event, context: Context) => {
   } catch (err) {
     logger.error('error in lambda', err);
     throw err;
+  } finally {
+    // wait for logs to be uploaded
+    await remoteLogger.flush();
   }
 };
 
