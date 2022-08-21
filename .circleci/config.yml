@@ -7,7 +7,7 @@ orbs:
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@5.0.2
-  slack: circleci/slack@4.1
+  slack: circleci/slack@4.4.2
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -37,11 +37,11 @@ jobs:
           name: Running Tests
           command: yarn test
       - slack/notify:
-          channel: '#circle-ci'
+          channel: circle-ci
           event: fail
           template: basic_fail_1
       - slack/notify:
-          channel: '#circle-ci'
+          channel: circle-ci
           event: pass
           template: basic_success_1
 
