@@ -4,7 +4,7 @@ import { DarkModeComponent } from './components/helpers/DarkModeComponent';
 import { Footer } from './components/layout/Footer';
 import { NavBar } from './components/layout/nav/NavBar';
 import { emitter, UserInfoEvent } from './Events';
-import { getToken, removeToken } from './util/Auth';
+import { getToken, removeToken, Token } from './util/Auth';
 import { getToastTheme, Toast } from './util/Toast';
 import { StudioApiService } from './services/StudioApiService';
 import { ToastContainer } from 'react-toastify';
@@ -17,8 +17,8 @@ class App extends DarkModeComponent {
     emitter.on('darkMode', this.handleDarkModeChange);
 
     // check for token and fetch userInfo if found
-    const token = getToken();
-    if (token) {
+    const token: Token = getToken();
+    if (token.isValid()) {
       Toast.showProgress(
         async () => {
           try {

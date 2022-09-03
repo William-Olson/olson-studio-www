@@ -19,3 +19,7 @@ export enum DarkModeTypes {
   OFF = 'off',
   SYSTEM = 'system'
 }
+
+export interface TokenData {
+  sub: string;
+}
