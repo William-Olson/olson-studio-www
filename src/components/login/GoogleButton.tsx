@@ -4,12 +4,11 @@ import { darkIcon, lightIcon } from './GoogleIcon';
 import { inject, observer } from 'mobx-react';
 
 import { DarkModeState } from '../../stores/DarkModeStore';
-// import { asObserver } from '../../util/Mobx';
 
 interface GoogleButtonProps {
   sizeWidth?: string;
   onClick: () => void;
-  darkModeStore?: typeof DarkModeState;
+  darkMode?: typeof DarkModeState;
 }
 
 const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
@@ -24,7 +23,7 @@ const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
   };
 
   // dark css
-  if (props.darkModeStore?.isDark) {
+  if (props.darkMode?.isDark) {
     googleBtnStyles.backgroundColor = '#4285F4';
     googleBtnStyles.color = 'white';
   }
@@ -36,7 +35,7 @@ const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
         onClick={props.onClick}
         className="flex w-96 h-29 font-medium rounded-md focus:ring-2 focus:ring-offset-2"
       >
-        <span>{props.darkModeStore?.isDark ? darkIcon() : lightIcon()} </span>
+        <span>{props.darkMode?.isDark ? darkIcon() : lightIcon()} </span>
         <span className="m-auto">Sign in with Google . . .</span>
       </button>
     </div>

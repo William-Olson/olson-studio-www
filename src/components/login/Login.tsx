@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import { DarkModeState } from '../../stores/DarkModeStore';
 import { LogoTypes } from '../../types/AppTypes';
 import { CustomLogo } from '../CustomLogo';
 import { getGoogleLoginUrl } from './Google';
@@ -10,7 +9,6 @@ interface LoginProps {}
 
 export const LoginComponent = observer(
   class extends React.Component<LoginProps> {
-    private darkModeState: typeof DarkModeState = DarkModeState;
     constructor(props: LoginProps) {
       super(props);
       this.goToGoogleLogin = this.goToGoogleLogin.bind(this);
@@ -33,10 +31,7 @@ export const LoginComponent = observer(
               </h2>
             </div>
             <div>
-              <GoogleButton
-                darkModeStore={this.darkModeState}
-                onClick={() => this.goToGoogleLogin()}
-              />
+              <GoogleButton onClick={() => this.goToGoogleLogin()} />
             </div>
           </div>
         </div>
