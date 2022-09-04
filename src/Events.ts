@@ -1,5 +1,6 @@
 import Emittery from 'emittery';
 import { DarkModeTypes } from './types/AppTypes';
+import { StudioApiUser } from './types/StudioApiTypes';
 
 export interface DarkModeChangeEvent {
   isDarkMode: boolean;
@@ -10,13 +11,7 @@ export interface ShouldNavigateEvent {
 }
 
 export interface UserInfoEvent {
-  user?: {
-    id: number;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    avatar?: string;
-  };
+  user?: StudioApiUser;
 }
 export interface LoginEvent extends UserInfoEvent {
   token?: string;

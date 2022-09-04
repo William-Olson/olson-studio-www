@@ -1,19 +1,16 @@
 import React, { ReactElement } from 'react';
 import customLogoGetters from '../util/images/LogoTypes';
-import { isDarkMode } from '../util/DarkMode';
-import { DarkModeTypes, LogoTypes } from '../types/AppTypes';
-import { DarkModeComponent } from './helpers/DarkModeComponent';
+import { LogoTypes } from '../types/AppTypes';
+import { observer, inject } from 'mobx-react';
+import { DarkModeState } from '../stores/DarkModeStore';
 
 export interface LogoProps extends React.SVGProps<ReactElement> {
   logo: LogoTypes;
   color?: string;
+  darkMode?: typeof DarkModeState;
 }
 
-export interface LogoState extends React.SVGProps<ReactElement> {
-  darkModeType: DarkModeTypes;
-}
-
-export class CustomLogo extends DarkModeComponent<LogoProps> {
+class CustomLogoComponent extends React.Component<LogoProps> {
   render() {
     const logoGetter = customLogoGetters.get(this.props.logo);
     let color = this.props.color;
@@ -24,7 +21,7 @@ export class CustomLogo extends DarkModeComponent<LogoProps> {
     }
 
     if (!color) {
-      if (isDarkMode()) {
+      if (this.props.darkMode?.isDark) {
         color = '#DBD9D4';
       } else {
         color = '#1A0609';
@@ -34,3 +31,7 @@ export class CustomLogo extends DarkModeComponent<LogoProps> {
     return logoGetter(color);
   }
 }
+
+export const CustomLogo = inject(...['darkMode'])(
+  observer(CustomLogoComponent)
+);
