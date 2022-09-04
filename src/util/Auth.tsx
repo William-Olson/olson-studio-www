@@ -1,18 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { TokenData } from '../types/AppTypes';
 
-// export const getToken = (): Token => {
-//   return new Token(localStorage.getItem('token') || '');
-// };
-
-// export const setToken = (token: Token): void => {
-//   localStorage.setItem('token', token.toString());
-// };
-
-// export const removeToken = (): void => {
-//   localStorage.removeItem('token');
-// };
-
 export class Token {
   private token: string;
 

@@ -12,7 +12,7 @@ class DarkModeStore {
     });
   }
 
-  public isDark: boolean = false;
+  public isDark = false;
   public darkModeType: DarkModeTypes = DarkModeTypes.SYSTEM;
 
   public toggleDarkMode(mode: DarkModeTypes): void {

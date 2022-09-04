@@ -43,15 +43,8 @@ const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
   );
 };
 
-// export const GoogleButton: React.FC<GoogleButtonProps> = inject(
-//   'darkModeStore'
-// )(observer(GoogleButtonComponent));
-
 export const GoogleButton: React.FC<GoogleButtonProps> = inject(
-  (injectParams) => {
-    console.log(injectParams);
-    return ((injectParams as string[]) || []).length
-      ? ((injectParams as string[]) || [])[0]
-      : 'someInjection';
-  }
+  ({ darkMode }) => ({
+    darkMode: darkMode as typeof DarkModeState
+  })
 )(observer(GoogleButtonComponent));

@@ -93,6 +93,6 @@ class GoogleAuthCallbackPage extends React.Component<
   }
 }
 
-export const GoogleAuthCallback = inject('darkMode')(
+export const GoogleAuthCallback = inject(...['darkMode'])(
   observer(GoogleAuthCallbackPage)
 );
