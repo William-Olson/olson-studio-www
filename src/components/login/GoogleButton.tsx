@@ -1,18 +1,19 @@
 import type { CSSProperties } from 'react';
 import React from 'react';
-import { isDarkMode } from '../../util/DarkMode';
 import { darkIcon, lightIcon } from './GoogleIcon';
+import { observer } from 'mobx-react';
+
+import { DarkModeState } from '../../stores/DarkModeStore';
 
 interface GoogleButtonProps {
   sizeWidth?: string;
   onClick: () => void;
+  darkMode?: typeof DarkModeState;
 }
 
-export const GoogleButton: React.FC<GoogleButtonProps> = (
+const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
   props: GoogleButtonProps
 ) => {
-  const inDarkMode = isDarkMode();
-
   const googleBtnStyles: CSSProperties = {
     width: props.sizeWidth,
     margin: '30px 5px',
@@ -22,7 +23,7 @@ export const GoogleButton: React.FC<GoogleButtonProps> = (
   };
 
   // dark css
-  if (inDarkMode) {
+  if (props.darkMode?.isDark) {
     googleBtnStyles.backgroundColor = '#4285F4';
     googleBtnStyles.color = 'white';
   }
@@ -34,9 +35,13 @@ export const GoogleButton: React.FC<GoogleButtonProps> = (
         onClick={props.onClick}
         className="flex w-96 h-29 font-medium rounded-md focus:ring-2 focus:ring-offset-2"
       >
-        <span>{inDarkMode ? darkIcon() : lightIcon()} </span>
+        <span>{props.darkMode?.isDark ? darkIcon() : lightIcon()} </span>
         <span className="m-auto">Sign in with Google . . .</span>
       </button>
     </div>
   );
 };
+
+export const GoogleButton: React.FC<GoogleButtonProps> = observer(
+  GoogleButtonComponent
+);

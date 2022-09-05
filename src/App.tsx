@@ -1,23 +1,27 @@
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { Outlet } from 'react-router-dom';
-import { DarkModeComponent } from './components/helpers/DarkModeComponent';
 import { Footer } from './components/layout/Footer';
 import { NavBar } from './components/layout/nav/NavBar';
 import { emitter, UserInfoEvent } from './Events';
-import { getToken, removeToken, Token } from './util/Auth';
+import { Token } from './util/Auth';
+import { observer, Provider } from 'mobx-react';
 import { getToastTheme, Toast } from './util/Toast';
 import { StudioApiService } from './services/StudioApiService';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { DarkModeState } from './stores/DarkModeStore';
+import { UserState } from './stores/UserStore';
 
-class App extends DarkModeComponent {
+class App extends React.Component {
   private service: StudioApiService = new StudioApiService();
-  componentDidMount() {
-    // handle super class behaviour since we override the mount method
-    emitter.on('darkMode', this.handleDarkModeChange);
+  private darkMode: typeof DarkModeState = DarkModeState;
+  private user: typeof UserState = UserState;
 
+  componentDidMount() {
+    this.darkMode.loadDarkModeFromCache();
+    console.log('loaded dark mode from cache');
     // check for token and fetch userInfo if found
-    const token: Token = getToken();
+    const token: Token = Token.fromCache();
     if (token.isValid()) {
       Toast.showProgress(
         async () => {
@@ -27,7 +31,7 @@ class App extends DarkModeComponent {
             emitter.emit('userInfo', ev);
           } catch (err) {
             console.error('Error fetching user: ', err);
-            removeToken();
+            Token.clearCache();
             throw err;
           }
         },
@@ -37,27 +41,30 @@ class App extends DarkModeComponent {
           error: 'Bad Auth Token! 😬'
         },
         {
-          theme: getToastTheme(this.state.isDark)
+          theme: getToastTheme(this.darkMode.isDark)
         }
       );
     }
   }
+
   public render(): ReactElement {
     return (
-      <div className="w-full h-full">
-        <ToastContainer />
-        <div className="md:w-90 max-w-90 h-56px">
-          <NavBar />
+      <Provider darkMode={this.darkMode} user={this.user}>
+        <div className="w-full h-full">
+          <ToastContainer />
+          <div className="md:w-90 max-w-90 h-56px">
+            <NavBar darkMode={this.darkMode} />
+          </div>
+          <div className="content-wrapper">
+            <Outlet />
+          </div>
+          <div className="footer md:w-full max-w-full text-center p-36px h-24px">
+            <Footer />
+          </div>
         </div>
-        <div className="content-wrapper">
-          <Outlet />
-        </div>
-        <div className="footer md:w-full max-w-full text-center p-36px h-24px">
-          <Footer />
-        </div>
-      </div>
+      </Provider>
     );
   }
 }
 
-export default App;
+export default observer(App);

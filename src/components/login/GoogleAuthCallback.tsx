@@ -1,8 +1,9 @@
 import React from 'react';
 import { emitter, LoginEvent } from '../../Events';
 import { StudioApiService } from '../../services/StudioApiService';
-import { getToken, removeToken, setToken } from '../../util/Auth';
-import { isDarkMode } from '../../util/DarkMode';
+import { DarkModeState } from '../../stores/DarkModeStore';
+import { Token } from '../../util/Auth';
+import { observer } from 'mobx-react';
 import { getToastTheme, Toast } from '../../util/Toast';
 import { WillNavigate } from '../helpers/WillNavigate';
 
@@ -11,12 +12,12 @@ interface GoogleAuthCallbackState {
   loading: boolean;
 }
 
-export class GoogleAuthCallback extends React.Component<
+class GoogleAuthCallbackPage extends React.Component<
   GoogleAuthCallbackProps,
   GoogleAuthCallbackState
 > {
   private service = new StudioApiService();
-
+  private darkMode: typeof DarkModeState = DarkModeState;
   constructor(props: GoogleAuthCallbackProps) {
     super(props);
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
@@ -30,10 +31,10 @@ export class GoogleAuthCallback extends React.Component<
     // console.log(`exchanging auth code ${code} for access token...`);
     this.setState({ loading: true });
     try {
-      const oldToken = getToken();
-      if (oldToken) {
-        removeToken(); // from local storage
+      const oldToken: Token = Token.fromCache();
+      if (oldToken.isValid()) {
         try {
+          Token.clearCache(); // from old value
           // remove session from the server as well
           await this.service.deleteCurrentSession(oldToken);
         } catch (rmErr) {
@@ -43,9 +44,9 @@ export class GoogleAuthCallback extends React.Component<
 
       const resp = await this.service.exchangeGoogleAuthToken(code);
 
-      if (resp && resp.success && resp.user) {
+      if (resp && resp.success && resp.user && resp.token) {
         // console.log('got user from token exchange: ', resp.user);
-        setToken(resp.token);
+        Token.cache(new Token(resp.token));
         const ev: LoginEvent = { user: resp.user, token: resp.token };
         emitter.emit('userLogin', ev);
         emitter.emit('shouldNavigate', { location: toPage });
@@ -74,7 +75,7 @@ export class GoogleAuthCallback extends React.Component<
           error: 'Uh Oh, An Unexpected Error Occurred! Unable to login! 😭'
         },
         {
-          theme: getToastTheme(isDarkMode())
+          theme: getToastTheme(!!this.darkMode?.isDark)
         }
       );
     }
@@ -89,3 +90,5 @@ export class GoogleAuthCallback extends React.Component<
     );
   }
 }
+
+export const GoogleAuthCallback = observer(GoogleAuthCallbackPage);
