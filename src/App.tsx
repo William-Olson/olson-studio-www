@@ -53,7 +53,7 @@ class App extends React.Component {
         <div className="w-full h-full">
           <ToastContainer />
           <div className="md:w-90 max-w-90 h-56px">
-            <NavBar darkMode={this.darkMode} />
+            <NavBar darkMode={this.darkMode} user={this.user} />
           </div>
           <div className="content-wrapper">
             <Outlet />
