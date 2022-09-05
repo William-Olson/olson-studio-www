@@ -3,13 +3,11 @@ import { emitter, LoginEvent } from '../../Events';
 import { StudioApiService } from '../../services/StudioApiService';
 import { DarkModeState } from '../../stores/DarkModeStore';
 import { Token } from '../../util/Auth';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { getToastTheme, Toast } from '../../util/Toast';
 import { WillNavigate } from '../helpers/WillNavigate';
 
-interface GoogleAuthCallbackProps {
-  darkMode?: typeof DarkModeState;
-}
+interface GoogleAuthCallbackProps {}
 interface GoogleAuthCallbackState {
   loading: boolean;
 }
@@ -19,7 +17,7 @@ class GoogleAuthCallbackPage extends React.Component<
   GoogleAuthCallbackState
 > {
   private service = new StudioApiService();
-
+  private darkMode: typeof DarkModeState = DarkModeState;
   constructor(props: GoogleAuthCallbackProps) {
     super(props);
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
@@ -77,7 +75,7 @@ class GoogleAuthCallbackPage extends React.Component<
           error: 'Uh Oh, An Unexpected Error Occurred! Unable to login! 😭'
         },
         {
-          theme: getToastTheme(!!this.props.darkMode?.isDark)
+          theme: getToastTheme(!!this.darkMode?.isDark)
         }
       );
     }
@@ -93,6 +91,4 @@ class GoogleAuthCallbackPage extends React.Component<
   }
 }
 
-export const GoogleAuthCallback = inject(...['darkMode'])(
-  observer(GoogleAuthCallbackPage)
-);
+export const GoogleAuthCallback = observer(GoogleAuthCallbackPage);

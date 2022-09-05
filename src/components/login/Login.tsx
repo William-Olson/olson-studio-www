@@ -4,11 +4,13 @@ import { CustomLogo } from '../CustomLogo';
 import { getGoogleLoginUrl } from './Google';
 import { GoogleButton } from './GoogleButton';
 import { observer } from 'mobx-react';
+import { DarkModeState } from '../../stores/DarkModeStore';
 
 interface LoginProps {}
 
 export const LoginComponent = observer(
   class extends React.Component<LoginProps> {
+    private darkMode: typeof DarkModeState = DarkModeState;
     constructor(props: LoginProps) {
       super(props);
       this.goToGoogleLogin = this.goToGoogleLogin.bind(this);
@@ -31,7 +33,10 @@ export const LoginComponent = observer(
               </h2>
             </div>
             <div>
-              <GoogleButton onClick={() => this.goToGoogleLogin()} />
+              <GoogleButton
+                darkMode={this.darkMode}
+                onClick={() => this.goToGoogleLogin()}
+              />
             </div>
           </div>
         </div>

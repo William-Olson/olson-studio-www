@@ -19,7 +19,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.darkMode.loadDarkModeFromCache();
-
+    console.log('loaded dark mode from cache');
     // check for token and fetch userInfo if found
     const token: Token = Token.fromCache();
     if (token.isValid()) {
@@ -53,7 +53,7 @@ class App extends React.Component {
         <div className="w-full h-full">
           <ToastContainer />
           <div className="md:w-90 max-w-90 h-56px">
-            <NavBar />
+            <NavBar darkMode={this.darkMode} />
           </div>
           <div className="content-wrapper">
             <Outlet />

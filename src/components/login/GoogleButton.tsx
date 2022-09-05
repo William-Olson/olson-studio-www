@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import React from 'react';
 import { darkIcon, lightIcon } from './GoogleIcon';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 import { DarkModeState } from '../../stores/DarkModeStore';
 
@@ -42,8 +42,6 @@ const GoogleButtonComponent: React.FC<GoogleButtonProps> = (
   );
 };
 
-export const GoogleButton: React.FC<GoogleButtonProps> = inject(
-  ({ darkMode }) => ({
-    darkMode: darkMode as typeof DarkModeState
-  })
-)(observer(GoogleButtonComponent));
+export const GoogleButton: React.FC<GoogleButtonProps> = observer(
+  GoogleButtonComponent
+);

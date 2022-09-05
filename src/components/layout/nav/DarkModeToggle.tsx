@@ -1,5 +1,5 @@
 import { DarkModeTypes, IconTypes } from '../../../types/AppTypes';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { Theme } from '../../../util/Theme';
 import { CustomIcon } from '../../CustomIcon';
 import { DarkModeState } from '../../../stores/DarkModeStore';
@@ -8,8 +8,8 @@ interface ToggleIconProps {
   darkMode?: typeof DarkModeState;
 }
 
-export const DarkModeToggle: React.FC<ToggleIconProps> = inject('darkMode')(
-  observer((props: ToggleIconProps) => {
+export const DarkModeToggle: React.FC<ToggleIconProps> = observer(
+  (props: ToggleIconProps) => {
     const handleMode = (mode: DarkModeTypes) => {
       props.darkMode?.toggleDarkMode(mode);
     };
@@ -67,5 +67,5 @@ export const DarkModeToggle: React.FC<ToggleIconProps> = inject('darkMode')(
         );
         return <></>;
     }
-  })
+  }
 );

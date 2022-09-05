@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { emitter, LoginEvent } from '../../../Events';
 import { DarkModeState } from '../../../stores/DarkModeStore';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { UserState } from '../../../stores/UserStore';
 import { IconTypes } from '../../../types/AppTypes';
 import { CustomIcon } from '../../CustomIcon';
@@ -81,7 +81,7 @@ class NavBarComponent extends React.Component<NavBarProps> {
                 icon={IconTypes.Github}
               />
             </a>
-            <DarkModeToggle />
+            <DarkModeToggle darkMode={this.props.darkMode} />
           </div>
         </div>
       </nav>
@@ -89,6 +89,4 @@ class NavBarComponent extends React.Component<NavBarProps> {
   }
 }
 
-export const NavBar = inject(...['darkMode', 'user'])(
-  observer(NavBarComponent)
-);
+export const NavBar = observer(NavBarComponent);
