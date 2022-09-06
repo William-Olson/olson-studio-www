@@ -58,7 +58,7 @@ class NavBarComponent extends React.Component<NavBarProps> {
             )}
             {!!this.props.user?.user?.avatar && (
               <div className="pr-2 min-w-6 w-8 h-8 ">
-                <Link to={'/Login'}>
+                <Link to={'/Profile'}>
                   <img
                     id="user-avatar"
                     className="inline object-cover w-6 h-6 rounded-full"

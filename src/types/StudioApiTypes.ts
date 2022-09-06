@@ -5,6 +5,8 @@ export interface StudioApiUser {
   email: string;
   avatar?: string;
   provider?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface RevokeSessionResponse {
