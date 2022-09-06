@@ -3,22 +3,7 @@ import { observer } from 'mobx-react';
 import { UserState } from '../../../stores/UserStore';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import moment from 'moment';
-
-interface LabelProps {
-  label: string;
-  value: string;
-}
-
-function SimpleLabel(props: LabelProps): ReactElement {
-  return (
-    <div className="flex-container">
-      <div className="flex flex-row">
-        <div className="flex-col w-44">{props.label}</div>
-        <div className="flex-col flex-grow">{props.value}</div>
-      </div>
-    </div>
-  );
-}
+import { SimpleLabel } from '../../layout/subcomponents/SimpleLabel';
 
 export const ProfileDetails = observer(
   class extends React.Component {
@@ -26,24 +11,27 @@ export const ProfileDetails = observer(
     private darkMode: typeof DarkModeState = DarkModeState;
 
     render() {
+      const border = 'rounded border-2 border-inherit';
       let memberSince = 'N/A';
       let lastLogin = 'N/A';
       if (this.userStore.user?.created_at) {
         memberSince = moment(this.userStore.user?.created_at).format(
-          'MM/DD/YYYY hh:mm A'
+          'M / D - YYYY'
         );
       }
       if (this.userStore.user?.updated_at) {
-        lastLogin = moment(this.userStore.user?.updated_at).format(
-          'MM/DD/YYYY hh:mm A'
-        );
+        const last = moment(this.userStore.user?.updated_at).toDate();
+        const since = moment
+          .duration(-1 * (Date.now() - last.getTime()))
+          .humanize(true);
+        lastLogin = since.toString();
       }
 
       return (
         <>
           {!!this.userStore?.user && (
-            <div className="pb-20 w-90">
-              <div className="m-5 rounded border-2 border-inherit pl-8 pr-8 pb-9">
+            <div className="pb-20 md:ml-auto md:mr-auto md:w-1/2">
+              <div className="m-5 pl-8 pr-8 pb-9">
                 <h3 className="text-3xl font-mono pb-6 mt-6">User Details</h3>
                 <p></p>
                 <SimpleLabel
@@ -59,8 +47,8 @@ export const ProfileDetails = observer(
                   label="Provider"
                   value={this.userStore.user.provider?.toUpperCase() || ''}
                 />
-                <SimpleLabel label="Member Since" value={memberSince} />
                 <SimpleLabel label="Last Login" value={lastLogin} />
+                <SimpleLabel label="Member Since" value={memberSince} />
               </div>
             </div>
           )}

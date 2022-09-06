@@ -17,11 +17,11 @@ export const ProfileBanner = observer(
           <header>
             <div className="flex justify-center">
               {!!this.userStore?.user?.avatar && (
-                <div className="h-32 w-32">
+                <div className="h-28 w-28">
                   <img
                     id="user-avatar"
                     className={
-                      'inline object-cover w-32 h-32 rounded-full border-4 ' +
+                      'inline object-cover w-28 h-28 rounded-full border-4 ' +
                       imageBorderColor
                     }
                     src={this.userStore?.user.avatar}
