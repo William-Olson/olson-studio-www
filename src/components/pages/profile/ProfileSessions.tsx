@@ -18,8 +18,8 @@ const isCurrentSession = (session: StudioApiSession): boolean => {
   return currentSession === session.id;
 };
 
-const maxLength: number = 53;
-const truncateAgent = (session: StudioApiSession) => {
+const maxLength = 53;
+const truncateAgent = (session: StudioApiSession): string => {
   if (!session) {
     return '';
   }

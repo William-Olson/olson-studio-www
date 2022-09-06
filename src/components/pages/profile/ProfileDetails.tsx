@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react';
 import { observer } from 'mobx-react';
 import { UserState } from '../../../stores/UserStore';
-import { DarkModeState } from '../../../stores/DarkModeStore';
+// import { DarkModeState } from '../../../stores/DarkModeStore';
 import moment from 'moment';
 import { SimpleLabel } from '../../layout/subcomponents/SimpleLabel';
 
 export const ProfileDetails = observer(
   class extends React.Component {
     private userStore: typeof UserState = UserState;
-    private darkMode: typeof DarkModeState = DarkModeState;
+    // private darkMode: typeof DarkModeState = DarkModeState;
 
-    render() {
-      const border = 'rounded border-2 border-inherit';
+    render(): ReactElement {
+      // const border = 'rounded border-2 border-inherit';
       let memberSince = 'N/A';
       let lastLogin = 'N/A';
       if (this.userStore.user?.created_at) {
