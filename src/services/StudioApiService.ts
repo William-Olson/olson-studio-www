@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { StudioApiSessions } from '../types/StudioApiTypes';
 import { Token } from '../util/Auth';
 
 const STUDIO_API_BASE_URL =
@@ -19,6 +20,44 @@ export class StudioApiService {
         method: 'GET',
         headers: {
           Authorization: `bearer ${token}`
+        }
+      })
+    ).data;
+  }
+
+  /**
+   * Retrieves Information around the current User's Active Sessions.
+   *
+   * @param token Token The authentcated user's auth token
+   * @returns Studio API User Session Information
+   */
+  public async getActiveSessions(token: Token): Promise<StudioApiSessions> {
+    console.log('fetching sessions');
+    return (
+      await axios.request({
+        url: `${STUDIO_API_BASE_URL}/sessions`,
+        method: 'GET',
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      })
+    ).data;
+  }
+
+  /**
+   * Deletes a user session by session id.
+   *
+   * @param token Token An authentcated user's auth token
+   * @returns object Response containing a success or failure boolean.
+   */
+  public async revokeSession(sessionId: string, token: Token) {
+    console.log(`removing old session: ${sessionId}`);
+    return (
+      await axios.request({
+        url: `${STUDIO_API_BASE_URL}/sessions/${sessionId}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: 'bearer ' + token.toString()
         }
       })
     ).data;

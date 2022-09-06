@@ -12,6 +12,16 @@ interface SessionAttributes {
   lastActivity: Date;
 }
 
+// don't return these values in responses
+const PROTECTED_ATTRIBUTES: Array<keyof SessionAttributes> = [
+  'hash',
+  'salt',
+  'iterations'
+];
+
+export interface SessionOutput
+  extends Omit<SessionAttributes, 'hash' | 'salt' | 'iterations'> {}
+
 export interface SessionInput extends SessionAttributes {}
 
 export class Session
@@ -33,6 +43,15 @@ export class Session
   public async newActivity(): Promise<void> {
     this.lastActivity = new Date();
     await this.save();
+  }
+
+  public toJSON(): SessionOutput {
+    // hide protected fields
+    const sessionJson: SessionAttributes = Object.assign({}, this.get());
+    for (const attr of PROTECTED_ATTRIBUTES) {
+      delete sessionJson[attr];
+    }
+    return sessionJson;
   }
 
   public static register(sequelize: Sequelize) {

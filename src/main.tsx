@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/Login';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HomeComponent } from './components/pages/Home';
+import { ProfilePage } from './components/pages/profile/ProfilePage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.render(
             element={<GoogleAuthCallback />}
           />
           <Route path="login" element={<LoginComponent />} />
+          <Route path="profile" element={<ProfilePage />} />
           {/* root component */}
           <Route path="" element={<HomeComponent />} />
         </Route>
