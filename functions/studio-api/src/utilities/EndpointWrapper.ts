@@ -23,7 +23,7 @@ export const endpointWrapper: CustomWrapper = (
     .replace('bound', '')
     .trim()}`;
   if (!mapped.has(`${handlerName}-${info.basePath}`)) {
-    initLogger.info(`mapping: ${info.routeClass}@${info.basePath}`);
+    initLogger.silly(`mapping: ${info.routeClass}@${info.basePath}`);
     mapped.add(`${handlerName}-${info.basePath}`);
   }
 

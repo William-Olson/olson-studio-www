@@ -9,12 +9,28 @@ import { DataLayer } from './src/data/DataLayer';
 import { Server } from './src/Server';
 import { LoggerFactory } from './src/services/Logger';
 import { RemoteLogger } from './src/services/RemoteLogger';
+import { IdUtil } from './src/utilities/IdUtil';
 
 export const handler: Handler = async (event: Event, context: Context) => {
-  const server = container.resolve(Server);
   const loggerFactory = container.resolve(LoggerFactory);
+
+  // set a new request id for tracking in logs
+  const requestId = IdUtil.newRequestId();
+  loggerFactory.contextId = requestId;
+
+  const server = container.resolve(Server);
   const remoteLogger = container.resolve(RemoteLogger);
-  const logger = loggerFactory.getLogger('app:boot');
+  const logger = loggerFactory.getLogger('app:lambda');
+
+  const {
+    httpMethod: method,
+    headers: { origin },
+    path
+  } = event;
+
+  logger.info(
+    `NEW_REQUEST ${requestId} [ ${method}:  ${path} ], from: ${origin}`
+  );
 
   // setup express routes etc.
   await server.init();

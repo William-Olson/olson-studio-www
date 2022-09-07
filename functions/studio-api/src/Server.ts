@@ -53,7 +53,7 @@ export class Server {
 
   public async init(): Promise<Server> {
     // add middleware
-    this.logger.info('adding middleware...');
+    this.logger.silly('adding middleware...');
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -61,7 +61,7 @@ export class Server {
     this.app.use(cors(corsOpts));
 
     // add routes
-    this.logger.info('adding routes...');
+    this.logger.silly('adding routes...');
     const apiRoutes = container.resolve(ApiRoutes);
     for (const [endpointPath, mdlwr, route] of apiRoutes.getRoutes()) {
       await this.harness.use(
@@ -71,7 +71,7 @@ export class Server {
       );
     }
 
-    this.logger.info('adding fallthrough handlers...');
+    this.logger.silly('adding fallthrough handlers...');
     this.addErrorHandlers();
 
     return this;
@@ -93,7 +93,7 @@ export class Server {
 
   private addErrorHandlers() {
     this.app.use((req, res, next) => {
-      this.logger.info('404 error... ' + req.path);
+      this.logger.silly('404 error... ' + req.path);
       next(new ErrorResponse(404, 'Resource Not Found'));
     });
 

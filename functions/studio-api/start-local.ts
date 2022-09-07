@@ -3,8 +3,14 @@ import 'reflect-metadata';
 import { container } from 'tsyringe';
 import { DataLayer } from './src/data/DataLayer';
 import { Server } from './src/Server';
+import LoggerFactory from './src/services/Logger';
+import { IdUtil } from './src/utilities/IdUtil';
 
 (async () => {
+  const logFactory = container.resolve(LoggerFactory);
+  logFactory.contextId = IdUtil.newRequestId();
+  const logger = logFactory.getLogger('app:boot');
+
   // resolve the server instance
   const studioApiServer = container.resolve(Server);
 
@@ -23,5 +29,6 @@ import { Server } from './src/Server';
     port = parseInt(process.env.APP_PORT, base);
   }
 
+  logger.info('starting server on port ' + port);
   (await studioApiServer.init()).start(port);
 })();

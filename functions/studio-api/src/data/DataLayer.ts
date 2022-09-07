@@ -57,7 +57,7 @@ export class DataLayer {
     const connectionString = (this.dbConfig as ProdDbConfig).url;
     const showFrom = 0;
     const showTo = 8;
-    this.logger.info(
+    this.logger.silly(
       'Beginning of connection url: ' +
         (connectionString || 'XXXXXXXX').slice(showFrom, showTo) +
         '**'
@@ -79,9 +79,9 @@ export class DataLayer {
       await this.defaultConnect();
     }
 
-    this.logger.info('authenticating db . . .');
+    this.logger.silly('authenticating db . . .');
     await this.db.authenticate();
-    this.logger.info('Success!');
+    this.logger.silly('Success!');
 
     container.register<DbLayer>(DbLayer, { useValue: this.db });
   }
@@ -95,7 +95,7 @@ export class DataLayer {
     await this.db.runMigrations();
 
     // init models
-    this.logger.info('initializing models...');
+    this.logger.silly('initializing models...');
     await this.db.initialize(modelInitialization);
   }
 }

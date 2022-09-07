@@ -4,11 +4,12 @@ import loggingConfig from '../../config/logging';
 import { isDev } from '../utilities/isDev';
 import packageJson from '../../../../package.json';
 
-type LogLevel = 'error' | 'info';
+type LogLevel = 'error' | 'info' | 'debug';
 
 interface RemoteLogPayload {
   project: string;
   logtype: LogLevel;
+  requestId: string;
   timestamp: number;
   message: string;
   loggerName?: string;
@@ -18,6 +19,7 @@ export interface LogData {
   logLevel: LogLevel;
   source: string;
   messages: Array<unknown>;
+  refId: string;
 }
 
 @singleton()
@@ -67,6 +69,7 @@ export class RemoteLogger {
         message: normalizedMessage,
         timestamp: Date.now(),
         logtype: data.logLevel,
+        requestId: data.refId,
         loggerName: data.source
       };
 
