@@ -1,1 +1,1 @@
-export const isDev = process.env.NETLIFY_DEV;
+export const isDev = !!(process.env['NETLIFY_DEV'] || undefined);
