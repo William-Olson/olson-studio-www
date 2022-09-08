@@ -7,6 +7,9 @@ import User from '../data/models/User';
 import { hashPassword, verifyPassword } from '../utilities/HashUtil';
 import Session from '../data/models/Session';
 import { v4 as uuidv4 } from 'uuid';
+import { UserService } from './UserService';
+import Badge, { BadgeNames } from '../data/models/Badge';
+import { StatusCodes } from 'http-status-codes';
 
 const TEN_YEARS = 60 * 60 * 24 * 365.25 * 10;
 const SESSION_TOKEN_EXPIRES = TEN_YEARS;
@@ -15,6 +18,8 @@ export interface AuthRequest extends Request {
   session?: Session | null;
   user?: User | null;
 }
+
+export interface AdminRequest extends Required<AuthRequest> {}
 
 export interface SessionData {
   session: Session;
@@ -31,11 +36,19 @@ interface ClaimData {
 @singleton()
 export class AuthService {
   private logger: Logger;
-  constructor(@inject(LoggerFactory) loggerFactory: LoggerFactory) {
+  private userService: UserService;
+  constructor(
+    @inject(LoggerFactory) loggerFactory: LoggerFactory,
+    @inject(UserService) userService: UserService
+  ) {
     this.logger = loggerFactory.getLogger(`app:${AuthService.name}`);
+    this.userService = userService;
   }
 
-  public getMiddleware(required = true): RequestHandler {
+  public getMiddleware(
+    required = true,
+    accessBadges: BadgeNames[] = []
+  ): RequestHandler {
     return async (req: AuthRequest, res: Response, next: NextFunction) => {
       if (req.session) {
         next();
@@ -47,10 +60,7 @@ export class AuthService {
       const match = header.match(/^(bearer|jwt) (.*)$/i);
 
       if (required && !match) {
-        this.logger.error('Not Authorized! No Token!');
-        res.statusCode = 401;
-        res.send({ message: 'Unauthorized', statusCode: 401 });
-        return;
+        return this.badAuth(res, 'Not Authorized! No Token!');
       }
 
       if (match) {
@@ -58,19 +68,77 @@ export class AuthService {
         const session = await this.getSession(token);
 
         if (required && !session) {
-          this.logger.error('Not Authorized! No Session!');
-          res.statusCode = 401;
-          res.send({ message: 'Unauthorized', statusCode: 401 });
-          return;
+          return this.badAuth(res, 'Not Authorized! No Session!');
+        } else if (!required && !session) {
+          this.logger.info('Allowing user through as guest. (Auth Optional)');
         }
 
-        this.logger.info(`Authenticating user with id ${session?.userId}`);
-        req.session = session;
-        req.user = await this.getUserFromSession(session);
+        if (session) {
+          this.logger.info(`Authenticating user with id ${session?.userId}`);
+          req.session = session;
+          req.user = await this.userService.getById(session.userId);
+          this.logger.info('added user to request: ' + req.user);
+        }
+      }
+
+      // check access badges if passed in
+      if (!!accessBadges && accessBadges.length > 0) {
+        if (!req.session || !req.user) {
+          const logMsg = 'Not Authorized! No User Session for Badge Check!';
+          return this.badAuth(res, logMsg);
+        }
+        if (!this.userHasAccessBadges(req, res, accessBadges)) {
+          return;
+        }
       }
 
       next();
     };
+  }
+
+  /*
+    Called from middleware to check if the user on the request has the
+    required administrative badges. (expects user model with badges on
+    request param). Sends 401s if any badges are not present and returns
+    a value of false. Otherwise returns true if user has all badges.
+   */
+  public userHasAccessBadges(
+    req: AuthRequest,
+    res: Response,
+    requiredBadges: BadgeNames[]
+  ): boolean {
+    if (!req.user?.Badges) {
+      this.badAuth(
+        res,
+        `Not Authorized! User with id ${req.user?.id} has no access badges!`
+      );
+      return false;
+    }
+
+    const userBadges: Map<BadgeNames, Badge> = new Map(
+      req.user.Badges.map((badge) => [badge.name as BadgeNames, badge])
+    );
+    for (const badgeName of requiredBadges) {
+      if (!userBadges.has(badgeName)) {
+        this.badAuth(
+          res,
+          `Not Authorized! Missing Required Badge: ${badgeName} ❌ `
+        );
+        return false;
+      }
+      this.logger.info(
+        `Verified user with id ${req.user.id} has access badge: ${
+          userBadges.get(badgeName)?.friendlyName
+        } 🪪  ✨`
+      );
+    }
+    return true;
+  }
+
+  private badAuth(res: Response, logMessage: string): void {
+    this.logger.error(logMessage);
+    res.statusCode = StatusCodes.UNAUTHORIZED;
+    res.send({ message: 'Unauthorized', statusCode: StatusCodes.UNAUTHORIZED });
   }
 
   public async getSession(token: string): Promise<Session | null> {
@@ -186,11 +254,11 @@ export class AuthService {
 
   public async getUserFromSession(
     session: Session | null
-  ): Promise<User | null> {
+  ): Promise<User | undefined> {
     if (!session) {
-      return null;
+      return undefined;
     }
-    return await User.findOne({ where: { id: session.userId } });
+    return await this.userService.getById(session.userId);
   }
 
   private createJwt(sub: string, claims: ClaimData, expiresIn = 60 * 60) {

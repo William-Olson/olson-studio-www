@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { EncryptUtil } from '../../utilities/EncryptUtil';
+import Badge, { BadgeOutput } from './Badge';
 
 export interface UserAttributes {
   id: number;
@@ -11,6 +12,7 @@ export interface UserAttributes {
   sourceId?: string;
   authToken?: string;
   refreshToken?: string;
+  Badges?: Badge[];
 }
 
 // token encryption key
@@ -31,7 +33,9 @@ export interface UserInput
   > {}
 
 export interface UserOutput
-  extends Omit<UserAttributes, 'authToken' | 'refreshToken' | 'sourceId'> {}
+  extends Omit<UserAttributes, 'authToken' | 'refreshToken' | 'sourceId'> {
+  badges?: BadgeOutput[];
+}
 
 export class User
   extends Model<UserAttributes, UserInput>
@@ -48,6 +52,8 @@ export class User
   declare authToken?: string;
 
   // declare Sessions?: Session[];
+  declare Badges?: Badge[];
+  declare getBadges: () => Badge[];
 
   private _authToken?: string;
   private _refreshToken?: string;
@@ -92,7 +98,14 @@ export class User
     for (const attr of PROTECTED_ATTRIBUTES) {
       delete userJson[attr];
     }
-    return userJson;
+
+    // clean up badges
+    const output: UserOutput = userJson;
+    if (userJson.Badges && userJson.Badges.length > 0) {
+      output.badges = userJson.Badges.map((b) => b.toJSON());
+      delete output['Badges'];
+    }
+    return output;
   }
 
   // timestamps!

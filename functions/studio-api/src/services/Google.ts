@@ -2,7 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import jwtDecode from 'jwt-decode';
 import { singleton, inject, injectable } from 'tsyringe';
 import config from '../../config/google';
+import Badge, { BadgeTypes } from '../data/models/Badge';
 import User from '../data/models/User';
+import UserBadge from '../data/models/UserBadges';
 import LoggerFactory, { Logger } from './Logger';
 
 export interface GoogleUser {
@@ -89,7 +91,8 @@ export class GoogleService {
     let user = await User.findOne({
       where: {
         sourceId: googleUser.googleId
-      }
+      },
+      include: [{ model: Badge, where: { type: BadgeTypes.Administrative } }]
     });
 
     if (!user) {

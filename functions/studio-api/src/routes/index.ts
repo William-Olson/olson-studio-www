@@ -8,6 +8,9 @@ import { RootEndpoint } from './RootEndpoint';
 import { GoogleAuthEndpoint } from './GoogleAuthEndpoint';
 import { UserProfileEndpoint } from './UserProfileEndpoint';
 import UserSessionEndpoint from './UserSessionEndpoint';
+import BadgeEndpoint from './BadgeEndpoint';
+import { BadgeNames } from '../data/models/Badge';
+import AdminBadgesEndpoint from './admin/AdminBadgesEndpoint';
 
 @singleton()
 @injectable()
@@ -23,13 +26,28 @@ export class ApiRoutes {
   }
 
   getRoutes(): [string, RequestHandler[], unknown][] {
-    const auth: (required?: boolean) => RequestHandler = (required = true) =>
-      this.auth.getMiddleware(required);
+    const auth: (
+      required?: boolean,
+      requiredBadges?: BadgeNames[]
+    ) => RequestHandler = (required = true, requiredBadges = []) =>
+      this.auth.getMiddleware(required, requiredBadges);
+
+    const admin: () => RequestHandler = () => auth(true, [BadgeNames.Admin]);
+
+    const badges: (...badges: BadgeNames[]) => RequestHandler = (...badges) =>
+      auth(true, [...badges]);
 
     return [
+      // admin endpoints
+      ['/admin/badges', [admin()], AdminBadgesEndpoint],
+
+      // using badge middleware
+      // ['/some-endpoint', [badges(BadgeNames.Etc1, BadgeNames.Etc2)], SomeEndpoint],
+
       // auth'ed endpoints
       ['/test', [auth()], TestEndpoint],
       ['/me', [auth()], UserProfileEndpoint],
+      ['/badges', [auth()], BadgeEndpoint],
       ['/sessions', [auth()], UserSessionEndpoint],
 
       // optional auth endpoints

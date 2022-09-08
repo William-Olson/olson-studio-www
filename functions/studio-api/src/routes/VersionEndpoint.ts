@@ -7,6 +7,8 @@ import { BaseEndpoint, RouterClass } from './BaseEndpoint';
 interface VersionResponse {
   app: string;
   db?: string;
+  runtime?: string;
+  typescript?: string;
 }
 
 @injectable()
@@ -30,19 +32,31 @@ export class VersionEndpoint extends BaseEndpoint implements RouterClass {
       `returning version ${packageJson.version} for endpoint response`
     );
     let dbVersion: string | undefined;
+    let tsVersion: string | undefined;
+    let runtimeVersion: string | undefined;
+
     try {
       if (req.user) {
+        tsVersion = packageJson.devDependencies['typescript'];
+        runtimeVersion = process.env['AWS_LAMBDA_JS_RUNTIME'];
         const db = container.resolve(DbLayer);
         dbVersion = await db.getDbVersion();
       }
     } catch (_) {
       this.logger.error('Unable to get version from database');
     }
+
     const resp: VersionResponse = {
       app: packageJson.version
     };
     if (dbVersion) {
       resp.db = dbVersion;
+    }
+    if (tsVersion) {
+      resp.typescript = tsVersion;
+    }
+    if (runtimeVersion) {
+      resp.runtime = runtimeVersion;
     }
     return resp;
   }

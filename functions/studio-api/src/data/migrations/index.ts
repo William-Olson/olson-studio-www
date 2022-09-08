@@ -14,6 +14,7 @@ export const getMigrationFiles = async (): Promise<IMigrationDefinition[]> => {
   // add migrations
   await addMigration(import('./20220620191016-AddUserTable'));
   await addMigration(import('./20220708155325-AddingSessionTable'));
+  await addMigration(import('./20220908075756-AddUserBadges'));
 
   return migrations;
 };
