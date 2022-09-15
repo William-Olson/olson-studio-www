@@ -15,10 +15,10 @@ export class AdminBadgesEndpoint extends AdminEndpoint implements RouterClass {
   constructor(
     @inject('RouteHarness') harness: HarnessDependency,
     @inject(LoggerFactory) loggerFactory: LoggerFactory,
-    @inject(BadgeService) BadgeService: BadgeService
+    @inject(BadgeService) badgeService: BadgeService
   ) {
     super(harness, loggerFactory);
-    this.badgeService = BadgeService;
+    this.badgeService = badgeService;
   }
 
   public mountRoutes() {
