@@ -3,28 +3,28 @@ import { HarnessDependency } from 'route-harness';
 import { inject, injectable } from 'tsyringe';
 import { AuthRequest } from '../services/Auth';
 import LoggerFactory from '../services/Logger';
-import { UserService } from '../services/UserService';
+import { BadgeService } from '../services/BadgeService';
 import ErrorResponse from '../utilities/ErrorResponse';
 import BaseEndpoint, { RouterClass } from './BaseEndpoint';
 
 @injectable()
-export class UserProfileEndpoint extends BaseEndpoint implements RouterClass {
-  private userService: UserService;
+export class BadgeEndpoint extends BaseEndpoint implements RouterClass {
+  private badgeService: BadgeService;
 
   constructor(
     @inject('RouteHarness') harness: HarnessDependency,
     @inject(LoggerFactory) loggerFactory: LoggerFactory,
-    @inject(UserService) userService: UserService
+    @inject(BadgeService) badgeService: BadgeService
   ) {
     super(harness, loggerFactory);
-    this.userService = userService;
+    this.badgeService = badgeService;
   }
 
   public mountRoutes() {
-    this.router.get('/', this.getUserProfile.bind(this));
+    this.router.get('/', this.getBadges.bind(this));
   }
 
-  async getUserProfile(req: AuthRequest) {
+  async getBadges(req: AuthRequest) {
     if (!req.user) {
       throw new ErrorResponse(
         StatusCodes.UNAUTHORIZED,
@@ -32,17 +32,20 @@ export class UserProfileEndpoint extends BaseEndpoint implements RouterClass {
       );
     }
 
-    // fetch user from db with all their associated data
-    const profile = await this.userService.getUserProfile(req.user?.id);
+    try {
+      // fetch user from db
+      const badges = await this.badgeService.getUserBadges(req.user.id);
 
-    if (!profile) {
-      throw new ErrorResponse(
-        StatusCodes.NOT_FOUND,
-        'Unable to find user with id: ' + req.user?.id
-      );
+      if (!badges || !badges.length) {
+        return [];
+      }
+
+      return badges.map((b) => b.toJSON());
+    } catch (err) {
+      this.logger.error(err);
+      return [];
     }
-    return profile.toJSON();
   }
 }
 
-export default UserProfileEndpoint;
+export default BadgeEndpoint;
