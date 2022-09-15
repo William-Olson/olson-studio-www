@@ -13,11 +13,11 @@ export interface AdminRouter {
   patch: (path: string, fn: AdminHandler) => void;
 }
 
-type AdminHandler = (
+type AdminHandler<T = unknown> = (
   req: AdminRequest,
   res: Response,
   next?: NextFunction
-) => any;
+) => T;
 
 export const isAdminRequest = (
   req: AuthRequest | AdminRequest

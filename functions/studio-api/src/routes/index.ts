@@ -34,8 +34,8 @@ export class ApiRoutes {
 
     const admin: () => RequestHandler = () => auth(true, [BadgeNames.Admin]);
 
-    const badges: (...badges: BadgeNames[]) => RequestHandler = (...badges) =>
-      auth(true, [...badges]);
+    // const badges: (...badges: BadgeNames[]) => RequestHandler = (...badges) =>
+    //   auth(true, [...badges]);
 
     return [
       // admin endpoints

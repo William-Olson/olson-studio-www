@@ -26,7 +26,7 @@ export class AdminBadgesEndpoint extends AdminEndpoint implements RouterClass {
     this.router.get('/', this.getBadges.bind(this));
   }
 
-  async getBadges(req: AdminRequest) {
+  async getBadges() {
     try {
       this.logger.info('fetching all badges');
       return await this.badgeService.getBadges();

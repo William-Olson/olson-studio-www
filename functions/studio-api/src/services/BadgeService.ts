@@ -1,6 +1,6 @@
 import { NextFunction, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { inject, injectable, singleton } from 'tsyringe';
+import { inject, singleton } from 'tsyringe';
 import Badge, { BadgeNames } from '../data/models/Badge';
 import User from '../data/models/User';
 import { AuthRequest, AuthService } from './Auth';

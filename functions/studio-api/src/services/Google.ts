@@ -4,7 +4,6 @@ import { singleton, inject, injectable } from 'tsyringe';
 import config from '../../config/google';
 import Badge, { BadgeTypes } from '../data/models/Badge';
 import User from '../data/models/User';
-import UserBadge from '../data/models/UserBadges';
 import LoggerFactory, { Logger } from './Logger';
 
 export interface GoogleUser {
