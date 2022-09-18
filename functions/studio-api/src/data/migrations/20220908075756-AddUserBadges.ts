@@ -1,11 +1,5 @@
 import { IMigrationDefinition } from 'db-facade';
-import {
-  QueryInterface,
-  DataTypes,
-  Transaction,
-  QueryTypes,
-  Sequelize
-} from 'sequelize';
+import { QueryInterface, DataTypes, Transaction, QueryTypes } from 'sequelize';
 
 enum CurrentBadgeTypes {
   Achievement = 'achievement',
