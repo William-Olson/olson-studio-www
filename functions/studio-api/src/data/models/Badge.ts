@@ -12,12 +12,14 @@ interface BadgeAttributes {
   created: Date;
   updated: Date; // for tracking when the last user_badge was unlocked
   UserBadge?: UserBadge;
+  _type: string;
 }
 
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof BadgeAttributes> = [];
 
-export interface BadgeOutput extends Omit<BadgeAttributes, 'UserBadge'> {
+export interface BadgeOutput
+  extends Omit<BadgeAttributes, '_type' | 'UserBadge'> {
   // merged user_badge attributes if they exist
   obtained?: Date;
   unread?: boolean;
@@ -27,7 +29,7 @@ export interface BadgeOutput extends Omit<BadgeAttributes, 'UserBadge'> {
 export interface BadgeInput
   extends Optional<
     BadgeAttributes,
-    'id' | 'rarity' | 'created' | 'updated' | 'isPublic' | 'UserBadge'
+    'id' | '_type' | 'rarity' | 'created' | 'updated' | 'isPublic' | 'UserBadge'
   > {}
 
 export enum BadgeTypes {
@@ -44,7 +46,7 @@ export class Badge
   implements BadgeAttributes
 {
   declare readonly id: number;
-  declare type: BadgeTypes;
+  declare _type: string;
   declare rarity: number;
   declare name: string;
   declare friendlyName: string;
@@ -74,7 +76,20 @@ export class Badge
       output.obtained = userBadge.created;
       output.unread = userBadge.unread;
     }
+
+    // fix hacky fake enum type
+    output.type = json._type as BadgeTypes;
+    delete json['_type' as keyof BadgeAttributes];
+
     return output;
+  }
+
+  public get type(): BadgeTypes {
+    return this._type as BadgeTypes;
+  }
+
+  public set type(badgeType: BadgeTypes) {
+    this._type = badgeType?.toString();
   }
 
   public static register(sequelize: Sequelize) {
@@ -86,8 +101,11 @@ export class Badge
           autoIncrement: true
         },
         type: {
-          type: DataTypes.ENUM,
-          values: [BadgeTypes.Administrative, BadgeTypes.Achievement]
+          type: DataTypes.VIRTUAL
+        },
+        _type: {
+          type: DataTypes.STRING,
+          field: 'type'
         },
         rarity: {
           type: DataTypes.SMALLINT,

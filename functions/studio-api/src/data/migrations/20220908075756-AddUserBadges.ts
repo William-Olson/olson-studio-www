@@ -1,5 +1,11 @@
 import { IMigrationDefinition } from 'db-facade';
-import { QueryInterface, DataTypes, Transaction, QueryTypes } from 'sequelize';
+import {
+  QueryInterface,
+  DataTypes,
+  Transaction,
+  QueryTypes,
+  Sequelize
+} from 'sequelize';
 
 enum CurrentBadgeTypes {
   Achievement = 'achievement',
@@ -32,11 +38,8 @@ export default {
               autoIncrement: true
             },
             type: {
-              type: DataTypes.ENUM,
-              values: [
-                CurrentBadgeTypes.Administrative,
-                CurrentBadgeTypes.Achievement
-              ]
+              // Fake enum for serverless db workaround
+              type: DataTypes.STRING
             },
             rarity: {
               type: DataTypes.SMALLINT,
@@ -112,6 +115,26 @@ export default {
           },
           { transaction }
         );
+
+        // ADD FAKE ENUM CONSTRAINTS
+        await queryInterface.addConstraint('badges', {
+          type: 'check',
+          fields: ['type'],
+          where: {
+            type: [
+              CurrentBadgeTypes.Administrative,
+              CurrentBadgeTypes.Achievement
+            ]
+          },
+          name: 'check_type_is_hacky_enum',
+          transaction
+        });
+
+        await queryInterface.addIndex('badges', {
+          fields: ['type'],
+          name: 'badge_type_index',
+          transaction
+        });
 
         // ADD ADMIN BADGE
         await queryInterface.sequelize.query(
