@@ -6,6 +6,7 @@ import { Token } from '../../../util/Auth';
 import { ProfileSessions } from './ProfileSessions';
 import { UserState } from '../../../stores/UserStore';
 import { observer } from 'mobx-react';
+import { ProfileBadges } from './ProfileBadges';
 
 export const ProfilePage = observer(
   class extends React.Component {
@@ -23,8 +24,9 @@ export const ProfilePage = observer(
       return (
         <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
           <ProfileBanner />
-          <ProfileDetails />
           <ProfileSessions />
+          <ProfileDetails />
+          <ProfileBadges />
           {!!this.userStore?.user && (
             <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto">
               <button

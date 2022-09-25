@@ -14,3 +14,46 @@
 .content-wrapper {
   min-height: calc(100vh - 152px);
 }
+
+/* Tooltip Styles */
+
+.studio-tooltip {
+  position: relative;
+}
+
+.studio-tooltip::before,
+.studio-tooltip::after {
+  position: absolute;
+  left: 50%;
+  display: none;
+  transition: all ease 0.3s;
+}
+
+.studio-tooltip::before {
+  content: '';
+  border-width: 10px 8px 0 8px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.3) transparent transparent transparent;
+  top: -20px;
+  margin-left: -8px;
+}
+
+.studio-tooltip::after {
+  content: attr(data-studio-tooltip-text);
+  background: rgba(0, 0, 0, 0.3);
+  top: -20px;
+  transform: translateY(-100%);
+  font-size: 14px;
+  margin-left: -150px;
+  width: 300px;
+  border-radius: 10px;
+  color: #eee;
+  padding: 14px;
+}
+
+/* Hover states */
+
+.studio-tooltip:hover::before,
+.studio-tooltip:hover::after {
+  display: block;
+}
