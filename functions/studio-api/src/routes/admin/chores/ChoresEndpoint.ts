@@ -7,10 +7,9 @@ import { ChoreService } from '../../../services/ChoreService';
 import ErrorResponse from '../../../utilities/ErrorResponse';
 import { RouterClass } from '../../BaseEndpoint';
 import AdminEndpoint from '../AdminEndpoint';
-import ChoreChart, { ChoreChartOutput } from '../../../data/models/ChoreChart';
+import ChoreChart from '../../../data/models/ChoreChart';
 import { Paged, pagingFromRequest } from '../../../utilities/Pagination';
 import _ from 'lodash';
-import { UserService } from '../../../services/UserService';
 import Chore, { ChoreInput, ChoreOutput } from '../../../data/models/Chore';
 
 @injectable()
@@ -40,7 +39,7 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
   async getChores(req: AdminRequest): Promise<Paged<ChoreOutput>> {
     this.logger.info('fetching charts...');
     const paging = pagingFromRequest(req);
-    if (!!paging.errorMessage) {
+    if (paging.errorMessage) {
       throw new ErrorResponse(StatusCodes.BAD_REQUEST, paging.errorMessage);
     }
 
@@ -73,7 +72,7 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
       );
     }
     const existingChore = await this.choreService.getChoreByName(req.body.name);
-    if (!!existingChore) {
+    if (existingChore) {
       throw new ErrorResponse(
         StatusCodes.UNPROCESSABLE_ENTITY,
         `Chore already exists with name: ${req.body.name}`
@@ -115,9 +114,9 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
     }
 
     // make sure no duplicate name exists
-    if (!!req.body.name) {
+    if (req.body.name) {
       const existing = await this.choreService.getChoreByName(req.body.name);
-      if (!!existing && existing.id !== choreId) {
+      if (existing && existing.id !== choreId) {
         throw new ErrorResponse(
           StatusCodes.UNPROCESSABLE_ENTITY,
           `Chore already exists with name: ${req.body.name}`

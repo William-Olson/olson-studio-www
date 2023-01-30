@@ -59,7 +59,7 @@ export function pagingFromRequest(req: AuthRequest): ParsedPaging {
     paging.pageSize = parseInt(`${sizeParam}`, 10);
     if (isNaN(paging.pageSize)) {
       paging.errorMessage =
-        (!!paging.errorMessage ? '; ' : '') +
+        (paging.errorMessage ? '; ' : '') +
         `Invalid input for number param: pageSize. Received: ${sizeParam}`;
     }
   }
@@ -81,7 +81,7 @@ export function pagingFromRequest(req: AuthRequest): ParsedPaging {
     paging.pageSize = parseInt(`${pageSize}`, 10);
     if (isNaN(paging.pageSize)) {
       paging.errorMessage =
-        (!!paging.errorMessage ? '; ' : '') +
+        (paging.errorMessage ? '; ' : '') +
         `Invalid input for number param: pageSize. Received: ${pageSize}`;
     }
   }
@@ -90,8 +90,8 @@ export function pagingFromRequest(req: AuthRequest): ParsedPaging {
 }
 
 export function asOffset(paging?: PagingOptions): OffsetPaging {
-  const BASE_TEN: number = 10;
-  const MAX_PAGE_SIZE: number = 500;
+  const BASE_TEN = 10;
+  const MAX_PAGE_SIZE = 500;
 
   const page: number = Math.max(
     parseInt(`${paging?.page || DefaultPaging.page}`, BASE_TEN),
@@ -116,8 +116,10 @@ export function asOffset(paging?: PagingOptions): OffsetPaging {
 
 export function attemptToJSON<T, V = T | Partial<T>>(obj: T): T | V {
   try {
-    if (typeof (obj as any)?.toJSON === 'function') {
-      return (obj as any).toJSON() as V;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const o = obj as any;
+    if (typeof o?.toJSON === 'function') {
+      return o.toJSON() as V;
     }
     return obj;
   } catch (err) {

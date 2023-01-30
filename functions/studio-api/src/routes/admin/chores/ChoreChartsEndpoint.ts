@@ -44,7 +44,7 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
   async getChoreCharts(req: AdminRequest): Promise<Paged<ChoreChartOutput>> {
     this.logger.info('fetching charts...');
     const paging = pagingFromRequest(req);
-    if (!!paging.errorMessage) {
+    if (paging.errorMessage) {
       throw new ErrorResponse(StatusCodes.BAD_REQUEST, paging.errorMessage);
     }
     return await this.choreService.getCharts(paging);
@@ -67,7 +67,7 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
     const existingChart = await this.choreService.getChoreChartByName(
       req.body.name
     );
-    if (!!existingChart) {
+    if (existingChart) {
       throw new ErrorResponse(
         StatusCodes.UNPROCESSABLE_ENTITY,
         `Chore chart already exists with name: ${req.body.name}`
@@ -109,11 +109,11 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
     }
 
     // make sure no duplicate name exists
-    if (!!req.body.name) {
+    if (req.body.name) {
       const existing = await this.choreService.getChoreChartByName(
         req.body.name
       );
-      if (!!existing && existing.id !== id) {
+      if (existing && existing.id !== id) {
         throw new ErrorResponse(
           StatusCodes.UNPROCESSABLE_ENTITY,
           `Chore chart already exists with name: ${req.body.name}`
@@ -122,7 +122,7 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
     }
 
     // make sure assignee exists if provided
-    if (!!req.body.assignee) {
+    if (req.body.assignee) {
       const assignee = await this.userService.getById(req.body.assignee);
       if (!assignee) {
         throw new ErrorResponse(

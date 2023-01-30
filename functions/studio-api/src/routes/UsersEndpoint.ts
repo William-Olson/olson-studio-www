@@ -29,7 +29,7 @@ export class UsersEndpoint extends BaseEndpoint implements RouterClass {
 
   async getUsers(req: AuthRequest) {
     const paging = pagingFromRequest(req);
-    if (!!paging.errorMessage) {
+    if (paging.errorMessage) {
       throw new ErrorResponse(StatusCodes.BAD_REQUEST, paging.errorMessage);
     }
 

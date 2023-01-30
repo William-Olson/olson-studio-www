@@ -35,6 +35,7 @@ export class ChoreService {
   ): Promise<Paged<ChoreChartOutput>> {
     const offsetOptions = asOffset(paging);
     const results = await ChoreChart.findAndCountAll({
+      include: [Chore],
       limit: offsetOptions.limit,
       offset: offsetOptions.offset
     });

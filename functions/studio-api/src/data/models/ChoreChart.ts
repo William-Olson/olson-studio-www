@@ -45,7 +45,7 @@ export class ChoreChart
   declare Chores: Array<Chore>;
 
   public async updateStreak(): Promise<void> {
-    const streakSoFar: number = this.streak;
+    // const streakSoFar: number = this.streak;
     // TODO: update streak based on the percentage of completed chore_chart_events from last cycle
     // and the ranking of each event
     await this.save();
