@@ -1,6 +1,6 @@
 {
   "name": "olson-studio",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "scripts": {
     "dev": "npm run build-functions && DEBUG=app* netlify dev",
     "run-ui-for-prod-locally": "yarn build && yarn serve",
