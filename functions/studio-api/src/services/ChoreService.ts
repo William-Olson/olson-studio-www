@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Op } from 'sequelize';
 import { inject, singleton } from 'tsyringe';
-import Chore from '../data/models/Chore';
+import Chore, { ChoreOutput } from '../data/models/Chore';
 import ChoreChart, { ChoreChartOutput } from '../data/models/ChoreChart';
 import ChoreChartEvent from '../data/models/ChoreChartEvent';
 import {
@@ -42,10 +42,31 @@ export class ChoreService {
     return asPagedResponse(results, offsetOptions);
   }
 
+  public async getChores(
+    chartId: number,
+    paging?: PagingOptions
+  ): Promise<Paged<ChoreOutput>> {
+    const offsetOptions = asOffset(paging);
+    this.logger.error('limit: ' + offsetOptions.limit);
+    this.logger.error('offset: ' + offsetOptions.offset);
+    const results = await Chore.findAndCountAll({
+      where: { choreChartId: chartId },
+      order: [['id', 'ASC']],
+      limit: offsetOptions.limit,
+      offset: offsetOptions.offset
+    });
+
+    return asPagedResponse(results, offsetOptions);
+  }
+
   public async getChoreChartByName(
     name: string
   ): Promise<ChoreChart | undefined> {
     return (await ChoreChart.findOne({ where: { name } })) || undefined;
+  }
+
+  public async getChoreByName(name: string): Promise<Chore | undefined> {
+    return (await Chore.findOne({ where: { name } })) || undefined;
   }
 
   /*

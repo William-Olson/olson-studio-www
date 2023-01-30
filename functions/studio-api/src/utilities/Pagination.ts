@@ -103,7 +103,7 @@ export function asOffset(paging?: PagingOptions): OffsetPaging {
   );
 
   const res: OffsetPaging = {
-    offset: page == 1 ? 0 : page * pageSize,
+    offset: page <= 1 ? 0 : (page - 1) * pageSize,
     limit: pageSize,
     original: {
       page,

@@ -13,6 +13,7 @@ import { BadgeNames } from '../data/models/Badge';
 import AdminBadgesEndpoint from './admin/AdminBadgesEndpoint';
 import ChoreChartsEndpoint from './admin/chores/ChoreChartsEndpoint';
 import UsersEndpoint from './UsersEndpoint';
+import ChoresEndpoint from './admin/chores/ChoresEndpoint';
 
 @singleton()
 @injectable()
@@ -42,6 +43,7 @@ export class ApiRoutes {
     return [
       // admin endpoints
       ['/admin/badges', [admin()], AdminBadgesEndpoint],
+      ['/admin/chore-charts', [admin()], ChoresEndpoint],
       ['/admin/chore-charts', [admin()], ChoreChartsEndpoint],
 
       // using badge middleware

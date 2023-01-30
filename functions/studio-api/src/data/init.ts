@@ -30,5 +30,5 @@ export const modelInitialization: (
   ChoreChart.hasMany(Chore, {
     foreignKey: 'chore_chart_id'
   });
-  Chore.belongsTo(ChoreChart);
+  // Chore.belongsTo(ChoreChart);
 };

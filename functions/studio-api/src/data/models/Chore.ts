@@ -1,8 +1,7 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import User from './User';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 
 interface ChoreAttributes {
-  id: string;
+  id: number;
   choreChartId: number;
   name: string;
   description: string;
@@ -14,16 +13,15 @@ interface ChoreAttributes {
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof ChoreAttributes> = [];
 
-export interface ChoreOutput
-  extends Omit<ChoreAttributes, 'hash' | 'salt' | 'iterations'> {}
-
-export interface ChoreInput extends ChoreAttributes {}
+export interface ChoreOutput extends ChoreAttributes {}
+export interface ChoreInput
+  extends Optional<ChoreAttributes, 'created' | 'updated' | 'id'> {}
 
 export class Chore
   extends Model<ChoreAttributes, ChoreInput>
   implements ChoreAttributes
 {
-  declare id: string;
+  declare id: number;
   declare choreChartId: number;
   declare name: string;
   declare description: string;
