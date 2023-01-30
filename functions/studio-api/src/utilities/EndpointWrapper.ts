@@ -49,6 +49,7 @@ export const endpointWrapper: CustomWrapper = (
       }
     } catch (error) {
       logger.error(`Error in route ${endpointName} ${handlerName}`);
+      logger.error(error);
       next(error);
     }
   };

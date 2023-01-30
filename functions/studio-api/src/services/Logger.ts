@@ -79,7 +79,7 @@ class WrappedLogger implements Logger {
 
   public info(...args: unknown[]) {
     // log to console
-    this.debug(`[${this.getActiveRefId()}]`, ...args);
+    this.debug(`info [${this.getActiveRefId()}]`, ...args);
     // this.debug(`[${this.getSmartRef()}]`, ...args);
 
     // and also send to third party monitoring service
@@ -97,7 +97,7 @@ class WrappedLogger implements Logger {
     }
 
     // log to console
-    this.debug(`[${this.getActiveRefId()}]`, ...args);
+    this.debug(`silly [${this.getActiveRefId()}]`, ...args);
     // this.debug(`[${this.getSmartRef()}]`, ...args);
 
     // and also send to third party monitoring service
@@ -111,7 +111,7 @@ class WrappedLogger implements Logger {
 
   public error(...args: unknown[]) {
     // log to console
-    this.debug(`[${this.getActiveRefId()}]`, ...args);
+    this.debug(`error [${this.getActiveRefId()}]`, ...args);
     // this.debug(`[${this.getSmartRef()}]`, ...args);
 
     // and also send to third party monitoring service

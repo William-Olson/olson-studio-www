@@ -7,6 +7,7 @@ import { BadgeService } from '../../services/BadgeService';
 import ErrorResponse from '../../utilities/ErrorResponse';
 import { RouterClass } from './../BaseEndpoint';
 import AdminEndpoint, { isAdminRequest } from './AdminEndpoint';
+import { pagingFromRequest } from '../../utilities/Pagination';
 
 @injectable()
 export class AdminBadgesEndpoint extends AdminEndpoint implements RouterClass {
@@ -26,14 +27,13 @@ export class AdminBadgesEndpoint extends AdminEndpoint implements RouterClass {
     this.router.get('/', this.getBadges.bind(this));
   }
 
-  async getBadges() {
-    try {
-      this.logger.info('fetching all badges');
-      return await this.badgeService.getBadges();
-    } catch (err) {
-      this.logger.error(err);
-      return [];
+  async getBadges(req: AdminRequest) {
+    this.logger.info('fetching all badges');
+    const paging = pagingFromRequest(req);
+    if (paging.errorMessage) {
+      throw new ErrorResponse(StatusCodes.BAD_REQUEST, paging.errorMessage);
     }
+    return await this.badgeService.getBadges(paging);
   }
 
   async getBadgeByType(req: AdminRequest) {

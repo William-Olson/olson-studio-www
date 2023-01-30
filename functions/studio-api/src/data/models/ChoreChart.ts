@@ -1,8 +1,9 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import Chore from './Chore';
 import User from './User';
 
 interface ChoreChartAttributes {
-  id: string;
+  id: number;
   assignee: number;
   createdBy: number;
   name: string;
@@ -18,16 +19,18 @@ interface ChoreChartAttributes {
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof ChoreChartAttributes> = [];
 
-export interface ChoreChartOutput
-  extends Omit<ChoreChartAttributes, 'hash' | 'salt' | 'iterations'> {}
-
-export interface ChoreChartInput extends ChoreChartAttributes {}
+export interface ChoreChartOutput extends ChoreChartAttributes {}
+export interface ChoreChartInput
+  extends Optional<
+    ChoreChartAttributes,
+    'streak' | 'score' | 'recurring' | 'created' | 'updated' | 'id'
+  > {}
 
 export class ChoreChart
   extends Model<ChoreChartAttributes, ChoreChartInput>
   implements ChoreChartAttributes
 {
-  declare id: string;
+  declare id: number;
   declare assignee: number;
   declare createdBy: number;
   declare name: string;
@@ -39,8 +42,7 @@ export class ChoreChart
   declare created: Date;
   declare updated: Date;
 
-  declare readonly createdAt: Date;
-  declare readonly updatedAt: Date;
+  declare Chores: Array<Chore>;
 
   public async updateStreak(): Promise<void> {
     const streakSoFar: number = this.streak;
