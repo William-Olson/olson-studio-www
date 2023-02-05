@@ -1,13 +1,20 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+
+export enum ChoreEventStatus {
+  TODO = 'TODO',
+  NEEDS_CHECK = 'NEEDS_CHECK',
+  COMPLETED = 'COMPLETED'
+}
 
 interface ChoreChartEventAttributes {
   id: string;
   choreChartId: number;
   choreId: number;
-  status: string;
+  status: ChoreEventStatus;
+  _status?: string;
   rating: number;
   due: Date;
-  completed: Date;
+  completed?: Date;
   created: Date;
   updated: Date;
 }
@@ -15,10 +22,12 @@ interface ChoreChartEventAttributes {
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof ChoreChartEventAttributes> = [];
 
-export interface ChoreChartEventOutput
-  extends Omit<ChoreChartEventAttributes, 'hash' | 'salt' | 'iterations'> {}
-
-export interface ChoreChartEventInput extends ChoreChartEventAttributes {}
+export interface ChoreChartEventOutput extends ChoreChartEventAttributes {}
+export interface ChoreChartEventInput
+  extends Optional<
+    ChoreChartEventAttributes,
+    'id' | 'status' | 'rating' | 'created' | 'updated'
+  > {}
 
 export class ChoreChartEvent
   extends Model<ChoreChartEventAttributes, ChoreChartEventInput>
@@ -27,7 +36,7 @@ export class ChoreChartEvent
   declare id: string;
   declare choreChartId: number;
   declare choreId: number;
-  declare status: string;
+  declare _status: string;
   declare rating: number;
   declare due: Date;
   declare completed: Date;
@@ -37,11 +46,23 @@ export class ChoreChartEvent
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
+  public get status(): ChoreEventStatus {
+    return this._status as ChoreEventStatus;
+  }
+
+  public set status(badgeType: ChoreEventStatus) {
+    this._status = badgeType?.toString();
+  }
+
   public toJSON(): ChoreChartEventOutput {
     // hide protected fields
     const ChoreChartEventJson: ChoreChartEventAttributes = Object.assign(
       {},
-      this.get()
+      this.get(),
+      {
+        status: this._status,
+        _status: undefined
+      }
     );
     for (const attr of PROTECTED_ATTRIBUTES) {
       delete ChoreChartEventJson[attr];
@@ -60,6 +81,7 @@ export class ChoreChartEvent
         choreChartId: {
           allowNull: false,
           type: DataTypes.INTEGER,
+          onDelete: 'CASCADE',
           references: {
             model: 'chore_charts',
             key: 'id'
@@ -70,6 +92,7 @@ export class ChoreChartEvent
           allowNull: false,
           type: DataTypes.INTEGER,
           primaryKey: true,
+          onDelete: 'CASCADE',
           references: {
             model: 'chores',
             key: 'id'
@@ -77,7 +100,11 @@ export class ChoreChartEvent
           field: 'chore_id'
         },
         status: {
-          type: DataTypes.STRING
+          type: DataTypes.VIRTUAL
+        },
+        _status: {
+          type: DataTypes.STRING,
+          field: 'status'
         },
         rating: {
           type: DataTypes.INTEGER,

@@ -54,6 +54,7 @@ export class Chore
         choreChartId: {
           allowNull: false,
           type: DataTypes.INTEGER,
+          onDelete: 'CASCADE',
           references: {
             model: 'chore_charts',
             key: 'id'

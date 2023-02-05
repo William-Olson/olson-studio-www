@@ -85,6 +85,7 @@ export default {
             choreChartId: {
               allowNull: false,
               type: DataTypes.INTEGER,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chore_charts',
                 key: 'id'
@@ -127,6 +128,7 @@ export default {
             choreChartId: {
               allowNull: false,
               type: DataTypes.INTEGER,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chore_charts',
                 key: 'id'
@@ -136,6 +138,7 @@ export default {
             choreId: {
               allowNull: false,
               type: DataTypes.INTEGER,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chores',
                 key: 'id'
