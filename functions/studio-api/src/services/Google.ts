@@ -91,7 +91,13 @@ export class GoogleService {
       where: {
         sourceId: googleUser.googleId
       },
-      include: [{ model: Badge, where: { type: BadgeTypes.Administrative } }]
+      include: [
+        {
+          model: Badge,
+          where: { type: BadgeTypes.Administrative },
+          required: false
+        }
+      ]
     });
 
     if (!user) {
