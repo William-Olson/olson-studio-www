@@ -76,8 +76,10 @@ export class ChoreChartEventsEndpoint
       switch (req.query.filter) {
         case 'today':
           sinceDate = moment().startOf('day').toDate();
+          break;
         case 'week':
           sinceDate = moment().startOf('week').toDate();
+          break;
         default:
           this.logger.info(
             `Ignoring unsupported filter type in query params: ${req.query.filter}`
