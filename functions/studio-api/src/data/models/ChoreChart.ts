@@ -3,9 +3,9 @@ import Chore from './Chore';
 import User from './User';
 
 interface ChoreChartAttributes {
-  id: number;
+  id: string;
   assignee: number;
-  createdBy: number;
+  createdBy: string;
   name: string;
   description: string;
   streak: number;
@@ -30,9 +30,9 @@ export class ChoreChart
   extends Model<ChoreChartAttributes, ChoreChartInput>
   implements ChoreChartAttributes
 {
-  declare id: number;
+  declare id: string;
   declare assignee: number;
-  declare createdBy: number;
+  declare createdBy: string;
   declare name: string;
   declare description: string;
   declare streak: number;
@@ -65,18 +65,18 @@ export class ChoreChart
       {
         id: {
           primaryKey: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           unique: true,
           autoIncrement: true
         },
         assignee: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           references: { model: User, key: 'id' }
         },
         createdBy: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           references: { model: User, key: 'id' },
           field: 'created_by'
         },

@@ -2,8 +2,18 @@ import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { EncryptUtil } from '../../utilities/EncryptUtil';
 import Badge, { BadgeOutput } from './Badge';
 
+// Note About model IDs in this project:
+// The IDs in production are big.
+// Our prod db uses 64 bits (not 32) for the DataTypes.INTEGER type.
+// We mark all our ids with BIGINT to match prod behavior since the
+// auto generated values for IDs usually start over 32 bits. We also treat
+// the properties as strings to avoid silly arithmetic mistakes.
+//
+// Just note that any INTEGER columns should use caution that the field can
+// grow to numbers larger than Number.MAX_SAFE_INTEGER in production.
+
 export interface UserAttributes {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -41,7 +51,7 @@ export class User
   extends Model<UserAttributes, UserInput>
   implements UserAttributes
 {
-  declare id: number;
+  declare id: string;
   declare firstName: string;
   declare lastName: string;
   declare email: string;
@@ -117,7 +127,7 @@ export class User
       {
         id: {
           primaryKey: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           autoIncrement: true
         },
         provider: {

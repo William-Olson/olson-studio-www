@@ -43,11 +43,15 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
       throw new ErrorResponse(StatusCodes.BAD_REQUEST, paging.errorMessage);
     }
 
-    const id = parseInt(`${req.params.id}`, 10);
-    if (isNaN(id)) {
-      throw new ErrorResponse(StatusCodes.BAD_REQUEST, 'Invalid id');
+    const chart = await ChoreChart.findByPk(req.params.id);
+    if (!chart) {
+      throw new ErrorResponse(
+        StatusCodes.NOT_FOUND,
+        `Unable to find chart with id: ${req.params.id}`
+      );
     }
-    return await this.choreService.getChores(id, paging);
+
+    return await this.choreService.getChores(chart.id, paging);
   }
 
   /*
@@ -102,7 +106,7 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
         'Missing endpoint param: id'
       );
     }
-    const choreId: number = parseInt(`${req.params.choreId}`, 10);
+    const choreId: string = req.params.choreId;
     this.logger.info('patching chore with id' + choreId);
     const chore: Chore | null = await Chore.findByPk(choreId);
 

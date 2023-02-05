@@ -99,21 +99,15 @@ export class ChoreChartEventsEndpoint
   async patchChoreChartEvents(
     req: AdminRequest
   ): Promise<ChoreChartEventOutput> {
-    if (!req.params.chartId || isNaN(parseInt(req.params.chartId, 10))) {
-      throw new ErrorResponse(
-        StatusCodes.BAD_REQUEST,
-        'Missing or bad endpoint param: chartId'
-      );
-    }
-    if (!req.params.eventId || isNaN(parseInt(req.params.eventId, 10))) {
+    const chartId: string = this.getChartId(req);
+    if (!req.params.eventId) {
       throw new ErrorResponse(
         StatusCodes.BAD_REQUEST,
         'Missing or bad endpoint param: eventId'
       );
     }
 
-    const chartId: number = this.getChartId(req);
-    const eventId: number = parseInt(req.params.eventId, 10);
+    const eventId: string = req.params.eventId;
 
     this.logger.info('patching chore chart with chartId' + chartId);
     const chart = await ChoreChart.findByPk(chartId);
@@ -170,7 +164,7 @@ export class ChoreChartEventsEndpoint
     }
   }
 
-  private getChartId(req: AdminRequest): number {
+  private getChartId(req: AdminRequest): string {
     if (!req.params.chartId) {
       throw new ErrorResponse(
         StatusCodes.BAD_REQUEST,
@@ -178,21 +172,7 @@ export class ChoreChartEventsEndpoint
       );
     }
 
-    let chartId: number | undefined;
-    try {
-      chartId = parseInt(req.params.chartId, 10);
-      if (isNaN(chartId)) {
-        throw new Error('Invalid number for chartId: ' + req.params.chartId);
-      }
-    } catch (err) {
-      this.logger.error('Error parsing chartId: ' + req.params.chartId);
-      this.logger.error(err);
-      throw new ErrorResponse(
-        StatusCodes.BAD_REQUEST,
-        'Invalid chartId URL parameter'
-      );
-    }
-    return chartId;
+    return `${req.params.chartId}`;
   }
 }
 

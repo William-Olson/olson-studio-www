@@ -11,7 +11,7 @@ export default {
           {
             id: {
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               autoIncrement: true
             },
             provider: {

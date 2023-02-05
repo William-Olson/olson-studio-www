@@ -91,13 +91,13 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
     Update a ChoreChart with a partial model
   */
   async patchChoreChart(req: AdminRequest): Promise<ChoreChartOutput> {
-    if (!req.params.id || isNaN(parseInt(req.params.id, 10))) {
+    if (!req.params.id) {
       throw new ErrorResponse(
         StatusCodes.BAD_REQUEST,
         'Missing endpoint param: id'
       );
     }
-    const id: number = parseInt(`${req.params.id}`, 10);
+    const { id } = req.params;
     this.logger.info('patching chore chart with id' + id);
     const chart: ChoreChart | null = await ChoreChart.findByPk(id);
 

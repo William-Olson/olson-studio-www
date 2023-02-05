@@ -4,7 +4,7 @@ export enum StudioBadgeTypes {
 }
 
 export interface StudioApiBadge {
-  id: number;
+  id: string;
   friendlyName: string;
   name: string;
   description: string;
@@ -15,11 +15,11 @@ export interface StudioApiBadge {
   rarity: number;
   obtained?: Date;
   unread?: boolean;
-  userId?: number;
+  userId?: string;
 }
 
 export interface StudioApiUser {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

@@ -55,7 +55,7 @@ export class BadgeService {
     };
   }
 
-  public async getUserBadges(userId: number): Promise<Badge[]> {
+  public async getUserBadges(userId: string): Promise<Badge[]> {
     const user = await User.findByPk(userId);
     if (!user) {
       throw new Error('Unable to resolve user from user id: ' + userId);

@@ -52,7 +52,7 @@ export class UserService {
     return user || undefined;
   }
 
-  public async getById(userId: number): Promise<User | undefined> {
+  public async getById(userId: string): Promise<User | undefined> {
     const user = await User.findOne({
       where: { id: userId },
       include: [AccessBadges]
@@ -61,7 +61,7 @@ export class UserService {
     return user || undefined;
   }
 
-  public async getUserProfile(userId: number): Promise<User | undefined> {
+  public async getUserProfile(userId: string): Promise<User | undefined> {
     const user = await User.findOne({
       where: { id: userId },
       include: [Badge]

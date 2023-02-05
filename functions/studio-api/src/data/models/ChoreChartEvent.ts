@@ -8,8 +8,8 @@ export enum ChoreEventStatus {
 
 interface ChoreChartEventAttributes {
   id: string;
-  choreChartId: number;
-  choreId: number;
+  choreChartId: string;
+  choreId: string;
   status: ChoreEventStatus;
   _status?: string;
   rating: number;
@@ -34,8 +34,8 @@ export class ChoreChartEvent
   implements ChoreChartEventAttributes
 {
   declare id: string;
-  declare choreChartId: number;
-  declare choreId: number;
+  declare choreChartId: string;
+  declare choreId: string;
   declare _status: string;
   declare rating: number;
   declare due: Date;
@@ -75,12 +75,12 @@ export class ChoreChartEvent
       {
         id: {
           primaryKey: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           autoIncrement: true
         },
         choreChartId: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           onDelete: 'CASCADE',
           references: {
             model: 'chore_charts',
@@ -90,7 +90,7 @@ export class ChoreChartEvent
         },
         choreId: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           primaryKey: true,
           onDelete: 'CASCADE',
           references: {

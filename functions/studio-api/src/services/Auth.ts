@@ -29,7 +29,7 @@ export interface SessionData {
 interface ClaimData {
   sub?: string;
   secret: string;
-  userId: number;
+  userId: string;
 }
 
 @injectable()

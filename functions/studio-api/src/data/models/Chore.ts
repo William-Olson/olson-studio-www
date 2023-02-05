@@ -1,8 +1,8 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 
 interface ChoreAttributes {
-  id: number;
-  choreChartId: number;
+  id: string;
+  choreChartId: string;
   name: string;
   description: string;
   scheduleDays: string;
@@ -21,8 +21,8 @@ export class Chore
   extends Model<ChoreAttributes, ChoreInput>
   implements ChoreAttributes
 {
-  declare id: number;
-  declare choreChartId: number;
+  declare id: string;
+  declare choreChartId: string;
   declare name: string;
   declare description: string;
   declare scheduleDays: string;

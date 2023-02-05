@@ -48,7 +48,7 @@ export class ChoreService {
   }
 
   public async getChores(
-    chartId: number,
+    chartId: string,
     paging?: PagingOptions
   ): Promise<Paged<ChoreOutput>> {
     const offsetOptions = asOffset(paging);
@@ -63,7 +63,7 @@ export class ChoreService {
   }
 
   public async getChartEventsForOwner(
-    chartId: number,
+    chartId: string,
     sinceDate: Date | undefined,
     paging?: PagingOptions
   ): Promise<Paged<ChoreChartEventOutput>> {
@@ -100,7 +100,7 @@ export class ChoreService {
   /*
     Create chore chart events for the week if they haven't been created yet
   */
-  public async createChoreEventsIfNeeded(chartId: number): Promise<boolean> {
+  public async createChoreEventsIfNeeded(chartId: string): Promise<boolean> {
     let hasCreatedEvents = false;
     await ChoreChartEvent.sequelize?.transaction(
       {
@@ -190,7 +190,7 @@ export class ChoreService {
     Fetches chart data for a given assignee user id
   */
   public async getCurrentChoresForUser(
-    assigneeUserId: number
+    assigneeUserId: string
   ): Promise<ChoreChartData[]> {
     const startOfWeek = moment().startOf('week').toDate();
     this.logger.info(
