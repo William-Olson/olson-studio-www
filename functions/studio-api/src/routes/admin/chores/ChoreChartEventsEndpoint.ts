@@ -34,7 +34,6 @@ export class ChoreChartEventsEndpoint
   public mountRoutes() {
     // base = '/admin/chore-charts'
     this.router.get('/:chartId/events', this.getChoreChartEvents.bind(this));
-
     this.router.patch(
       '/:chartId/events/:eventId',
       this.patchChoreChartEvents.bind(this)
@@ -128,7 +127,9 @@ export class ChoreChartEventsEndpoint
 
     // status can change
     if (req.body.status) {
-      chartEvent.status = this.resolveEventStatus(req.body.status);
+      const status = this.resolveEventStatus(req.body.status);
+      chartEvent.status = status;
+      chartEvent._status = status.toString();
     }
 
     // rating can change
@@ -138,6 +139,12 @@ export class ChoreChartEventsEndpoint
         throw new ErrorResponse(
           StatusCodes.BAD_REQUEST,
           `Invalid input for rating: ${req.body.rating}`
+        );
+      }
+      if (newRating > 5 || newRating < 0) {
+        throw new ErrorResponse(
+          StatusCodes.BAD_REQUEST,
+          `Bad input for rating field: ${newRating}`
         );
       }
       chartEvent.rating = newRating;
