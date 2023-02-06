@@ -64,6 +64,17 @@ export class ChoreChartsEndpoint extends AdminEndpoint implements RouterClass {
     // ensure fields exist
     const requiredFields = ['name', 'assignee', 'description', 'dueTime'];
     this.throwOnMissing(req, ['name', 'assignee', 'description', 'dueTime']);
+
+    // make sure assignee exists
+    const assignee = await this.userService.getById(req.body.assignee);
+    if (!assignee) {
+      throw new ErrorResponse(
+        StatusCodes.UNPROCESSABLE_ENTITY,
+        `Unable to find user with id ${req.body.assignee} for chore-chart assignee`
+      );
+    }
+
+    // duplicate name check
     const existingChart = await this.choreService.getChoreChartByName(
       req.body.name
     );

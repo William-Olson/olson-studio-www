@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import ChoreChartEvent from './ChoreChartEvent';
 
 interface ChoreAttributes {
   id: string;
@@ -6,6 +7,7 @@ interface ChoreAttributes {
   name: string;
   description: string;
   scheduleDays: string;
+  events?: ChoreChartEvent[];
   created: Date;
   updated: Date;
 }
@@ -33,13 +35,17 @@ export class Chore
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
+  declare readonly events: ChoreChartEvent[];
+
   public toJSON(): ChoreOutput {
     // hide protected fields
-    const ChoreJson: ChoreAttributes = Object.assign({}, this.get());
+    const choreJson: ChoreAttributes = Object.assign({}, this.get());
     for (const attr of PROTECTED_ATTRIBUTES) {
-      delete ChoreJson[attr];
+      delete choreJson[attr];
     }
-    return ChoreJson;
+    return Object.assign(choreJson, {
+      events: (choreJson.events || []).map((ev) => ev.toJSON())
+    });
   }
 
   public static register(sequelize: Sequelize) {

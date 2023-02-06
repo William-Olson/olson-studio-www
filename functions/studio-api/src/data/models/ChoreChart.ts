@@ -4,7 +4,7 @@ import User from './User';
 
 interface ChoreChartAttributes {
   id: string;
-  assignee: number;
+  assignee: string;
   createdBy: string;
   name: string;
   description: string;
@@ -12,6 +12,7 @@ interface ChoreChartAttributes {
   score: number;
   recurring: boolean;
   dueTime: string;
+  chores?: Array<Chore>;
   created: Date;
   updated: Date;
 }
@@ -31,7 +32,7 @@ export class ChoreChart
   implements ChoreChartAttributes
 {
   declare id: string;
-  declare assignee: number;
+  declare assignee: string;
   declare createdBy: string;
   declare name: string;
   declare description: string;
@@ -42,7 +43,7 @@ export class ChoreChart
   declare created: Date;
   declare updated: Date;
 
-  declare Chores: Array<Chore>;
+  declare readonly chores: Array<Chore>;
 
   public async updateStreak(): Promise<void> {
     // const streakSoFar: number = this.streak;

@@ -15,6 +15,7 @@ import ChoreChartsEndpoint from './admin/chores/ChoreChartsEndpoint';
 import UsersEndpoint from './UsersEndpoint';
 import ChoresEndpoint from './admin/chores/ChoresEndpoint';
 import ChoreChartEventsEndpoint from './admin/chores/ChoreChartEventsEndpoint';
+import UserChoresEndpoint from './UserChoresEndpoint';
 
 @singleton()
 @injectable()
@@ -55,6 +56,7 @@ export class ApiRoutes {
       ['/test', [auth()], TestEndpoint],
       ['/me', [auth()], UserProfileEndpoint],
       ['/badges', [auth()], BadgeEndpoint],
+      ['/chores', [auth()], UserChoresEndpoint],
       ['/sessions', [auth()], UserSessionEndpoint],
       ['/users', [auth()], UsersEndpoint],
 

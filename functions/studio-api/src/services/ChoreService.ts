@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import moment from 'moment';
-import { Op, Transaction, WhereOptions } from 'sequelize';
+import { Includeable, Op, Transaction, WhereOptions } from 'sequelize';
 import { inject, singleton } from 'tsyringe';
 import Chore, { ChoreOutput } from '../data/models/Chore';
 import ChoreChart, { ChoreChartOutput } from '../data/models/ChoreChart';
@@ -22,6 +23,22 @@ export interface ChoreChartData {
   events?: Array<ChoreChartEvent>;
 }
 
+const CurrentChoresAndEvents: Includeable = {
+  model: Chore,
+  as: 'chores',
+  required: false,
+  include: [
+    {
+      model: ChoreChartEvent,
+      where: {
+        due: { [Op.gte]: moment().startOf('week').toDate() }
+      },
+      as: 'events',
+      required: false
+    }
+  ]
+};
+
 /*
   ChoreService
   Provides functionality and operations around Chores, Chore Charts, and Chore Events.
@@ -39,9 +56,10 @@ export class ChoreService {
   ): Promise<Paged<ChoreChartOutput>> {
     const offsetOptions = asOffset(paging);
     const results = await ChoreChart.findAndCountAll({
-      include: [Chore],
+      include: [CurrentChoresAndEvents],
       limit: offsetOptions.limit,
-      offset: offsetOptions.offset
+      offset: offsetOptions.offset,
+      distinct: true
     });
 
     return asPagedResponse(results, offsetOptions);
@@ -87,6 +105,9 @@ export class ChoreService {
     return asPagedResponse(results, offsetOptions);
   }
 
+  /*
+    Lookup a chart by name
+  */
   public async getChoreChartByName(
     name: string
   ): Promise<ChoreChart | undefined> {
@@ -95,6 +116,28 @@ export class ChoreService {
 
   public async getChoreByName(name: string): Promise<Chore | undefined> {
     return (await Chore.findOne({ where: { name } })) || undefined;
+  }
+
+  /*
+    Create events for all charts that are assigned to the user with id equal to the
+    assigneeId param.
+  */
+  public async createAssigneeEventsIfNeeded(
+    assigneeId: string
+  ): Promise<boolean> {
+    let result = false;
+
+    const charts = await ChoreChart.findAll({
+      attributes: ['id'],
+      where: { assignee: assigneeId }
+    });
+
+    for (const { id } of charts || []) {
+      this.logger.info(`Creating events for chart ${id}...`);
+      const wereEventsCreated = await this.createAssigneeEventsIfNeeded(id);
+      result = result || wereEventsCreated;
+    }
+    return result;
   }
 
   /*
@@ -109,7 +152,7 @@ export class ChoreService {
       },
       async (t: Transaction) => {
         const chart = await ChoreChart.findByPk(chartId, {
-          include: [Chore],
+          include: [CurrentChoresAndEvents],
           transaction: t
         });
 
@@ -120,23 +163,20 @@ export class ChoreService {
         if (!chart.recurring) {
           return; // no need for recurring event creation
         }
-        const currentEvents = await ChoreChartEvent.findAll({
-          where: {
-            choreChartId: chartId,
-            created: {
-              [Op.gt]: moment().startOf('week').toDate()
-            }
-          },
-          transaction: t
-        });
+
+        // flatten out the events from the query
+        const currentEvents = _.flatMap(
+          chart.chores,
+          ({ events }) => events || []
+        );
 
         if (
           // check if events are missing for this week
           (!currentEvents || currentEvents.length <= 0) &&
-          (chart?.Chores || []).length > 0
+          (chart?.chores || []).length > 0
         ) {
           // create the events for this week
-          for (const chore of chart.Chores) {
+          for (const chore of chart.chores) {
             await this.createChoreChartEvent(chart, chore, t);
           }
           hasCreatedEvents = true;
@@ -190,47 +230,28 @@ export class ChoreService {
     Fetches chart data for a given assignee user id
   */
   public async getCurrentChoresForUser(
-    assigneeUserId: string
-  ): Promise<ChoreChartData[]> {
+    assigneeUserId: string,
+    pagination?: PagingOptions
+  ): Promise<Paged<ChoreChartOutput>> {
     const startOfWeek = moment().startOf('week').toDate();
     this.logger.info(
       `Fetching chart data for user ${assigneeUserId} since ${startOfWeek.toISOString()}`
     );
-    const results: Array<ChoreChartData> = [];
+
     if (!assigneeUserId) {
       throw new Error('Missing param user id! ' + assigneeUserId);
     }
 
-    const charts: ChoreChart[] = await ChoreChart.findAll({
+    const paged = asOffset(pagination);
+    const assigneeCharts = await ChoreChart.findAndCountAll({
       where: {
         assignee: assigneeUserId
       },
-      include: [Chore]
+      limit: paged.limit,
+      offset: paged.offset,
+      include: [CurrentChoresAndEvents],
+      distinct: true
     });
-
-    const thisWeeksEvents = await ChoreChartEvent.findAll({
-      where: {
-        choreChartId: [...charts.map((c) => c.id)],
-        choreId: [
-          ...charts
-            .map((chart) => (chart.Chores || []).map((chore) => chore.id))
-            .reduce((acc, idArr) => [...acc, ...idArr], [])
-        ],
-        created: {
-          [Op.gt]: startOfWeek
-        }
-      }
-    });
-
-    for (const chart of charts) {
-      const data: ChoreChartData = {
-        chart,
-        chores: chart.Chores,
-        events: thisWeeksEvents.filter((ev) => ev.choreChartId === chart.id)
-      };
-      results.push(data);
-    }
-
-    return results;
+    return asPagedResponse(assigneeCharts, paged);
   }
 }
