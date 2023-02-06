@@ -1,16 +1,18 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import Chore from './Chore';
 import User from './User';
 
 interface ChoreChartAttributes {
   id: string;
-  assignee: number;
-  createdBy: number;
+  assignee: string;
+  createdBy: string;
   name: string;
   description: string;
   streak: number;
   score: number;
   recurring: boolean;
   dueTime: string;
+  chores?: Array<Chore>;
   created: Date;
   updated: Date;
 }
@@ -18,18 +20,20 @@ interface ChoreChartAttributes {
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof ChoreChartAttributes> = [];
 
-export interface ChoreChartOutput
-  extends Omit<ChoreChartAttributes, 'hash' | 'salt' | 'iterations'> {}
-
-export interface ChoreChartInput extends ChoreChartAttributes {}
+export interface ChoreChartOutput extends ChoreChartAttributes {}
+export interface ChoreChartInput
+  extends Optional<
+    ChoreChartAttributes,
+    'streak' | 'score' | 'recurring' | 'created' | 'updated' | 'id'
+  > {}
 
 export class ChoreChart
   extends Model<ChoreChartAttributes, ChoreChartInput>
   implements ChoreChartAttributes
 {
   declare id: string;
-  declare assignee: number;
-  declare createdBy: number;
+  declare assignee: string;
+  declare createdBy: string;
   declare name: string;
   declare description: string;
   declare streak: number;
@@ -39,11 +43,10 @@ export class ChoreChart
   declare created: Date;
   declare updated: Date;
 
-  declare readonly createdAt: Date;
-  declare readonly updatedAt: Date;
+  declare readonly chores: Array<Chore>;
 
   public async updateStreak(): Promise<void> {
-    const streakSoFar: number = this.streak;
+    // const streakSoFar: number = this.streak;
     // TODO: update streak based on the percentage of completed chore_chart_events from last cycle
     // and the ranking of each event
     await this.save();
@@ -63,18 +66,18 @@ export class ChoreChart
       {
         id: {
           primaryKey: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           unique: true,
           autoIncrement: true
         },
         assignee: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           references: { model: User, key: 'id' }
         },
         createdBy: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           references: { model: User, key: 'id' },
           field: 'created_by'
         },

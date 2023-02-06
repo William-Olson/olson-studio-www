@@ -18,7 +18,7 @@ export default {
           {
             id: {
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               autoIncrement: true
             },
             type: {
@@ -66,7 +66,7 @@ export default {
           {
             user_id: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               primaryKey: true,
               references: {
                 model: 'users',
@@ -77,7 +77,7 @@ export default {
             badge_id: {
               allowNull: false,
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               references: {
                 model: 'badges',
                 key: 'id'

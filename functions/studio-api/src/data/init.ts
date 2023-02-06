@@ -26,4 +26,14 @@ export const modelInitialization: (
     through: UserBadge,
     foreignKey: 'user_id'
   });
+  ChoreChart.hasMany(Chore, {
+    foreignKey: 'choreChartId',
+    as: 'chores',
+    onDelete: 'CASCADE'
+  });
+  Chore.hasMany(ChoreChartEvent, {
+    foreignKey: 'choreId',
+    as: 'events',
+    onDelete: 'CASCADE'
+  });
 };

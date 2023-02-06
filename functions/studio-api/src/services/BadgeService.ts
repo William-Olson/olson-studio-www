@@ -3,6 +3,12 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, singleton } from 'tsyringe';
 import Badge, { BadgeNames } from '../data/models/Badge';
 import User from '../data/models/User';
+import {
+  asOffset,
+  asPagedResponse,
+  Paged,
+  PagingOptions
+} from '../utilities/Pagination';
 import { AuthRequest, AuthService } from './Auth';
 import LoggerFactory, { Logger } from './Logger';
 
@@ -49,7 +55,7 @@ export class BadgeService {
     };
   }
 
-  public async getUserBadges(userId: number): Promise<Badge[]> {
+  public async getUserBadges(userId: string): Promise<Badge[]> {
     const user = await User.findByPk(userId);
     if (!user) {
       throw new Error('Unable to resolve user from user id: ' + userId);
@@ -62,7 +68,14 @@ export class BadgeService {
     return badge || undefined;
   }
 
-  public async getBadges(): Promise<{ rows: Badge[]; count: number }> {
-    return await Badge.findAndCountAll();
+  public async getBadges(pagination?: PagingOptions): Promise<Paged<Badge>> {
+    const paging = asOffset(pagination);
+    return asPagedResponse<Badge>(
+      await Badge.findAndCountAll({
+        limit: paging.limit,
+        offset: paging.offset
+      }),
+      paging
+    );
   }
 }

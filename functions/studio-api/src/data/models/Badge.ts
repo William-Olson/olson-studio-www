@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import UserBadge from './UserBadges';
 
 interface BadgeAttributes {
-  id: number;
+  id: string;
   rarity: number; // 1 to 5, 5 is rarest, 1 is common
   name: string; // unique identifier used to check against in the code
   friendlyName: string;
@@ -23,7 +23,7 @@ export interface BadgeOutput
   // merged user_badge attributes if they exist
   obtained?: Date;
   unread?: boolean;
-  userId?: number;
+  userId?: string;
 }
 
 export interface BadgeInput
@@ -45,7 +45,7 @@ export class Badge
   extends Model<BadgeAttributes, BadgeInput>
   implements BadgeAttributes
 {
-  declare readonly id: number;
+  declare readonly id: string;
   declare _type: string;
   declare rarity: number;
   declare name: string;
@@ -97,7 +97,7 @@ export class Badge
       {
         id: {
           primaryKey: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           autoIncrement: true
         },
         type: {

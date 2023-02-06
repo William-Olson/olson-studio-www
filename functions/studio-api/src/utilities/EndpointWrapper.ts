@@ -6,6 +6,7 @@ import {
   Injectables
 } from 'route-harness';
 import LoggerFactory, { Logger } from '../services/Logger';
+import { isDev } from './isDev';
 
 const mapped: Set<string> = new Set();
 
@@ -36,19 +37,32 @@ export const endpointWrapper: CustomWrapper = (
           `, Body: ${JSON.stringify(request.body)} }`
       );
       const result = await handler(request, response);
-      if (result) {
-        if (result.status >= 400 || result.statusCode >= 400) {
-          logger.error(result);
-        }
-        logger.info(
-          `[ ${endpointName} ] ${handlerName}.Response: ${JSON.stringify(
-            result
-          )}`
-        );
-        response.send(result);
+      if (!result) {
+        return;
       }
+
+      if (result.status >= 400 || result.statusCode >= 400) {
+        logger.error(result);
+      } else {
+        const responseLogMessage = `[ ${endpointName} ] ${handlerName}.Response: ${
+          result.status || result.statusCode || 200
+        }`;
+        logger.info(
+          responseLogMessage +
+            // include success response data in development logs only
+            (isDev
+              ? `\n${JSON.stringify(
+                  result
+                  // undefined,
+                  // 2
+                )}`
+              : '')
+        );
+      }
+      response.send(result);
     } catch (error) {
       logger.error(`Error in route ${endpointName} ${handlerName}`);
+      logger.error(error);
       next(error);
     }
   };

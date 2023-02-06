@@ -1,7 +1,13 @@
 import { Includeable } from 'sequelize/types';
 import { inject, singleton } from 'tsyringe';
 import Badge, { BadgeTypes } from '../data/models/Badge';
-import User from '../data/models/User';
+import User, { UserOutput } from '../data/models/User';
+import {
+  asOffset,
+  asPagedResponse,
+  Paged,
+  PagingOptions
+} from '../utilities/Pagination';
 import LoggerFactory, { Logger } from './Logger';
 
 export const AccessBadges: Includeable = {
@@ -24,6 +30,19 @@ export class UserService {
     this.logger = loggerFactory.getLogger(`app:services:${UserService.name}`);
   }
 
+  public async getUsers(paging?: PagingOptions): Promise<Paged<UserOutput>> {
+    this.logger.info('Fetching users...');
+    const offsetPaging = asOffset(paging);
+
+    return asPagedResponse(
+      await User.findAndCountAll({
+        limit: offsetPaging.limit,
+        offset: offsetPaging.offset
+      }),
+      offsetPaging
+    );
+  }
+
   public async getBySourceId(userSourceId: string): Promise<User | undefined> {
     const user = await User.findOne({
       where: { sourceId: userSourceId },
@@ -33,7 +52,7 @@ export class UserService {
     return user || undefined;
   }
 
-  public async getById(userId: number): Promise<User | undefined> {
+  public async getById(userId: string): Promise<User | undefined> {
     const user = await User.findOne({
       where: { id: userId },
       include: [AccessBadges]
@@ -42,7 +61,7 @@ export class UserService {
     return user || undefined;
   }
 
-  public async getUserProfile(userId: number): Promise<User | undefined> {
+  public async getUserProfile(userId: string): Promise<User | undefined> {
     const user = await User.findOne({
       where: { id: userId },
       include: [Badge]

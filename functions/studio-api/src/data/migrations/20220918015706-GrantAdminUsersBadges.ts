@@ -41,7 +41,7 @@ export default {
         // GRANT ADMIN BADGES
         const initialAdmins = process.env.OS_ADMIN_USERS;
         if (initialAdmins) {
-          const admins: Array<{ id: number }> =
+          const admins: Array<{ id: string }> =
             await await queryInterface.sequelize.query(
               `SELECT id from users WHERE source_id IN (${initialAdmins})`,
               {
@@ -50,7 +50,7 @@ export default {
               }
             );
 
-          const badges: Array<{ id: number }> =
+          const badges: Array<{ id: string }> =
             await await queryInterface.sequelize.query(
               `SELECT b.id from badges b WHERE b.name = 'admin' LIMIT 1`,
               {

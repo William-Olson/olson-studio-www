@@ -12,13 +12,13 @@ export default {
           {
             id: {
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               unique: true,
               autoIncrement: true
             },
             assignee: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               primaryKey: true,
               references: {
                 model: 'users',
@@ -27,7 +27,7 @@ export default {
             },
             createdBy: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               primaryKey: true,
               references: {
                 model: 'users',
@@ -78,13 +78,14 @@ export default {
           {
             id: {
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               unique: true,
               autoIncrement: true
             },
             choreChartId: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chore_charts',
                 key: 'id'
@@ -121,12 +122,13 @@ export default {
           {
             id: {
               primaryKey: true,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
               autoIncrement: true
             },
             choreChartId: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chore_charts',
                 key: 'id'
@@ -135,7 +137,8 @@ export default {
             },
             choreId: {
               allowNull: false,
-              type: DataTypes.INTEGER,
+              type: DataTypes.BIGINT,
+              onDelete: 'CASCADE',
               references: {
                 model: 'chores',
                 key: 'id'

@@ -1,12 +1,13 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import User from './User';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import ChoreChartEvent from './ChoreChartEvent';
 
 interface ChoreAttributes {
   id: string;
-  choreChartId: number;
+  choreChartId: string;
   name: string;
   description: string;
   scheduleDays: string;
+  events?: ChoreChartEvent[];
   created: Date;
   updated: Date;
 }
@@ -14,17 +15,16 @@ interface ChoreAttributes {
 // don't return these values in responses
 const PROTECTED_ATTRIBUTES: Array<keyof ChoreAttributes> = [];
 
-export interface ChoreOutput
-  extends Omit<ChoreAttributes, 'hash' | 'salt' | 'iterations'> {}
-
-export interface ChoreInput extends ChoreAttributes {}
+export interface ChoreOutput extends ChoreAttributes {}
+export interface ChoreInput
+  extends Optional<ChoreAttributes, 'created' | 'updated' | 'id'> {}
 
 export class Chore
   extends Model<ChoreAttributes, ChoreInput>
   implements ChoreAttributes
 {
   declare id: string;
-  declare choreChartId: number;
+  declare choreChartId: string;
   declare name: string;
   declare description: string;
   declare scheduleDays: string;
@@ -35,13 +35,17 @@ export class Chore
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
+  declare readonly events: ChoreChartEvent[];
+
   public toJSON(): ChoreOutput {
     // hide protected fields
-    const ChoreJson: ChoreAttributes = Object.assign({}, this.get());
+    const choreJson: ChoreAttributes = Object.assign({}, this.get());
     for (const attr of PROTECTED_ATTRIBUTES) {
-      delete ChoreJson[attr];
+      delete choreJson[attr];
     }
-    return ChoreJson;
+    return Object.assign(choreJson, {
+      events: (choreJson.events || []).map((ev) => ev.toJSON())
+    });
   }
 
   public static register(sequelize: Sequelize) {
@@ -56,6 +60,7 @@ export class Chore
         choreChartId: {
           allowNull: false,
           type: DataTypes.INTEGER,
+          onDelete: 'CASCADE',
           references: {
             model: 'chore_charts',
             key: 'id'

@@ -4,8 +4,8 @@ interface UserBadgeAttributes {
   unread: boolean;
   created: Date;
   updated: Date;
-  user_id: number;
-  badge_id: number;
+  user_id: string;
+  badge_id: string;
 }
 
 // don't return these values in responses. The updated field is required so
@@ -23,8 +23,8 @@ export class UserBadge
 {
   declare readonly created: Date;
   declare readonly updated: Date;
-  declare readonly user_id: number;
-  declare readonly badge_id: number;
+  declare readonly user_id: string;
+  declare readonly badge_id: string;
   declare unread: boolean;
 
   public toJSON(): UserBadgeOutput {
@@ -45,8 +45,8 @@ export class UserBadge
         },
         created: { type: DataTypes.DATE },
         updated: { type: DataTypes.DATE },
-        user_id: { type: DataTypes.INTEGER },
-        badge_id: { type: DataTypes.INTEGER }
+        user_id: { type: DataTypes.BIGINT },
+        badge_id: { type: DataTypes.BIGINT }
       },
       {
         sequelize,

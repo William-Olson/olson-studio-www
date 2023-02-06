@@ -21,6 +21,7 @@
   [dev]
    command = "yarn devrun" # Command to start your dev server
    port = 7447 # Port that the dev server will be listening on
+   targetPort = 3000
    publish = "dist" # Folder with the static content for _redirect file
    functionsPort = 8888
 

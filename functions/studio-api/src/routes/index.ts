@@ -11,6 +11,11 @@ import UserSessionEndpoint from './UserSessionEndpoint';
 import BadgeEndpoint from './BadgeEndpoint';
 import { BadgeNames } from '../data/models/Badge';
 import AdminBadgesEndpoint from './admin/AdminBadgesEndpoint';
+import ChoreChartsEndpoint from './admin/chores/ChoreChartsEndpoint';
+import UsersEndpoint from './UsersEndpoint';
+import ChoresEndpoint from './admin/chores/ChoresEndpoint';
+import ChoreChartEventsEndpoint from './admin/chores/ChoreChartEventsEndpoint';
+import UserChoresEndpoint from './UserChoresEndpoint';
 
 @singleton()
 @injectable()
@@ -40,6 +45,9 @@ export class ApiRoutes {
     return [
       // admin endpoints
       ['/admin/badges', [admin()], AdminBadgesEndpoint],
+      ['/admin/chore-charts', [admin()], ChoreChartEventsEndpoint],
+      ['/admin/chore-charts', [admin()], ChoresEndpoint],
+      ['/admin/chore-charts', [admin()], ChoreChartsEndpoint],
 
       // using badge middleware
       // ['/some-endpoint', [badges(BadgeNames.Etc1, BadgeNames.Etc2)], SomeEndpoint],
@@ -48,7 +56,9 @@ export class ApiRoutes {
       ['/test', [auth()], TestEndpoint],
       ['/me', [auth()], UserProfileEndpoint],
       ['/badges', [auth()], BadgeEndpoint],
+      ['/chores', [auth()], UserChoresEndpoint],
       ['/sessions', [auth()], UserSessionEndpoint],
+      ['/users', [auth()], UsersEndpoint],
 
       // optional auth endpoints
       ['/version', [auth(false)], VersionEndpoint],

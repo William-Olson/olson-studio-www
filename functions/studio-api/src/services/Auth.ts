@@ -29,7 +29,7 @@ export interface SessionData {
 interface ClaimData {
   sub?: string;
   secret: string;
-  userId: number;
+  userId: string;
 }
 
 @injectable()
@@ -77,7 +77,7 @@ export class AuthService {
           this.logger.info(`Authenticating user with id ${session?.userId}`);
           req.session = session;
           req.user = await this.userService.getById(session.userId);
-          this.logger.info('added user to request: ' + req.user);
+          // this.logger.info('added user to request: ', req.user?.toJSON);
         }
       }
 

@@ -3,7 +3,7 @@ import User from './User';
 
 interface SessionAttributes {
   id: string;
-  userId: number;
+  userId: string;
   hash: string;
   salt: string;
   iterations: number;
@@ -29,7 +29,7 @@ export class Session
   implements SessionAttributes
 {
   declare id: string;
-  declare userId: number;
+  declare userId: string;
   declare hash: string;
   declare salt: string;
   declare iterations: number;
@@ -63,7 +63,7 @@ export class Session
         },
         userId: {
           allowNull: false,
-          type: DataTypes.INTEGER,
+          type: DataTypes.BIGINT,
           references: { model: User, key: 'id' },
           field: 'user_id'
         },
