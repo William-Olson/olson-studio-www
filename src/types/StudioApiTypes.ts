@@ -1,3 +1,10 @@
+export interface PagedResponse<T> {
+  success?: boolean;
+  page: number;
+  page_size: boolean;
+  results?: T[];
+}
+
 export enum StudioBadgeTypes {
   Achievement = 'achievement',
   Administrative = 'administrative'
@@ -47,3 +54,31 @@ export interface StudioApiSessions {
   success: boolean;
   results?: StudioApiSession[];
 }
+
+export interface StudioApiAdminChore {
+  id: string;
+  choreChartId: string;
+  name: string;
+  description: string;
+  scheduleDays: string;
+  created: Date;
+  updated: Date;
+  // events: Array<any>;
+}
+
+export interface StudioApiAdminChart {
+  id: string;
+  assignee: string;
+  createdBy: string;
+  name: string;
+  description: string;
+  streak: number;
+  score: number;
+  recurring: boolean;
+  dueTime: string;
+  created: Date;
+  updated: Date;
+  chores: Array<StudioApiAdminChore>;
+}
+
+export type StudioApiAdminCharts = PagedResponse<StudioApiAdminChart>;

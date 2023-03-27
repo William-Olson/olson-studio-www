@@ -25,6 +25,7 @@ export const emitter =
     shouldNavigate: ShouldNavigateEvent;
     userLogin: LoginEvent;
     userInfo: UserInfoEvent;
+    chartsUpdated: undefined;
   }>();
 
 export const signalDarkModeChange = (change: DarkModeChangeEvent) => {

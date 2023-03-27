@@ -108,7 +108,7 @@ export class ChoreChartEventsEndpoint
 
     const eventId: string = req.params.eventId;
 
-    this.logger.info('patching chore chart with chartId' + chartId);
+    this.logger.info('patching chore chart with chartId: ' + chartId);
     const chart = await ChoreChart.findByPk(chartId);
     if (!chart || chart.createdBy !== req.user?.id) {
       throw new ErrorResponse(
@@ -157,11 +157,11 @@ export class ChoreChartEventsEndpoint
 
   public resolveEventStatus(status: string): ChoreEventStatus {
     switch (status.toUpperCase()) {
-      case ChoreEventStatus.COMPLETED.toString():
+      case ChoreEventStatus.COMPLETED:
         return ChoreEventStatus.COMPLETED;
-      case ChoreEventStatus.NEEDS_CHECK.toString():
+      case ChoreEventStatus.NEEDS_CHECK:
         return ChoreEventStatus.NEEDS_CHECK;
-      case ChoreEventStatus.TODO.toString():
+      case ChoreEventStatus.TODO:
         return ChoreEventStatus.TODO;
       default:
         throw new ErrorResponse(

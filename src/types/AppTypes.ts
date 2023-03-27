@@ -2,6 +2,7 @@ export enum IconTypes {
   Moon = 'moon',
   Sun = 'sun',
   Plus = 'plus',
+  Chart = 'chart',
   Github = 'github',
   Home = 'home',
   UserCircle = 'user-circle'

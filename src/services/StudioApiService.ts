@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StudioApiSessions } from '../types/StudioApiTypes';
 import { Token } from '../util/Auth';
 
-const STUDIO_API_BASE_URL =
+export const STUDIO_API_BASE_URL =
   import.meta.env.VITE_APP_OS_SERVER_URL ||
   'http://localhost:8888/.netlify/functions/studio-api';
 
@@ -17,6 +17,25 @@ export class StudioApiService {
     return (
       await axios.request({
         url: `${STUDIO_API_BASE_URL}/me`,
+        method: 'GET',
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      })
+    ).data;
+  }
+
+  /**
+   * Retrieves User Information associated to the auth token.
+   *
+   * @param token Token The authentcated user's auth token
+   * @returns Studio API User Information
+   */
+  public async getUsers(token: Token, searchTerm?: string) {
+    const queryParams = searchTerm ? `?q=${searchTerm}` : '';
+    return (
+      await axios.request({
+        url: `${STUDIO_API_BASE_URL}/users` + queryParams,
         method: 'GET',
         headers: {
           Authorization: `bearer ${token}`

@@ -32,6 +32,9 @@ class NavBarComponent extends React.Component<NavBarProps> {
   }
 
   public render() {
+    const adminBadge = !!this.props.user?.isAdmin;
+    // console.log('isAdmin', adminBadge);
+
     return (
       <nav className="flex flex-row min-w-full">
         <div className="nav-padding basis-4/5"></div>
@@ -46,6 +49,16 @@ class NavBarComponent extends React.Component<NavBarProps> {
                 />
               </Link>
             </div>
+            {!!this.props.user?.user && !!this.props.user?.isAdmin && (
+              <div className="pr-2 ">
+                <Link to={'/chore-charts'}>
+                  <CustomIcon
+                    darkMode={this.props.darkMode}
+                    icon={IconTypes.Chart}
+                  />
+                </Link>
+              </div>
+            )}
             {!this.props.user?.user?.avatar && (
               <div className="pr-2 ">
                 <Link to={'/Login'}>

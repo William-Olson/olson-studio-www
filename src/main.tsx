@@ -8,6 +8,8 @@ import { LoginComponent } from './components/login/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HomeComponent } from './components/pages/Home';
 import { ProfilePage } from './components/pages/profile/ProfilePage';
+import { CreateChartForm } from './components/forms/CreateChartForm';
+import { AdminCharts } from './components/pages/charts/AdminChartsPage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +22,10 @@ ReactDOM.render(
           />
           <Route path="login" element={<LoginComponent />} />
           <Route path="profile" element={<ProfilePage />} />
+
+          {/* admin chore charts */}
+          <Route path="chore-charts" element={<AdminCharts />} />
+          <Route path="create-chore-chart" element={<CreateChartForm />} />
           {/* root component */}
           <Route path="" element={<HomeComponent />} />
         </Route>
