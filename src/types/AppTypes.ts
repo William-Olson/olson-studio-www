@@ -5,6 +5,7 @@ export enum IconTypes {
   Chart = 'chart',
   Github = 'github',
   Home = 'home',
+  Checkmark = 'checkmark',
   UserCircle = 'user-circle'
 }
 

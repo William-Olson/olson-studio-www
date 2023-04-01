@@ -1,5 +1,5 @@
-import React, { FormEventHandler, HTMLProps, ReactElement } from 'react';
-import Autosuggest from 'react-autosuggest';
+import React, { FormEvent, ReactElement } from 'react';
+import Autosuggest, { ChangeEvent } from 'react-autosuggest';
 
 export interface AutocompleteProps<T> {
   // the handler for reacting to a selection
@@ -40,10 +40,7 @@ export class Autocomplete<T> extends React.Component<
     };
   }
 
-  onChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    changed: { newValue?: string }
-  ): void => {
+  onChange = (event: FormEvent<HTMLElement>, changed: ChangeEvent): void => {
     this.setState({
       value: changed.newValue || ''
     });
@@ -62,7 +59,7 @@ export class Autocomplete<T> extends React.Component<
       placeholder: 'Search...',
       value,
       required: this.props.required,
-      onChange: this.onChange as any,
+      onChange: this.onChange,
       className:
         'shadow appearance-none border rounded w-full py-2 px-3 bg-inherit leading-tight focus:outline-none focus:shadow-outline'
     };
@@ -79,9 +76,10 @@ export class Autocomplete<T> extends React.Component<
         }}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         getSuggestionValue={this.props.getSuggestionValue}
-        onSuggestionSelected={(ev: any, val: { suggestion: T }) =>
-          this.props.onSelect(val?.suggestion)
-        }
+        onSuggestionSelected={(
+          _ev: FormEvent<HTMLElement>,
+          val: { suggestion: T }
+        ) => this.props.onSelect(val?.suggestion)}
         renderSuggestion={this.props.renderSuggestion}
         inputProps={inputProps}
       />

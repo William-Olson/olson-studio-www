@@ -23,7 +23,9 @@ interface FormValues {
   dueTime?: string;
 }
 
-export const CreateChartComponent: React.FC<{}> = () => {
+interface CreateChartComponentProps {}
+
+export const CreateChartComponent: React.FC<CreateChartComponentProps> = () => {
   const navigate = useNavigate();
   const initialValues: FormValues = {
     assignee: '',
@@ -74,7 +76,10 @@ export const CreateChartComponent: React.FC<{}> = () => {
     return errorFound;
   };
 
-  const onSubmit = async (values: FormValues, actions: FormikHelpers<any>) => {
+  const onSubmit = async (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
     console.log({ values, actions });
     // alert(JSON.stringify(values, null, 2));
     try {

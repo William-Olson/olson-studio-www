@@ -21,7 +21,7 @@ class AdminChartsStore {
     });
   }
 
-  public isConfirmModalOpen: boolean = false;
+  public isConfirmModalOpen = false;
   public chartToDelete: StudioApiAdminChart | undefined;
 
   public openConfirmModal(shouldOpen: boolean, chart?: StudioApiAdminChart) {

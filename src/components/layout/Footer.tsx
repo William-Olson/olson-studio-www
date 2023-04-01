@@ -4,7 +4,7 @@ export class Footer extends React.Component {
   public render() {
     const copyrightYear = new Date().getFullYear();
     return (
-      <div className="nav">
+      <div className="nav h-[100px] mt-[100px]">
         © {copyrightYear + ' '}
         <a href="https://olson.studio" rel="noopener" target="_blank">
           Olson Studio
