@@ -108,7 +108,7 @@ export function ConfirmModal<T = string>(props: ConfirmModalProps<T>) {
               </button>
               <button
                 type="button"
-                onClick={props.onCancel ? props.onCancel : () => {}}
+                onClick={props.onCancel ? props.onCancel : undefined}
                 className="border-[lightgrey] border-2 mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm sm:mt-0 sm:w-auto"
               >
                 {props.cancelBtnText || 'Cancel'}

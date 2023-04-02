@@ -10,6 +10,8 @@ import { ConfirmModal } from '../../modals/ConfirmModal';
 import { getToastTheme, Toast } from '../../../util/Toast';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { emitter } from '../../../Events';
+import { EmptyResults } from './EmptyResults';
+import { Link } from 'react-router-dom';
 
 class AdminChartsTableComponent extends React.Component {
   private darkMode: typeof DarkModeState = DarkModeState;
@@ -26,7 +28,8 @@ class AdminChartsTableComponent extends React.Component {
   }
 
   private handleUpdateEvent() {
-    AdminChartsState.fetchAdminCharts();
+    this.adminCharts.fetchAdminCharts();
+    this.adminCharts.viewChart(undefined);
   }
 
   public render(): ReactElement {
@@ -58,7 +61,7 @@ class AdminChartsTableComponent extends React.Component {
           <div className="pb-20 w-full">
             <div className="m-5 pl-8 pr-8 pb-9 space-y-6">
               <h3 className="text-3xl font-mono pb-6 mt-6">List of Charts</h3>
-              {this.adminCharts.activeAdminCharts?.results?.length &&
+              {!!this.adminCharts.activeAdminCharts?.results?.length &&
                 _.sortBy(this.adminCharts.activeAdminCharts.results, [
                   'lastActivity'
                 ])
@@ -68,7 +71,12 @@ class AdminChartsTableComponent extends React.Component {
                       label={moment(adminChart.created).format(
                         'M / D - hh:mm:ss a'
                       )}
-                      value={adminChart.name}
+                      value={
+                        <Link to={`/chore-charts/${adminChart.id}`}>
+                          {' '}
+                          {adminChart.name}
+                        </Link>
+                      }
                       key={adminChart.id}
                       action={
                         <button
@@ -82,6 +90,9 @@ class AdminChartsTableComponent extends React.Component {
                       }
                     />
                   ))}
+              {!this.adminCharts.activeAdminCharts?.results?.length && (
+                <EmptyResults entityName="Charts" />
+              )}
             </div>
           </div>
         )}

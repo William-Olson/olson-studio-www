@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { Formik, Form, Field, FieldProps, FormikHelpers } from 'formik';
-import { CSSProperties } from 'react';
+import { CSSProperties, useEffect } from 'react';
 import { ChoreChartService } from '../../services/ChoreChartService';
 import { getToastTheme, Toast } from '../../util/Toast';
 import { DarkModeState } from '../../stores/DarkModeStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { UserState } from '../../stores/UserStore';
 import { AdminGuard } from '../helpers/AdminGuard';
 import { observer } from 'mobx-react';
 import { WeekdaysPicker } from './inputs/WeekdaysPicker';
+import { Token } from '../../util/Auth';
+import { ChorePayload } from '../../types/ChoreTypes';
+import { AdminChartsState } from '../../stores/AdminChartsStore';
+import { AdminChoresState } from '../../stores/AdminChoresStore';
 
 interface FormValues {
   name?: string;
@@ -16,19 +20,24 @@ interface FormValues {
   scheduleDays?: string;
 }
 
-interface CreateChoreComponentProps {
-  chartId?: string;
-}
+interface CreateChoreComponentProps {}
 
-export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = (
-  props: CreateChoreComponentProps
-) => {
+export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = () => {
   const navigate = useNavigate();
   const initialValues: FormValues = {
     name: '',
     description: '',
     scheduleDays: ''
   };
+
+  const adminCharts: typeof AdminChartsState = AdminChartsState;
+  const adminChores: typeof AdminChoresState = AdminChoresState;
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    adminCharts.findChart(id || '').then((c) => adminCharts.viewChart(c));
+  });
 
   const formStyles: CSSProperties = {
     maxWidth: '800px',
@@ -46,14 +55,19 @@ export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = (
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    console.log({ values, actions });
+    // console.log({ values, actions });
     try {
       const api = new ChoreChartService();
-      // api.createChore(Token.fromCache(), props.chartId, values as ChorePayload);
+      api.createChore(
+        Token.fromCache(),
+        adminCharts.viewingChart?.id || '',
+        values as ChorePayload
+      );
       Toast.success('Created chore successfully', {
         theme: getToastTheme(DarkModeState.isDark)
       });
-      navigate('/chore-charts/');
+      navigate(`/chore-charts/${adminCharts.viewingChart?.id}`);
+      adminChores.fetchChores(adminCharts.viewingChart?.id);
     } catch (err) {
       console.error('Error creating chore');
       console.error(err);
@@ -104,7 +118,6 @@ export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = (
                 <WeekdaysPicker
                   value={field.value}
                   onChange={(days: string) => {
-                    console.log('days change -> ', days);
                     field.onChange({
                       target: { name: 'scheduleDays', value: `${days}` }
                     });

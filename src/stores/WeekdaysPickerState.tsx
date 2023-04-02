@@ -1,15 +1,11 @@
-import { observable, action, makeObservable } from 'mobx';
-import moment from 'moment';
+import { observable, action, makeObservable, computed } from 'mobx';
+import { dayMap, Days } from '../util/days';
 
-const dayMap: { [k: string]: number } = {
-  M: 1,
-  T: 2,
-  W: 3,
-  R: 4,
-  F: 5,
-  S: 6,
-  U: 7
-};
+// Takes in a string as dayMap symbols delimited by commas (i.e. 'M,T') and
+// parses into an array of boolean values representing if the
+// day was selected. Each boolean in the array is mapped to its
+// corresponding symbol via index (i.e. [ M, T, W, R, F, S, U ])
+// so: 'M,T' => [true, true, false, false, false, false, false]
 
 class WeekdaysPickerStore {
   public days?: boolean[];
@@ -20,19 +16,22 @@ class WeekdaysPickerStore {
       selectDay: action,
       initDays: action,
       fromInput: action,
+      toScheduleDays: computed,
       dayName: action
     });
   }
 
   public fromInput(scheduleDays: string): void {
-    const dayIndices: Set<number> = new Set(
-      scheduleDays.split(',').map((d) => dayMap[d.toUpperCase()] || dayMap.S)
+    const selected: Set<number> = new Set(
+      scheduleDays.split(',').map((d) => dayMap[d.toUpperCase()])
     );
 
-    this.initDays([1, 2, 3, 4, 5, 6, 7].map((d) => dayIndices.has(d)));
+    this.initDays(
+      [1, 2, 3, 4, 5, 6, 7].map((dayNum: number) => selected.has(dayNum))
+    );
   }
 
-  public toScheduleDays(): string {
+  public get toScheduleDays(): string {
     return (this.days || [])
       .map((selected: boolean, index: number) =>
         selected ? this.daySymbol(index) : undefined
@@ -66,10 +65,7 @@ class WeekdaysPickerStore {
       console.warn(`Unable to resolve name for day: ${dayIndex}`);
       return '';
     }
-    return moment()
-      .startOf('week')
-      .day(dayIndex + 1)
-      .format('dddd');
+    return Days.getName(dayIndex);
   }
 }
 

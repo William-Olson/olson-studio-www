@@ -23,12 +23,12 @@ const TimePicker: React.FC<TimePickerProps> = (props: TimePickerProps) => {
     });
     newPicker.create();
 
-    //@typescript-eslint-disable-next-line
+    // eslint-disable-next-line
     //@ts-ignore
     tm.addEventListener('accept', changeEventHandler);
 
     return () => {
-      //@typescript-eslint-disable-next-line
+      // eslint-disable-next-line
       //@ts-ignore
       tm.removeEventListener('accept', changeEventHandler);
     };

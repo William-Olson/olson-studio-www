@@ -5,7 +5,7 @@ import { Token } from '../../../util/Auth';
 import { Autocomplete } from './Autocomplete';
 
 export interface UserAutocompleteProps {
-  onSelect: (selection: any) => void;
+  onSelect: (selection: StudioApiUser) => void;
 }
 
 export interface UserAutocompleteState {

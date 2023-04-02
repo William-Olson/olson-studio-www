@@ -9,20 +9,28 @@ import { Token } from '../util/Auth';
 class AdminChartsStore {
   public activeAdminCharts?: StudioApiAdminCharts;
   public api: ChoreChartService = new ChoreChartService();
+  public viewingChart?: StudioApiAdminChart;
 
   constructor() {
     makeObservable(this, {
       activeAdminCharts: observable,
       isConfirmModalOpen: observable,
       chartToDelete: observable,
+      viewingChart: observable,
+      viewChart: action,
       openConfirmModal: action,
       fetchAdminCharts: action,
+      findChart: action,
       deleteChart: action
     });
   }
 
   public isConfirmModalOpen = false;
   public chartToDelete: StudioApiAdminChart | undefined;
+
+  public viewChart(chart: StudioApiAdminChart | undefined) {
+    this.viewingChart = chart;
+  }
 
   public openConfirmModal(shouldOpen: boolean, chart?: StudioApiAdminChart) {
     this.chartToDelete = chart;
@@ -38,8 +46,18 @@ class AdminChartsStore {
   }
 
   public async deleteChart(adminChart: StudioApiAdminChart): Promise<void> {
-    await this.api.deleteAdminChart(adminChart.id || '', Token.fromCache());
+    await this.api.deleteAdminChart(Token.fromCache(), adminChart.id || '');
     await this.fetchAdminCharts();
+  }
+
+  public async findChart(
+    chartId: string
+  ): Promise<StudioApiAdminChart | undefined> {
+    if (!this.activeAdminCharts) {
+      await this.fetchAdminCharts();
+    }
+
+    return this.activeAdminCharts?.results?.find((c) => c.id === chartId);
   }
 }
 

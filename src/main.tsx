@@ -11,6 +11,7 @@ import { ProfilePage } from './components/pages/profile/ProfilePage';
 import { CreateChartForm } from './components/forms/CreateChartForm';
 import { AdminCharts } from './components/pages/charts/AdminChartsPage';
 import { CreateChoreForm } from './components/forms/CreateChoreForm';
+import { AdminChartOverview } from './components/pages/charts/AdminChartOverview';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -27,7 +28,11 @@ ReactDOM.render(
           {/* admin chore charts */}
           <Route path="chore-charts" element={<AdminCharts />} />
           <Route path="create-chore-chart" element={<CreateChartForm />} />
-          <Route path="create-chore" element={<CreateChoreForm />} />
+          <Route path="chore-charts/:id" element={<AdminChartOverview />} />
+          <Route
+            path="chore-charts/:id/create-chore"
+            element={<CreateChoreForm />}
+          />
           {/* root component */}
           <Route path="" element={<HomeComponent />} />
         </Route>
