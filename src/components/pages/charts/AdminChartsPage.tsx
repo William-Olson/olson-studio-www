@@ -25,10 +25,13 @@ class AdminChartsComponent extends React.Component {
         <Banner headingText="Chore Charts" subText="Admin Panel" logo={icon} />
         <AdminChartsTable />
         {!!this.userStore?.user && (
-          <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto">
+          <div className="p-9 flex flex-row justify-center text-center auto-cols-max max-w-[650px] m-auto">
             <Link to="/create-chore-chart">
-              <button className="border-2 border-inherit rounded py-1 px-3">
-                Add New Chart
+              <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
+                <span className="flex flex-col">Add New Chart</span>
+                <span className="flex flex-col ml-2">
+                  <CustomIcon darkMode={DarkModeState} icon={IconTypes.Plus} />
+                </span>
               </button>
             </Link>
           </div>

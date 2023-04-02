@@ -8,7 +8,7 @@ import { AdminGuard } from '../../helpers/AdminGuard';
 import { ConfirmModal } from '../../modals/ConfirmModal';
 import { getToastTheme, Toast } from '../../../util/Toast';
 import { DarkModeState } from '../../../stores/DarkModeStore';
-import { EmptyResults } from './EmptyResults';
+import { EmptyResults } from '../../helpers/EmptyResults';
 import { AdminChartsState } from '../../../stores/AdminChartsStore';
 import { Days } from '../../../util/days';
 
@@ -58,7 +58,7 @@ class AdminChoresTableComponent extends React.Component<AdminChoresTableProps> {
         {!!this.userStore?.user && (
           <div className="pb-20 w-full">
             <div className="m-5 pl-8 pr-8 pb-9 space-y-6">
-              <h3 className="text-3xl font-mono pb-6 mt-6">List of Chores</h3>
+              <h3 className="text-3xl font-mono pb-6 mt-6">Chores</h3>
               {!!this.store.chores?.results?.length &&
                 _.sortBy(this.store.chores.results, ['created'])
                   .reverse()
@@ -68,6 +68,7 @@ class AdminChoresTableComponent extends React.Component<AdminChoresTableProps> {
                         <div>
                           {chore.scheduleDays.split(',').map((d, i) => (
                             <span
+                              key={`chore-list-item-${chore.id}-day-${i}`}
                               className={
                                 'mr-2 ' +
                                 (i % 2 === 0
@@ -81,7 +82,7 @@ class AdminChoresTableComponent extends React.Component<AdminChoresTableProps> {
                         </div>
                       }
                       value={chore.name}
-                      key={chore.id}
+                      key={`chore-list-item-${chore.id}`}
                       action={
                         <button
                           className="text-accent"

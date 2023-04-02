@@ -4,12 +4,17 @@ interface MutedSectionProps {
   addClasses?: string;
 }
 
+export const mutedColorCss = 'rgb(68 64 60 / 1)';
+export const mutedColorClass = 'text-stone-700';
+
+/*
+  Allows wrapping components or elements to apply muted color for text.
+*/
 export function MutedSection(
   props: React.PropsWithChildren<MutedSectionProps>
 ): React.ReactElement {
-  const colorClass = 'text-stone-700';
   let styles =
-    (props.overrideColorClass ? props.overrideColorClass : colorClass) +
+    (props.overrideColorClass ? props.overrideColorClass : mutedColorClass) +
     ' ' +
     (props.overrideClasses
       ? props.overrideClasses

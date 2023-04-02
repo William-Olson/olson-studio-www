@@ -6,6 +6,7 @@ export enum IconTypes {
   Github = 'github',
   Home = 'home',
   Checkmark = 'checkmark',
+  ChevronLeft = 'chevron-left',
   UserCircle = 'user-circle'
 }
 

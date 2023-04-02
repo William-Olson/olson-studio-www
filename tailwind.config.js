@@ -26,8 +26,15 @@ module.exports = {
       dark: 'rgb(16 12 13 / 91%)',
       white: '#DBD9D4',
       black: '#1A0609',
+      // accent colors
       accent: '#711c1c',
-      'accent-dark': '#490900'
+      'accent-dark': '#490900',
+      // clicky colors
+      // (.clickable css class defined in App.css)
+      clicky: '#5a8466',
+      'clicky-hover': '#4b6e55',
+      'clicky-dark': '#baefc8',
+      'clicky-dark-hover': '#a3d7b1'
     }),
     borderColor: ({ theme }) => ({
       ...theme('colors'),

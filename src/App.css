@@ -57,3 +57,21 @@
 .studio-tooltip:hover::after {
   display: block;
 }
+
+.dark .clickable {
+  color: #baefc8;
+  cursor: pointer;
+}
+
+.dark .clickable:hover {
+  color: #a3d7b1;
+}
+
+.clickable {
+  color: #5a8466;
+  cursor: pointer;
+}
+
+.clickable:hover {
+  color: #4b6e55;
+}

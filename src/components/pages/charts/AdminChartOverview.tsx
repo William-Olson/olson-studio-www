@@ -9,7 +9,7 @@ import { AdminChoresTable } from './AdminChoresTable';
 import { Link, useParams } from 'react-router-dom';
 
 import { AdminChartsState } from '../../../stores/AdminChartsStore';
-import { MutedSection } from '../../helpers/MutedSection';
+import { MutedSection, mutedColorCss } from '../../helpers/MutedSection';
 
 interface AdminChartOverviewProps {}
 
@@ -26,6 +26,7 @@ const AdminChartOverviewComponent: React.FC<AdminChartOverviewProps> = () => {
   const bannerIcon: ReactElement = (
     <CustomIcon
       className="w-24 h-24 m-auto"
+      color={mutedColorCss}
       darkMode={DarkModeState}
       icon={IconTypes.Chart}
     />
@@ -58,12 +59,27 @@ const AdminChartOverviewComponent: React.FC<AdminChartOverviewProps> = () => {
 
       <AdminChoresTable chartId={adminCharts.viewingChart.id} />
       {!!userStore?.user && (
-        <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto">
+        <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto flex flex-row">
+          <Link to={`/chore-charts`}>
+            <button className="border-2 flex flex-row border-inherit rounded py-1 px-3 mr-9">
+              <span className="flex flex-col">
+                <CustomIcon
+                  darkMode={DarkModeState}
+                  icon={IconTypes.ChevronLeft}
+                />
+              </span>
+              <span className="flex flex-col"> Back to Charts</span>
+            </button>
+          </Link>
+          <span className="flex flex-auto"></span>
           <Link
             to={`/chore-charts/${adminCharts.viewingChart.id}/create-chore`}
           >
-            <button className="border-2 border-inherit rounded py-1 px-3">
-              Add New Chore
+            <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
+              <span className="flex flex-col">Add New Chore</span>
+              <span className="flex flex-col ml-2">
+                <CustomIcon darkMode={DarkModeState} icon={IconTypes.Plus} />
+              </span>
             </button>
           </Link>
         </div>

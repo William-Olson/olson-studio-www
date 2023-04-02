@@ -10,7 +10,7 @@ import { ConfirmModal } from '../../modals/ConfirmModal';
 import { getToastTheme, Toast } from '../../../util/Toast';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { emitter } from '../../../Events';
-import { EmptyResults } from './EmptyResults';
+import { EmptyResults } from '../../helpers/EmptyResults';
 import { Link } from 'react-router-dom';
 
 class AdminChartsTableComponent extends React.Component {
@@ -60,10 +60,10 @@ class AdminChartsTableComponent extends React.Component {
         {!!this.userStore?.user && (
           <div className="pb-20 w-full">
             <div className="m-5 pl-8 pr-8 pb-9 space-y-6">
-              <h3 className="text-3xl font-mono pb-6 mt-6">List of Charts</h3>
+              <h3 className="text-3xl font-mono pb-6 mt-6">Your Charts</h3>
               {!!this.adminCharts.activeAdminCharts?.results?.length &&
                 _.sortBy(this.adminCharts.activeAdminCharts.results, [
-                  'lastActivity'
+                  'created'
                 ])
                   .reverse()
                   .map((adminChart) => (
@@ -72,7 +72,10 @@ class AdminChartsTableComponent extends React.Component {
                         'M / D - hh:mm:ss a'
                       )}
                       value={
-                        <Link to={`/chore-charts/${adminChart.id}`}>
+                        <Link
+                          className="clickable"
+                          to={`/chore-charts/${adminChart.id}`}
+                        >
                           {' '}
                           {adminChart.name}
                         </Link>

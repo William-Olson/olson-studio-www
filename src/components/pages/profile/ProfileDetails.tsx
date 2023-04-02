@@ -4,6 +4,7 @@ import { UserState } from '../../../stores/UserStore';
 // import { DarkModeState } from '../../../stores/DarkModeStore';
 import moment from 'moment';
 import { SimpleLabel } from '../../layout/subcomponents/SimpleLabel';
+import { MutedSection } from '../../helpers/MutedSection';
 
 export const ProfileDetails = observer(
   class extends React.Component {
@@ -31,7 +32,7 @@ export const ProfileDetails = observer(
         <>
           {!!this.userStore?.user && (
             <div className="pb-20 md:ml-auto md:mr-auto md:w-1/2">
-              <div className="m-5 pl-8 pr-8 pb-9">
+              <MutedSection addClasses="m-5 pl-8 pr-8 pb-9">
                 <h3 className="text-3xl font-mono pb-6 mt-6">User Details</h3>
                 <p></p>
                 <SimpleLabel
@@ -49,7 +50,7 @@ export const ProfileDetails = observer(
                 />
                 <SimpleLabel label="Last Login" value={lastLogin} />
                 <SimpleLabel label="Member Since" value={memberSince} />
-              </div>
+              </MutedSection>
             </div>
           )}
         </>
