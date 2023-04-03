@@ -28,8 +28,10 @@ class AdminChartsTableComponent extends React.Component {
   }
 
   private handleUpdateEvent() {
-    this.adminCharts.fetchAdminCharts();
-    this.adminCharts.viewChart(undefined);
+    // note: using import ref below on purpose
+    // (otherwise we need to bind this method to `this`)
+    AdminChartsState.fetchAdminCharts();
+    AdminChartsState.viewChart(undefined);
   }
 
   public render(): ReactElement {

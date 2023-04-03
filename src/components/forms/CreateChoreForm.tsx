@@ -58,11 +58,16 @@ export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = () => {
     // console.log({ values, actions });
     try {
       const api = new ChoreChartService();
-      api.createChore(
-        Token.fromCache(),
-        adminCharts.viewingChart?.id || '',
-        values as ChorePayload
-      );
+      if (
+        !(await api.createChore(
+          Token.fromCache(),
+          adminCharts.viewingChart?.id || '',
+          values as ChorePayload
+        ))
+      ) {
+        throw new Error(`Unable to create chart: ${values.name}`);
+      }
+
       Toast.success('Created chore successfully', {
         theme: getToastTheme(DarkModeState.isDark)
       });
@@ -70,7 +75,15 @@ export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = () => {
       adminChores.fetchChores(adminCharts.viewingChart?.id);
     } catch (err) {
       console.error('Error creating chore');
-      console.error(err);
+      Toast.error((err as Error)?.message || 'Unable to create Chore!', {
+        theme: getToastTheme(DarkModeState.isDark)
+      });
+      if (values.scheduleDays === '' || values.scheduleDays === undefined) {
+        Toast.error('Missing: Days Due on', {
+          theme: getToastTheme(DarkModeState.isDark)
+        });
+      }
+      // console.error(err);
     }
     actions.setSubmitting(false);
   };

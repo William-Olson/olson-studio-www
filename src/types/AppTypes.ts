@@ -1,4 +1,5 @@
 export enum IconTypes {
+  Approved = 'approved',
   Moon = 'moon',
   Sun = 'sun',
   Plus = 'plus',
@@ -7,6 +8,9 @@ export enum IconTypes {
   Home = 'home',
   Checkmark = 'checkmark',
   ChevronLeft = 'chevron-left',
+  ChevronRight = 'chevron-right',
+  RectangleGroup = 'rectangle-group',
+  Star = 'star',
   UserCircle = 'user-circle'
 }
 

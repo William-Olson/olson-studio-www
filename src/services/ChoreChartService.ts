@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ChoreChartPayload, ChorePayload } from '../types/ChoreTypes';
+import { PagedResponse, StudioApiChartEvent } from '../types/StudioApiTypes';
 import { Token } from '../util/Auth';
 import { STUDIO_API_BASE_URL } from './StudioApiService';
 
@@ -21,55 +22,9 @@ export class ChoreChartService {
           Authorization: 'bearer ' + token.toString()
         }
       });
-      resp.data;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
-  /**
-   * Fetches the Admin Chore Charts from the API.
-   *
-   * @param token Token An authentcated user's auth token
-   * @returns object Response containing the paginated results.
-   */
-  public async getAdminCharts(token: Token) {
-    try {
-      const resp = await axios.request({
-        url: `${STUDIO_API_BASE_URL}/admin/chore-charts`,
-        method: 'GET',
-        headers: {
-          Authorization: 'bearer ' + token.toString()
-        }
-      });
       return resp.data;
     } catch (err) {
       console.error(err);
-      throw err;
-    }
-  }
-
-  /**
-   * Fetches the Chores for a given Chart via Admin API.
-   *
-   * @param token Token An authentcated user's auth token.
-   * @param chartId ID of the chart to fetch chores from.
-   * @returns object Response containing the paginated results.
-   */
-  public async getChores(token: Token, chartId: string) {
-    try {
-      const resp = await axios.request({
-        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}/chores`,
-        method: 'GET',
-        headers: {
-          Authorization: 'bearer ' + token.toString()
-        }
-      });
-      return resp.data;
-    } catch (err) {
-      console.error(err);
-      throw err;
     }
   }
 
@@ -93,7 +48,27 @@ export class ChoreChartService {
       return resp.data;
     } catch (err) {
       console.error(err);
-      throw err;
+    }
+  }
+
+  /**
+   * Deletes the Admin Chore Charts with the given chart ID.
+   *
+   * @param token Token An authentcated user's auth token
+   * @returns object Response containing a success or failure boolean.
+   */
+  public async deleteAdminChart(token: Token, chartId: string) {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -117,21 +92,20 @@ export class ChoreChartService {
       return resp.data;
     } catch (err) {
       console.error(err);
-      throw err;
     }
   }
 
   /**
-   * Deletes the Admin Chore Charts with the given chart ID.
+   * Fetches the Admin Chore Charts from the API.
    *
    * @param token Token An authentcated user's auth token
-   * @returns object Response containing a success or failure boolean.
+   * @returns object Response containing the paginated results.
    */
-  public async deleteAdminChart(token: Token, chartId: string) {
+  public async getAdminCharts(token: Token) {
     try {
       const resp = await axios.request({
-        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}`,
-        method: 'DELETE',
+        url: `${STUDIO_API_BASE_URL}/admin/chore-charts`,
+        method: 'GET',
         headers: {
           Authorization: 'bearer ' + token.toString()
         }
@@ -139,7 +113,79 @@ export class ChoreChartService {
       return resp.data;
     } catch (err) {
       console.error(err);
-      throw err;
+    }
+  }
+
+  /**
+   * Fetches the Admin Chore Chart Events from the API.
+   *
+   * @param token Token An authentcated user's auth token.
+   * @param chartId ID of the chart to fetch events from.
+   * @returns object Response containing the paginated results.
+   */
+  public async getAdminChartEvents(
+    token: Token,
+    chartId: string
+  ): Promise<PagedResponse<StudioApiChartEvent> | undefined> {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}/events`,
+        method: 'GET',
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Updates the Admin Chore Chart Event via the API.
+   *
+   * @param token Token An authentcated user's auth token.
+   * @param event The event to update.
+   * @returns object Response containing success message or undefined.
+   */
+  public async updateEvent(
+    token: Token,
+    event: StudioApiChartEvent
+  ): Promise<PagedResponse<StudioApiChartEvent> | undefined> {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${event.choreChartId}/events/${event.id}`,
+        method: 'PATCH',
+        data: event,
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Fetches the Chores for a given Chart via Admin API.
+   *
+   * @param token Token An authentcated user's auth token.
+   * @param chartId ID of the chart to fetch chores from.
+   * @returns object Response containing the paginated results.
+   */
+  public async getChores(token: Token, chartId: string) {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}/chores`,
+        method: 'GET',
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
     }
   }
 }

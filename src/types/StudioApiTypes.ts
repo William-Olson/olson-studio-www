@@ -81,4 +81,22 @@ export interface StudioApiAdminChart {
   chores: Array<StudioApiAdminChore>;
 }
 
+export enum ChoreEventStatus {
+  TODO = 'TODO',
+  NEEDS_CHECK = 'NEEDS_CHECK',
+  COMPLETED = 'COMPLETED'
+}
+
+export interface StudioApiChartEvent {
+  id: string;
+  choreChartId: string;
+  choreId: string;
+  rating: number; // 0 - 5
+  due: Date; // Utc
+  completed?: Date;
+  created: Date;
+  updated: Date;
+  status: ChoreEventStatus;
+}
+
 export type StudioApiAdminCharts = PagedResponse<StudioApiAdminChart>;
