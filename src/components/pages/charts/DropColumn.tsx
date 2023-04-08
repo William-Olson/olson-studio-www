@@ -17,6 +17,7 @@ import {
   ChoreEventStatus,
   StudioApiChoreEvent
 } from '../../../types/StudioApiTypes';
+import { Loading } from '../../helpers/Loading';
 import { mutedColorCss } from '../../helpers/MutedSection';
 import { ChoreEventCard } from './ChoreEventCard';
 
@@ -103,7 +104,16 @@ const DropColumnComponent: React.FC<DropColumnProps> = (
     props.dropId
   );
 
-  // show the empty column even if there are no items to display in it
+  const listStyles = getListStyle(false);
+  if (props.store.loading) {
+    return (
+      <div style={listStyles}>
+        <Loading heightClass="h-full" />
+      </div>
+    );
+  }
+
+  // show the empty column when there are no items to display in it
   if (!props.data || !props.data.length) {
     return (
       <Droppable droppableId={props.dropId}>
@@ -113,7 +123,9 @@ const DropColumnComponent: React.FC<DropColumnProps> = (
             key={`${props.dropId}-droppable-area`}
             style={getListStyle(snapshot.isDraggingOver)}
             {...providedDroppable.droppableProps}
-          ></div>
+          >
+            {providedDroppable.placeholder}
+          </div>
         )}
       </Droppable>
     );
@@ -164,10 +176,6 @@ const DropColumnComponent: React.FC<DropColumnProps> = (
                             />
                           )}
                         </div>
-                        {
-                          (providedDraggable as Partial<DroppableProvided>)
-                            .placeholder
-                        }
                       </div>
                     );
                   }}

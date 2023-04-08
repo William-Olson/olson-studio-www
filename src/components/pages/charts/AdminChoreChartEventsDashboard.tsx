@@ -11,34 +11,37 @@ import { CustomIcon } from '../../CustomIcon';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { ChoreEventsArea } from './ChoreEventsArea';
 import moment from 'moment';
-import { Loading } from '../../helpers/Loading';
 
 interface AdminChoreChartEventsDashboardProps {}
 
 class AdminChoreChartEventsDashboardComponent extends React.Component<AdminChoreChartEventsDashboardProps> {
   public userStore: typeof UserState = UserState;
   public adminChartEvents: typeof AdminChartEventsState = AdminChartEventsState;
+  public darkMode: typeof DarkModeState = DarkModeState;
+
   componentDidMount(): void {
     this.adminChartEvents.fetchEvents();
-    // console.log('fetched: ', this.adminChartEvents.chartEvents);
+  }
+
+  refresh() {
+    this.adminChartEvents.fetchEvents();
   }
 
   render() {
-    if (!this.userStore.user) {
-      return <Loading />;
-    }
-
     if (!this.userStore.isAdmin) {
       return <AdminGuard isAdmin={false} />;
-    }
-
-    if (!this.adminChartEvents.charts) {
-      return <Loading />;
     }
 
     return (
       <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
         {/* <Banner headingText="" subText="Chore Chart Events" logo={bannerIcon} /> */}
+        <div
+          className="flex flex-row clickable select-none"
+          onClick={() => this.refresh()}
+        >
+          <CustomIcon darkMode={this.darkMode} icon={IconTypes.Refresh} />
+          {/* <span className="mx-2">refresh</span> */}
+        </div>
 
         <div className="pb-20 w-full">
           <div className="m-5 pl-8 pr-8 pb-9 space-y-6">

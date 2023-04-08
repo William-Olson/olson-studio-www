@@ -12,6 +12,7 @@ export enum IconTypes {
   Moon = 'moon',
   Plus = 'plus',
   RectangleGroup = 'rectangle-group',
+  Refresh = 'refresh',
   Star = 'star',
   Sun = 'sun',
   UserCircle = 'user-circle'

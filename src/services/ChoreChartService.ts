@@ -148,11 +148,11 @@ export class ChoreChartService {
   /**
    * Updates the Admin Chore Chart Event via the API.
    *
-   * @param token Token An authentcated user's auth token.
+   * @param token Token An admin's auth token.
    * @param event The event to update.
    * @returns object Response containing success message or undefined.
    */
-  public async updateEvent(
+  public async updateAdminChoreEvent(
     token: Token,
     event: StudioApiChoreEvent
   ): Promise<PagedResponse<StudioApiChoreEvent> | undefined> {
@@ -161,6 +161,35 @@ export class ChoreChartService {
         url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${event.choreChartId}/events/${event.id}`,
         method: 'PATCH',
         data: event,
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Updates the Chore Chart Event via Non-Admin API.
+   *
+   * @param token Token An authentcated user's auth token.
+   * @param event The event to update.
+   * @returns object Response containing success message or undefined.
+   */
+  public async updateChoreEvent(
+    token: Token,
+    event: StudioApiChoreEvent
+  ): Promise<PagedResponse<StudioApiChoreEvent> | undefined> {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/chores`,
+        method: 'PATCH',
+        data: {
+          eventId: event.id,
+          status: event.status
+        },
         headers: {
           Authorization: 'bearer ' + token.toString()
         }

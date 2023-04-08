@@ -7,26 +7,36 @@ import { observer } from 'mobx-react';
 
 import { ChoreEventsArea } from './ChoreEventsArea';
 import moment from 'moment';
-import { Loading } from '../../helpers/Loading';
+import { CustomIcon } from '../../CustomIcon';
+import { IconTypes } from '../../../types/AppTypes';
+import { DarkModeState } from '../../../stores/DarkModeStore';
 
 interface UserChoreChartEventsDashboardProps {}
 
 class UserChoreChartEventsDashboardComponent extends React.Component<UserChoreChartEventsDashboardProps> {
   public userStore: typeof UserState = UserState;
   public userChoreEvents: typeof UserChoreEventsState = UserChoreEventsState;
+  public darkMode: typeof DarkModeState = DarkModeState;
+
   componentDidMount(): void {
     this.userChoreEvents.fetchEvents();
-    // console.log('fetched: ', this.userChoreEvents.chartEvents);
+  }
+
+  refresh() {
+    this.userChoreEvents.fetchEvents();
   }
 
   render() {
-    if (!this.userChoreEvents.charts) {
-      return <Loading />;
-    }
-
     return (
       <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
         {/* <Banner headingText="" subText="Chore Chart Events" logo={bannerIcon} /> */}
+        <div
+          className="flex flex-row clickable select-none"
+          onClick={() => this.refresh()}
+        >
+          <CustomIcon darkMode={this.darkMode} icon={IconTypes.Refresh} />
+          {/* <span className="mx-2">refresh</span> */}
+        </div>
 
         <div className="pb-20 w-full">
           <div className="m-5 pl-8 pr-8 pb-9 space-y-6">

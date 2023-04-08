@@ -22,11 +22,13 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
       charts: observable,
       fetchEvents: action,
       getEventChart: action,
-      getEventChore: action
+      getEventChore: action,
+      markStatus: action
     });
   }
 
   public async fetchEvents(): Promise<void> {
+    this.loading = true;
     const token = Token.fromCache();
     const resp: PagedResponse<StudioApiChoreChart> =
       await this.api.getAdminCharts(token);
@@ -62,6 +64,7 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
         });
       }
     }
+    this.loading = false;
   }
 
   public getEventChart(
@@ -85,7 +88,7 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
     targetStatus: ChoreEventStatus
   ) {
     event.status = targetStatus;
-    this.api.updateEvent(Token.fromCache(), event);
+    await this.api.updateAdminChoreEvent(Token.fromCache(), event);
   }
 }
 

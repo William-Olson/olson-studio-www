@@ -6,6 +6,8 @@ import { ChoreEventStatus } from '../../../types/StudioApiTypes';
 import { DropColumn } from './DropColumn';
 import { UserState } from '../../../stores/UserStore';
 import { UserChoreEventsState } from '../../../stores/UserChoreEventsStore';
+import { getToastTheme, Toast } from '../../../util/Toast';
+import { DarkModeState } from '../../../stores/DarkModeStore';
 
 // -----------------------------------------------------------------
 // -----------------------------------------------------------------
@@ -19,6 +21,8 @@ interface ChoreEventsAreaProps {
 }
 
 export class ChoreEventsAreaComponent extends React.Component<ChoreEventsAreaProps> {
+  public darkMode: typeof DarkModeState = DarkModeState;
+
   constructor(props: ChoreEventsAreaProps) {
     super(props);
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -42,23 +46,38 @@ export class ChoreEventsAreaComponent extends React.Component<ChoreEventsAreaPro
       return;
     }
 
-    switch (result.destination.droppableId) {
-      case ChoreEventStatus.TODO:
-        this.props.store.markStatus(ev, ChoreEventStatus.TODO);
-        break;
-      case ChoreEventStatus.NEEDS_CHECK:
-        this.props.store.markStatus(ev, ChoreEventStatus.NEEDS_CHECK);
-        break;
-      case ChoreEventStatus.COMPLETED:
-        this.props.store.markStatus(ev, ChoreEventStatus.COMPLETED);
-        break;
+    const isAdmin = !!this.props.user?.isAdmin;
+    const availableStatuses: Set<ChoreEventStatus> = new Set<ChoreEventStatus>([
+      ChoreEventStatus.COMPLETED,
+      ChoreEventStatus.NEEDS_CHECK,
+      ChoreEventStatus.TODO
+    ]);
+    const targetStatus = result.destination.droppableId as ChoreEventStatus;
+    if (!availableStatuses.has(targetStatus)) {
+      console.warn('Unable to set status ' + targetStatus);
+      return;
     }
+    this.props.store
+      .markStatus(ev, targetStatus, isAdmin)
+      .then(() => {
+        const fromIndex = result.source.index;
+        const toIndex = result.destination?.index || 0;
+        const fromStatus = result.source.droppableId as ChoreEventStatus;
 
-    // console.log('source: ', result.source);
-    // console.log('dest: ', result.destination);
-    // console.log('result: ', result);
+        this.props.store.reorder(fromStatus, fromIndex, targetStatus, toIndex);
 
-    this.props.store.reorder();
+        if (fromStatus !== targetStatus) {
+          Toast.success('Chore Status Updated!', {
+            theme: getToastTheme(this.darkMode.isDark)
+          });
+        }
+      })
+      .catch((err) => {
+        Toast.error('An error occurred updated chore!', {
+          theme: getToastTheme(this.darkMode.isDark)
+        });
+        console.error('Error: ', err);
+      });
   }
 
   public render() {
