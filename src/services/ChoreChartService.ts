@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { ChoreChartPayload, ChorePayload } from '../types/ChoreTypes';
-import { PagedResponse, StudioApiChartEvent } from '../types/StudioApiTypes';
+import {
+  PagedResponse,
+  StudioApiChoreChart,
+  StudioApiChoreEvent
+} from '../types/StudioApiTypes';
 import { Token } from '../util/Auth';
 import { STUDIO_API_BASE_URL } from './StudioApiService';
 
@@ -126,7 +130,7 @@ export class ChoreChartService {
   public async getAdminChartEvents(
     token: Token,
     chartId: string
-  ): Promise<PagedResponse<StudioApiChartEvent> | undefined> {
+  ): Promise<PagedResponse<StudioApiChoreEvent> | undefined> {
     try {
       const resp = await axios.request({
         url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}/events`,
@@ -150,8 +154,8 @@ export class ChoreChartService {
    */
   public async updateEvent(
     token: Token,
-    event: StudioApiChartEvent
-  ): Promise<PagedResponse<StudioApiChartEvent> | undefined> {
+    event: StudioApiChoreEvent
+  ): Promise<PagedResponse<StudioApiChoreEvent> | undefined> {
     try {
       const resp = await axios.request({
         url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${event.choreChartId}/events/${event.id}`,
@@ -178,6 +182,29 @@ export class ChoreChartService {
     try {
       const resp = await axios.request({
         url: `${STUDIO_API_BASE_URL}/admin/chore-charts/${chartId}/chores`,
+        method: 'GET',
+        headers: {
+          Authorization: 'bearer ' + token.toString()
+        }
+      });
+      return resp.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Fetches the Chore events for the authenticated User.
+   *
+   * @param token Token An authentcated user's auth token.
+   * @returns object Response containing the paginated results.
+   */
+  public async getUserChoreEvents(
+    token: Token
+  ): Promise<PagedResponse<StudioApiChoreChart> | undefined> {
+    try {
+      const resp = await axios.request({
+        url: `${STUDIO_API_BASE_URL}/chores`,
         method: 'GET',
         headers: {
           Authorization: 'bearer ' + token.toString()

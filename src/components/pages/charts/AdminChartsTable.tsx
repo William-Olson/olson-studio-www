@@ -10,7 +10,7 @@ import { ConfirmModal } from '../../modals/ConfirmModal';
 import { getToastTheme, Toast } from '../../../util/Toast';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { emitter } from '../../../Events';
-import { EmptyResults } from '../../helpers/EmptyResults';
+import { EmptyResults } from './EmptyResults';
 import { Link } from 'react-router-dom';
 
 class AdminChartsTableComponent extends React.Component {
@@ -76,7 +76,7 @@ class AdminChartsTableComponent extends React.Component {
                       value={
                         <Link
                           className="clickable"
-                          to={`/chore-charts/${adminChart.id}`}
+                          to={`/admin/chore-charts/${adminChart.id}`}
                         >
                           {' '}
                           {adminChart.name}

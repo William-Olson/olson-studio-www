@@ -55,7 +55,7 @@ export interface StudioApiSessions {
   results?: StudioApiSession[];
 }
 
-export interface StudioApiAdminChore {
+export interface StudioApiChore {
   id: string;
   choreChartId: string;
   name: string;
@@ -63,10 +63,10 @@ export interface StudioApiAdminChore {
   scheduleDays: string;
   created: Date;
   updated: Date;
-  // events: Array<any>;
+  events: Array<StudioApiChoreEvent>;
 }
 
-export interface StudioApiAdminChart {
+export interface StudioApiChoreChart {
   id: string;
   assignee: string;
   createdBy: string;
@@ -78,7 +78,7 @@ export interface StudioApiAdminChart {
   dueTime: string;
   created: Date;
   updated: Date;
-  chores: Array<StudioApiAdminChore>;
+  chores: Array<StudioApiChore>;
 }
 
 export enum ChoreEventStatus {
@@ -87,7 +87,7 @@ export enum ChoreEventStatus {
   COMPLETED = 'COMPLETED'
 }
 
-export interface StudioApiChartEvent {
+export interface StudioApiChoreEvent {
   id: string;
   choreChartId: string;
   choreId: string;
@@ -99,4 +99,4 @@ export interface StudioApiChartEvent {
   status: ChoreEventStatus;
 }
 
-export type StudioApiAdminCharts = PagedResponse<StudioApiAdminChart>;
+export type StudioApiAdminCharts = PagedResponse<StudioApiChoreChart>;

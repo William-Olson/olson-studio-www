@@ -8,7 +8,7 @@ import { AdminGuard } from '../../helpers/AdminGuard';
 import { ConfirmModal } from '../../modals/ConfirmModal';
 import { getToastTheme, Toast } from '../../../util/Toast';
 import { DarkModeState } from '../../../stores/DarkModeStore';
-import { EmptyResults } from '../../helpers/EmptyResults';
+import { EmptyResults } from './EmptyResults';
 import { AdminChartsState } from '../../../stores/AdminChartsStore';
 import { Days } from '../../../util/days';
 

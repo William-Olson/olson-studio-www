@@ -1,4 +1,4 @@
-import { PagedResponse, StudioApiAdminChore } from '../types/StudioApiTypes';
+import { PagedResponse, StudioApiChore } from '../types/StudioApiTypes';
 import { observable, action, makeObservable, runInAction } from 'mobx';
 import { ChoreChartService } from '../services/ChoreChartService';
 import { Token } from '../util/Auth';
@@ -7,8 +7,8 @@ class AdminChartChoresStore {
   public api: ChoreChartService = new ChoreChartService();
   public chartId: string | undefined;
   public isConfirmModalOpen = false;
-  public choreToDelete: StudioApiAdminChore | undefined;
-  public chores: PagedResponse<StudioApiAdminChore> | undefined;
+  public choreToDelete: StudioApiChore | undefined;
+  public chores: PagedResponse<StudioApiChore> | undefined;
 
   constructor() {
     makeObservable(this, {
@@ -22,7 +22,7 @@ class AdminChartChoresStore {
     });
   }
 
-  public openConfirmModal(shouldOpen: boolean, chore?: StudioApiAdminChore) {
+  public openConfirmModal(shouldOpen: boolean, chore?: StudioApiChore) {
     this.choreToDelete = chore;
     this.isConfirmModalOpen = shouldOpen;
   }

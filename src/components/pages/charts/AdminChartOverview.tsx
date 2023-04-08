@@ -60,7 +60,7 @@ const AdminChartOverviewComponent: React.FC<AdminChartOverviewProps> = () => {
       <AdminChoresTable chartId={adminCharts.viewingChart.id} />
       {!!userStore?.user && (
         <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto flex flex-row">
-          <Link to={`/chore-charts`}>
+          <Link to={`/admin/chore-charts`}>
             <button className="border-2 flex flex-row border-inherit rounded py-1 px-3 mr-9">
               <span className="flex flex-col">
                 <CustomIcon
@@ -73,7 +73,7 @@ const AdminChartOverviewComponent: React.FC<AdminChartOverviewProps> = () => {
           </Link>
           <span className="flex flex-auto"></span>
           <Link
-            to={`/chore-charts/${adminCharts.viewingChart.id}/create-chore`}
+            to={`/admin/chore-charts/${adminCharts.viewingChart.id}/create-chore`}
           >
             <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
               <span className="flex flex-col">Add New Chore</span>

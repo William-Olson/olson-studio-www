@@ -13,29 +13,40 @@ import { AdminCharts } from './components/pages/charts/AdminChartsPage';
 import { CreateChoreForm } from './components/forms/CreateChoreForm';
 import { AdminChartOverview } from './components/pages/charts/AdminChartOverview';
 import { AdminChoreChartEventsDashboard } from './components/pages/charts/AdminChoreChartEventsDashboard';
+import { UserChoreChartEventsDashboard } from './components/pages/charts/UserChoreChartEventsDashboard';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          {/* auth routes */}
           <Route
             path="/oauth2/redirect/google"
             element={<GoogleAuthCallback />}
           />
           <Route path="login" element={<LoginComponent />} />
+
+          {/* normal user authenticated routes */}
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="chores" element={<UserChoreChartEventsDashboard />} />
 
           {/* admin chore charts */}
-          <Route path="chore-charts" element={<AdminCharts />} />
+          <Route path="admin/chore-charts" element={<AdminCharts />} />
           <Route
-            path="chore-chart-events"
+            path="admin/chore-chart-events"
             element={<AdminChoreChartEventsDashboard />}
           />
-          <Route path="chore-charts/:id" element={<AdminChartOverview />} />
-          <Route path="create-chore-chart" element={<CreateChartForm />} />
           <Route
-            path="chore-charts/:id/create-chore"
+            path="admin/chore-charts/:id"
+            element={<AdminChartOverview />}
+          />
+          <Route
+            path="admin/create-chore-chart"
+            element={<CreateChartForm />}
+          />
+          <Route
+            path="admin/chore-charts/:id/create-chore"
             element={<CreateChoreForm />}
           />
           {/* root component */}

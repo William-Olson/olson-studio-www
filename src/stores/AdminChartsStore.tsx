@@ -1,5 +1,5 @@
 import {
-  StudioApiAdminChart,
+  StudioApiChoreChart,
   StudioApiAdminCharts
 } from '../types/StudioApiTypes';
 import { observable, action, makeObservable, runInAction } from 'mobx';
@@ -9,7 +9,7 @@ import { Token } from '../util/Auth';
 class AdminChartsStore {
   public activeAdminCharts?: StudioApiAdminCharts;
   public api: ChoreChartService = new ChoreChartService();
-  public viewingChart?: StudioApiAdminChart;
+  public viewingChart?: StudioApiChoreChart;
 
   constructor() {
     makeObservable(this, {
@@ -26,13 +26,13 @@ class AdminChartsStore {
   }
 
   public isConfirmModalOpen = false;
-  public chartToDelete: StudioApiAdminChart | undefined;
+  public chartToDelete: StudioApiChoreChart | undefined;
 
-  public viewChart(chart: StudioApiAdminChart | undefined) {
+  public viewChart(chart: StudioApiChoreChart | undefined) {
     this.viewingChart = chart;
   }
 
-  public openConfirmModal(shouldOpen: boolean, chart?: StudioApiAdminChart) {
+  public openConfirmModal(shouldOpen: boolean, chart?: StudioApiChoreChart) {
     this.chartToDelete = chart;
     this.isConfirmModalOpen = shouldOpen;
   }
@@ -45,14 +45,14 @@ class AdminChartsStore {
     });
   }
 
-  public async deleteChart(adminChart: StudioApiAdminChart): Promise<void> {
+  public async deleteChart(adminChart: StudioApiChoreChart): Promise<void> {
     await this.api.deleteAdminChart(Token.fromCache(), adminChart.id || '');
     await this.fetchAdminCharts();
   }
 
   public async findChart(
     chartId: string
-  ): Promise<StudioApiAdminChart | undefined> {
+  ): Promise<StudioApiChoreChart | undefined> {
     if (!this.activeAdminCharts) {
       await this.fetchAdminCharts();
     }

@@ -50,7 +50,7 @@ class NavBarComponent extends React.Component<NavBarProps> {
             </div>
             {!!this.props.user?.user && hasAdminBadge && (
               <div className="pr-4">
-                <Link to={'/chore-charts'}>
+                <Link to={'/admin/chore-charts'}>
                   <CustomIcon
                     darkMode={this.props.darkMode}
                     icon={IconTypes.Chart}

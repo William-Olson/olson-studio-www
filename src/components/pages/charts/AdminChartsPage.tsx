@@ -26,7 +26,7 @@ class AdminChartsComponent extends React.Component {
         <AdminChartsTable />
         {!!this.userStore?.user && (
           <div className="p-9 flex flex-row justify-center text-center auto-cols-max max-w-[650px] m-auto">
-            <Link to={`/chore-chart-events`}>
+            <Link to={`/admin/chore-chart-events`}>
               <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
                 <span className="flex flex-col mr-2">
                   <CustomIcon
@@ -38,7 +38,7 @@ class AdminChartsComponent extends React.Component {
               </button>
             </Link>
             <span className="flex flex-auto"></span>
-            <Link to="/create-chore-chart">
+            <Link to="/admin/create-chore-chart">
               <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
                 <span className="flex flex-col">Add New Chart</span>
                 <span className="flex flex-col ml-2">

@@ -1,16 +1,19 @@
 export enum IconTypes {
   Approved = 'approved',
-  Moon = 'moon',
-  Sun = 'sun',
-  Plus = 'plus',
+  Bars2 = 'bars-2',
   Chart = 'chart',
-  Github = 'github',
-  Home = 'home',
   Checkmark = 'checkmark',
   ChevronLeft = 'chevron-left',
   ChevronRight = 'chevron-right',
+  Edit = 'edit',
+  Eye = 'eye',
+  Github = 'github',
+  Home = 'home',
+  Moon = 'moon',
+  Plus = 'plus',
   RectangleGroup = 'rectangle-group',
   Star = 'star',
+  Sun = 'sun',
   UserCircle = 'user-circle'
 }
 

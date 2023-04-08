@@ -71,7 +71,7 @@ export const CreateChoreComponent: React.FC<CreateChoreComponentProps> = () => {
       Toast.success('Created chore successfully', {
         theme: getToastTheme(DarkModeState.isDark)
       });
-      navigate(`/chore-charts/${adminCharts.viewingChart?.id}`);
+      navigate(`/admin/chore-charts/${adminCharts.viewingChart?.id}`);
       adminChores.fetchChores(adminCharts.viewingChart?.id);
     } catch (err) {
       console.error('Error creating chore');

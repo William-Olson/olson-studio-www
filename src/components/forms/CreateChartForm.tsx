@@ -88,7 +88,7 @@ export const CreateChartComponent: React.FC<CreateChartComponentProps> = () => {
       Toast.success('Created chart successfully', {
         theme: getToastTheme(DarkModeState.isDark)
       });
-      navigate('/chore-charts');
+      navigate('/admin/chore-charts');
       emitter.emit('chartsUpdated');
       // setTimeout(() => emitter.emit('chartsUpdated'), 1000);
     } catch (err) {
