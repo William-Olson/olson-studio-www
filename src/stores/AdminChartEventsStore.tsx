@@ -35,10 +35,9 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
 
     runInAction(() => {
       this.charts = resp;
-      this.eventsInTodo = [];
-      this.eventsInNeedsCheck = [];
-      this.eventsInDone = [];
     });
+
+    const ensureExclusive = this.getExclusiveChecker();
 
     const today = moment().format('MM-DD');
     for (const chart of resp.results || []) {
@@ -49,17 +48,7 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
             if (moment(ev.due).format('MM-DD') !== today) {
               return;
             }
-            switch (ev.status) {
-              case ChoreEventStatus.TODO:
-                this.eventsInTodo.push(ev);
-                break;
-              case ChoreEventStatus.NEEDS_CHECK:
-                this.eventsInNeedsCheck.push(ev);
-                break;
-              case ChoreEventStatus.COMPLETED:
-                this.eventsInDone.push(ev);
-                break;
-            }
+            ensureExclusive(ev);
           });
         });
       }
