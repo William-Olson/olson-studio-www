@@ -31,7 +31,7 @@ class UserChoreChartEventsDashboardComponent extends React.Component<UserChoreCh
       <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
         {/* <Banner headingText="" subText="Chore Chart Events" logo={bannerIcon} /> */}
         <div
-          className="flex flex-row clickable select-none"
+          className="select-none clickable w-6"
           onClick={() => this.refresh()}
         >
           <CustomIcon darkMode={this.darkMode} icon={IconTypes.Refresh} />

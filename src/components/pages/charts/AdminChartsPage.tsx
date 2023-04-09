@@ -6,7 +6,7 @@ import { CustomIcon } from '../../CustomIcon';
 import { Banner } from '../../layout/Banner';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { AdminChartsTable } from './AdminChartsTable';
-import { Link } from 'react-router-dom';
+import { LinkButton } from '../../helpers/LinkedButton';
 
 class AdminChartsComponent extends React.Component {
   private userStore: typeof UserState = UserState;
@@ -26,26 +26,17 @@ class AdminChartsComponent extends React.Component {
         <AdminChartsTable />
         {!!this.userStore?.user && (
           <div className="p-9 flex flex-row justify-center text-center auto-cols-max max-w-[650px] m-auto">
-            <Link to={`/admin/chore-chart-events`}>
-              <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
-                <span className="flex flex-col mr-2">
-                  <CustomIcon
-                    darkMode={DarkModeState}
-                    icon={IconTypes.RectangleGroup}
-                  />
-                </span>
-                <span className="flex flex-col">Events Dashboard</span>
-              </button>
-            </Link>
+            <LinkButton
+              to={`/admin/chore-chart-events`}
+              leftIcon={IconTypes.RectangleGroup}
+              label="Events Dashboard"
+            />
             <span className="flex flex-auto"></span>
-            <Link to="/admin/create-chore-chart">
-              <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
-                <span className="flex flex-col">Add New Chart</span>
-                <span className="flex flex-col ml-2">
-                  <CustomIcon darkMode={DarkModeState} icon={IconTypes.Plus} />
-                </span>
-              </button>
-            </Link>
+            <LinkButton
+              to="/admin/create-chore-chart"
+              rightIcon={IconTypes.Plus}
+              label="Add New Chart"
+            />
           </div>
         )}
       </div>

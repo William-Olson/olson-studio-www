@@ -108,7 +108,7 @@ const DropColumnComponent: React.FC<DropColumnProps> = (
   if (props.store.loading) {
     return (
       <div style={listStyles}>
-        <Loading heightClass="h-full" />
+        <Loading heightClass="h-[180px]" />
       </div>
     );
   }

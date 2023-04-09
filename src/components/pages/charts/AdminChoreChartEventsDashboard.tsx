@@ -11,6 +11,7 @@ import { CustomIcon } from '../../CustomIcon';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { ChoreEventsArea } from './ChoreEventsArea';
 import moment from 'moment';
+import { LinkButton } from '../../helpers/LinkedButton';
 
 interface AdminChoreChartEventsDashboardProps {}
 
@@ -36,7 +37,7 @@ class AdminChoreChartEventsDashboardComponent extends React.Component<AdminChore
       <div className="md:w-[900px] max-w-[900px] opacity-95 m-auto">
         {/* <Banner headingText="" subText="Chore Chart Events" logo={bannerIcon} /> */}
         <div
-          className="flex flex-row clickable select-none"
+          className="clickable select-none w-6"
           onClick={() => this.refresh()}
         >
           <CustomIcon darkMode={this.darkMode} icon={IconTypes.Refresh} />
@@ -66,17 +67,11 @@ class AdminChoreChartEventsDashboardComponent extends React.Component<AdminChore
           )}
         </div>
         <div className="flex justify-center">
-          <Link to={`/admin/chore-charts`}>
-            <button className="border-2 flex flex-row border-inherit rounded py-1 px-3 mr-9">
-              <span className="flex flex-col">
-                <CustomIcon
-                  darkMode={DarkModeState}
-                  icon={IconTypes.ChevronLeft}
-                />
-              </span>
-              <span className="flex flex-col"> Back to Charts</span>
-            </button>
-          </Link>
+          <LinkButton
+            leftIcon={IconTypes.ChevronLeft}
+            to={`/admin/chore-charts`}
+            label="Back to Charts"
+          />
         </div>
       </div>
     );

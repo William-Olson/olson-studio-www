@@ -6,10 +6,11 @@ import { CustomIcon } from '../../CustomIcon';
 import { Banner } from '../../layout/Banner';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { AdminChoresTable } from './AdminChoresTable';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { AdminChartsState } from '../../../stores/AdminChartsStore';
 import { MutedSection, mutedColorCss } from '../../helpers/MutedSection';
+import { LinkButton } from '../../helpers/LinkedButton';
 
 interface AdminChartOverviewProps {}
 
@@ -60,28 +61,17 @@ const AdminChartOverviewComponent: React.FC<AdminChartOverviewProps> = () => {
       <AdminChoresTable chartId={adminCharts.viewingChart.id} />
       {!!userStore?.user && (
         <div className="p-9 text-center auto-cols-max max-w-[650px] m-auto flex flex-row">
-          <Link to={`/admin/chore-charts`}>
-            <button className="border-2 flex flex-row border-inherit rounded py-1 px-3 mr-9">
-              <span className="flex flex-col">
-                <CustomIcon
-                  darkMode={DarkModeState}
-                  icon={IconTypes.ChevronLeft}
-                />
-              </span>
-              <span className="flex flex-col"> Back to Charts</span>
-            </button>
-          </Link>
+          <LinkButton
+            leftIcon={IconTypes.ChevronLeft}
+            to={`/admin/chore-charts`}
+            label="Back to Charts"
+          />
           <span className="flex flex-auto"></span>
-          <Link
+          <LinkButton
+            rightIcon={IconTypes.Plus}
             to={`/admin/chore-charts/${adminCharts.viewingChart.id}/create-chore`}
-          >
-            <button className="border-2 flex flex-row border-inherit rounded py-1 px-3">
-              <span className="flex flex-col">Add New Chore</span>
-              <span className="flex flex-col ml-2">
-                <CustomIcon darkMode={DarkModeState} icon={IconTypes.Plus} />
-              </span>
-            </button>
-          </Link>
+            label="Add New Chore"
+          />
         </div>
       )}
     </div>

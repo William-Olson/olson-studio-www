@@ -42,9 +42,55 @@ export abstract class BaseChoreEventsStore {
       eventsInTodo: observable,
       eventsInNeedsCheck: observable,
       eventsInDone: observable,
+      getExclusiveChecker: action,
       reorder: action,
       getEventAtIndex: action
     });
+  }
+
+  public getExclusiveChecker() {
+    const listFromStatus = (listStatus: ChoreEventStatus) => {
+      switch (listStatus) {
+        case ChoreEventStatus.TODO:
+          return this.eventsInTodo;
+        case ChoreEventStatus.NEEDS_CHECK:
+          return this.eventsInNeedsCheck;
+        case ChoreEventStatus.COMPLETED:
+          return this.eventsInDone;
+      }
+    };
+
+    const inTodo = new Set((this.eventsInTodo || []).map((e) => e.id));
+    const inNeedsCheck = new Set(
+      (this.eventsInNeedsCheck || []).map((e) => e.id)
+    );
+    const inDone = new Set((this.eventsInDone || []).map((e) => e.id));
+    const existenceMap = new Map<ChoreEventStatus, Set<string>>([
+      [ChoreEventStatus.TODO, inTodo],
+      [ChoreEventStatus.NEEDS_CHECK, inNeedsCheck],
+      [ChoreEventStatus.COMPLETED, inDone]
+    ]);
+
+    const ensureListExclusivity = (ev: StudioApiChoreEvent) => {
+      for (const [statusKey, existenceSet] of existenceMap.entries()) {
+        const list = listFromStatus(statusKey);
+        if (statusKey === ev.status) {
+          // if should be in this list
+          if (!existenceSet.has(ev.id)) {
+            // and not in it already
+            list.push(ev); // add it
+          }
+        } else {
+          // otherwise shouldn't be in this list
+          if (existenceSet.has(ev.id)) {
+            // and in it
+            _.remove(list, { id: ev.id }); // rm it
+          }
+        }
+      }
+    };
+
+    return ensureListExclusivity;
   }
 
   /*
@@ -74,7 +120,6 @@ export abstract class BaseChoreEventsStore {
     toStatus: ChoreEventStatus,
     toIndex: number
   ) {
-    this.loading = true;
     let eventToMove: StudioApiChoreEvent | undefined;
     let rmCount = 1;
 
@@ -104,7 +149,6 @@ export abstract class BaseChoreEventsStore {
         this.eventsInDone.splice(toIndex, rmCount, eventToMove);
         break;
     }
-    this.loading = false;
   }
 }
 
@@ -139,11 +183,7 @@ class UserChoreEventsStore extends BaseChoreEventsStore {
       this.charts = resp;
     });
 
-    const inTodo = new Set((this.eventsInTodo || []).map((e) => e.id));
-    const inNeedsCheck = new Set(
-      (this.eventsInNeedsCheck || []).map((e) => e.id)
-    );
-    const inDone = new Set((this.eventsInDone || []).map((e) => e.id));
+    const ensureListExclusivity = this.getExclusiveChecker();
 
     const today = moment().format('MM-DD');
     for (const chart of resp.results || []) {
@@ -154,23 +194,7 @@ class UserChoreEventsStore extends BaseChoreEventsStore {
             if (moment(ev.due).format('MM-DD') !== today) {
               return;
             }
-            switch (ev.status) {
-              case ChoreEventStatus.TODO:
-                if (!inTodo.has(ev.id)) {
-                  this.eventsInTodo.push(ev);
-                }
-                break;
-              case ChoreEventStatus.NEEDS_CHECK:
-                if (!inNeedsCheck.has(ev.id)) {
-                  this.eventsInNeedsCheck.push(ev);
-                }
-                break;
-              case ChoreEventStatus.COMPLETED:
-                if (!inDone.has(ev.id)) {
-                  this.eventsInDone.push(ev);
-                }
-                break;
-            }
+            ensureListExclusivity(ev);
           });
         });
       }
