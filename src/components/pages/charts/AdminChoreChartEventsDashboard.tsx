@@ -1,5 +1,4 @@
 import { UserState } from '../../../stores/UserStore';
-import { Link } from 'react-router-dom';
 
 import { AdminChartEventsState } from '../../../stores/AdminChartEventsStore';
 import { MutedSection } from '../../helpers/MutedSection';
