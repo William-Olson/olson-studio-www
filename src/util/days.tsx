@@ -7,7 +7,7 @@ export const dayMap: { [k: string]: number } = {
   R: 4,
   F: 5,
   S: 6,
-  U: 7
+  U: 0
 };
 
 export class Days {

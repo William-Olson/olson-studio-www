@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { AdminChartEventsState } from '../../../stores/AdminChartEventsStore';
+import { AdminChoreEventsState } from '../../../stores/AdminChoreEventsStore';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { ChoreEventStatus } from '../../../types/StudioApiTypes';
 import { DropColumn } from './DropColumn';
@@ -13,7 +13,7 @@ import { DarkModeState } from '../../../stores/DarkModeStore';
 // -----------------------------------------------------------------
 
 interface ChoreEventsAreaProps {
-  store: typeof AdminChartEventsState | typeof UserChoreEventsState;
+  store: typeof AdminChoreEventsState | typeof UserChoreEventsState;
   labelColumnOne?: string;
   labelColumnTwo?: string;
   labelColumnThree?: string;

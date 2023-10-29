@@ -12,7 +12,7 @@ import { Token } from '../util/Auth';
 import moment from 'moment';
 import { BaseChoreEventsStore } from './UserChoreEventsStore';
 
-class AdminChartEventsStore extends BaseChoreEventsStore {
+class AdminChoreEventsStore extends BaseChoreEventsStore {
   public charts?: StudioApiAdminCharts;
   public api: ChoreChartService = new ChoreChartService();
 
@@ -32,6 +32,11 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
     const token = Token.fromCache();
     const resp: PagedResponse<StudioApiChoreChart> =
       await this.api.getAdminCharts(token);
+
+    if (!resp || !resp.results) {
+      this.loading = false;
+      return;
+    }
 
     runInAction(() => {
       this.charts = resp;
@@ -81,4 +86,4 @@ class AdminChartEventsStore extends BaseChoreEventsStore {
   }
 }
 
-export const AdminChartEventsState = new AdminChartEventsStore();
+export const AdminChoreEventsState = new AdminChoreEventsStore();

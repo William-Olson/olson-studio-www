@@ -29,12 +29,15 @@ export const endpointWrapper: CustomWrapper = (
   }
 
   return async (request: Request, response: Response, next: NextFunction) => {
+    const verboseLogging = false; // toggle to show request data in logs
     try {
       logger.info(
-        `[ ${endpointName} ] ${handlerName}.Request:` +
-          ` { Params: ${JSON.stringify(request.params)}` +
-          `, Query: ${JSON.stringify(request.query)}` +
-          `, Body: ${JSON.stringify(request.body)} }`
+        `[ ${endpointName} ] ${handlerName}.Request ` +
+          (verboseLogging
+            ? ` { Params: ${JSON.stringify(request.params)}` +
+              `, Query: ${JSON.stringify(request.query)}` +
+              `, Body: ${JSON.stringify(request.body)} }`
+            : '')
       );
       const result = await handler(request, response);
       if (!result) {
@@ -48,15 +51,16 @@ export const endpointWrapper: CustomWrapper = (
           result.status || result.statusCode || 200
         }`;
         logger.info(
-          responseLogMessage +
+          `${responseLogMessage} ${
             // include success response data in development logs only
-            (isDev
+            isDev && verboseLogging
               ? `\n${JSON.stringify(
                   result
                   // undefined,
                   // 2
                 )}`
-              : '')
+              : ''
+          }`
         );
       }
       response.send(result);

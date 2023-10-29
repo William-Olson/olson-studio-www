@@ -27,7 +27,7 @@ class WeekdaysPickerStore {
     );
 
     this.initDays(
-      [1, 2, 3, 4, 5, 6, 7].map((dayNum: number) => selected.has(dayNum))
+      [1, 2, 3, 4, 5, 6, 0].map((dayNum: number) => selected.has(dayNum))
     );
   }
 
@@ -57,7 +57,8 @@ class WeekdaysPickerStore {
   }
 
   public daySymbol(dayIndex: number): string | undefined {
-    return Object.keys(dayMap).find((k) => dayMap[k] === dayIndex + 1);
+    const len = (this.days || []).length;
+    return Object.keys(dayMap).find((k) => dayMap[k] === (dayIndex + 1) % len);
   }
 
   public dayName(dayIndex: number): string {

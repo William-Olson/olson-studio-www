@@ -91,9 +91,18 @@ export class ChoresEndpoint extends AdminEndpoint implements RouterClass {
       }
     ) as ChoreInput;
 
-    // create the chart
-    this.logger.info('creating a new chore chart with name ' + req.body.name);
-    return (await Chore.create(inputData)).toJSON();
+    // create the chore and events for this week
+    this.logger.info('creating a new chore with name ' + req.body.name);
+    const chore = await this.choreService.createChore(inputData, existingChart);
+
+    if (!chore) {
+      throw new ErrorResponse(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        `Unexpected error occurred. Unable to create chore for chart: ${req.params.id}`
+      );
+    }
+
+    return chore.toJSON();
   }
 
   /*

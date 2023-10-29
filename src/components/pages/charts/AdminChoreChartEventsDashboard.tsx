@@ -1,6 +1,6 @@
 import { UserState } from '../../../stores/UserStore';
 
-import { AdminChartEventsState } from '../../../stores/AdminChartEventsStore';
+import { AdminChoreEventsState } from '../../../stores/AdminChoreEventsStore';
 import { MutedSection } from '../../helpers/MutedSection';
 import { AdminGuard } from '../../helpers/AdminGuard';
 import React from 'react';
@@ -16,7 +16,7 @@ interface AdminChoreChartEventsDashboardProps {}
 
 class AdminChoreChartEventsDashboardComponent extends React.Component<AdminChoreChartEventsDashboardProps> {
   public userStore: typeof UserState = UserState;
-  public adminChartEvents: typeof AdminChartEventsState = AdminChartEventsState;
+  public adminChartEvents: typeof AdminChoreEventsState = AdminChoreEventsState;
   public darkMode: typeof DarkModeState = DarkModeState;
 
   componentDidMount(): void {

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Includeable, Op, Transaction, WhereOptions } from 'sequelize';
 import { inject, singleton } from 'tsyringe';
-import Chore, { ChoreOutput } from '../data/models/Chore';
+import Chore, { ChoreInput, ChoreOutput } from '../data/models/Chore';
 import ChoreChart, { ChoreChartOutput } from '../data/models/ChoreChart';
 import ChoreChartEvent, {
   ChoreChartEventInput,
@@ -15,7 +15,7 @@ import {
   asOffset,
   asPagedResponse
 } from '../utilities/Pagination';
-import LoggerFactory, { Logger } from './Logger';
+import { LoggerFactory, Logger } from './Logger';
 
 export interface ChoreChartData {
   chart?: ChoreChart;
@@ -23,21 +23,30 @@ export interface ChoreChartData {
   events?: Array<ChoreChartEvent>;
 }
 
-const CurrentChoresAndEvents: Includeable = {
+const includeEventsBetween: (
+  afterDate: Date,
+  beforeDate: Date
+) => Includeable = (afterDate: Date, beforeDate: Date) => ({
   model: Chore,
   as: 'chores',
   required: false,
   include: [
     {
-      model: ChoreChartEvent,
       where: {
-        due: { [Op.gte]: moment().startOf('week').toDate() }
+        due: { [Op.between]: [afterDate, beforeDate] }
       },
+      model: ChoreChartEvent,
+      // where: {
+      //   due: { [Op.gte]: afterDate.toISOString() }
+      // },
       as: 'events',
       required: false
     }
   ]
-};
+});
+
+const startOfWeek: () => Date = () => moment().startOf('week').toDate();
+const endOfWeek: () => Date = () => moment().endOf('week').toDate();
 
 /*
   ChoreService
@@ -56,7 +65,7 @@ export class ChoreService {
   ): Promise<Paged<ChoreChartOutput>> {
     const offsetOptions = asOffset(paging);
     const results = await ChoreChart.findAndCountAll({
-      include: [CurrentChoresAndEvents],
+      include: [includeEventsBetween(startOfWeek(), endOfWeek())],
       limit: offsetOptions.limit,
       offset: offsetOptions.offset,
       distinct: true
@@ -134,10 +143,48 @@ export class ChoreService {
 
     for (const { id } of charts || []) {
       this.logger.info(`Creating events for chart ${id}...`);
-      const wereEventsCreated = await this.createAssigneeEventsIfNeeded(id);
+      const wereEventsCreated = await this.createChoreEventsIfNeeded(id);
       result = result || wereEventsCreated;
     }
     return result;
+  }
+
+  /*
+    Determines if the chore has events for this week.
+    Note: relies on chore.events being populated.
+  */
+  public choreHasCurrentEvents(chore: Chore): boolean {
+    const daysAssigned = chore.scheduleDays.split(',');
+    const end = endOfWeek();
+    const start = startOfWeek();
+    const thisWeeksEvents = (chore.events || []).filter(({ due }) => {
+      const m = moment(due);
+      return m.isAfter(start) && m.isBefore(end);
+    });
+    return thisWeeksEvents.length === daysAssigned.length;
+  }
+
+  /*
+    Creates a chore from input data along with the chore events
+    for the current week.
+  */
+  public async createChore(
+    choreData: ChoreInput,
+    chart: ChoreChart
+  ): Promise<Chore | null> {
+    let chore: Chore | null = null;
+    await ChoreChartEvent.sequelize?.transaction(
+      {
+        type: Transaction.TYPES.EXCLUSIVE,
+        isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED
+      },
+      async (t: Transaction) => {
+        chore = await Chore.create(choreData);
+        await this.createChoreEvents(chart, chore, t);
+        return chore;
+      }
+    );
+    return chore;
   }
 
   /*
@@ -152,7 +199,7 @@ export class ChoreService {
       },
       async (t: Transaction) => {
         const chart = await ChoreChart.findByPk(chartId, {
-          include: [CurrentChoresAndEvents],
+          include: [includeEventsBetween(startOfWeek(), endOfWeek())],
           transaction: t
         });
 
@@ -170,26 +217,34 @@ export class ChoreService {
           ({ events }) => events || []
         );
 
-        if (
-          // check if events are missing for this week
-          (!currentEvents || currentEvents.length <= 0) &&
-          (chart?.chores || []).length > 0
-        ) {
-          // create the events for this week
-          for (const chore of chart.chores) {
-            await this.createChoreChartEvent(chart, chore, t);
+        // create the events for this week
+        for (const chore of chart.chores) {
+          if (!this.choreHasCurrentEvents(chore)) {
+            await this.createChoreEvents(chart, chore, t);
+            hasCreatedEvents = true;
           }
-          hasCreatedEvents = true;
         }
       }
     );
     return hasCreatedEvents;
   }
 
+  private twelveToTwentyFour(lTTime: String): { hour: number; minute: number } {
+    const hourStr = lTTime.substring(0, 2);
+    const minStr = lTTime.substring(3, 5);
+    const amPmStr = lTTime.substring(6, lTTime.length);
+
+    if (amPmStr === 'AM') {
+      return { hour: parseInt(hourStr, 10), minute: parseInt(minStr, 10) };
+    } else {
+      return { hour: parseInt(hourStr, 10) + 12, minute: parseInt(minStr, 10) };
+    }
+  }
+
   /*
     Create chore chart events for a chore under an existing db transaction
   */
-  private async createChoreChartEvent(
+  private async createChoreEvents(
     chart: ChoreChart,
     chore: Chore,
     trx: Transaction
@@ -201,15 +256,23 @@ export class ChoreService {
       R: 4,
       F: 5,
       S: 6,
-      U: 7
+      U: 0 // note: using 7 here will create an event in next weeks range, which we don't want
     };
+    const cleanDayInput = (str: String) => (str || '').trim().toUpperCase();
     const days = chore.scheduleDays
       .split(',')
-      .map((d) => dayMap[d.toUpperCase()] || dayMap.S);
+      .map(cleanDayInput)
+      .filter((day) => !!day)
+      .map((d) => dayMap[d]);
 
     for (const day of days) {
-      const eventDate = moment().startOf('week').day(day).format('YYYY-MM-DD');
-      const dueDate = moment(eventDate + ' ' + chart.dueTime);
+      const militaryTime = this.twelveToTwentyFour(chart.dueTime);
+      const dueDate = moment()
+        .startOf('week')
+        .day(day)
+        .set('hours', militaryTime.hour)
+        .set('minutes', militaryTime.minute);
+
       const eventInput: ChoreChartEventInput = {
         choreChartId: chart.id,
         choreId: chore.id,
@@ -217,11 +280,13 @@ export class ChoreService {
         due: dueDate.toDate(),
         rating: 0
       };
+
       this.logger.info(
-        `Creating chore chart event [${chart.id}:${chore.id}] ${dueDate
-          .toDate()
-          .toISOString()}`
+        `Creating chore chart event for day ${day} => [${chart.id}:${
+          chore.id
+        }] ${dueDate.toISOString()}`
       );
+
       await ChoreChartEvent.create(eventInput, { transaction: trx });
     }
   }
@@ -233,9 +298,9 @@ export class ChoreService {
     assigneeUserId: string,
     pagination?: PagingOptions
   ): Promise<Paged<ChoreChartOutput>> {
-    const startOfWeek = moment().startOf('week').toDate();
+    const startDate = startOfWeek();
     this.logger.info(
-      `Fetching chart data for user ${assigneeUserId} since ${startOfWeek.toISOString()}`
+      `Fetching chart data for user ${assigneeUserId} since ${startDate.toISOString()}`
     );
 
     if (!assigneeUserId) {
@@ -249,7 +314,7 @@ export class ChoreService {
       },
       limit: paged.limit,
       offset: paged.offset,
-      include: [CurrentChoresAndEvents],
+      include: [includeEventsBetween(startDate, endOfWeek())],
       distinct: true
     });
     return asPagedResponse(assigneeCharts, paged);

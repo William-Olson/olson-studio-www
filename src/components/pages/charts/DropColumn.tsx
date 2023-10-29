@@ -9,7 +9,7 @@ import {
   DroppableProvided,
   NotDraggingStyle
 } from 'react-beautiful-dnd';
-import { AdminChartEventsState } from '../../../stores/AdminChartEventsStore';
+import { AdminChoreEventsState } from '../../../stores/AdminChoreEventsStore';
 import { DarkModeState } from '../../../stores/DarkModeStore';
 import { UserChoreEventsState } from '../../../stores/UserChoreEventsStore';
 import { UserState } from '../../../stores/UserStore';
@@ -89,7 +89,7 @@ const provideItemStyleFetcher = (isDark: boolean, id: string) => {
 interface DropColumnProps {
   data: Array<StudioApiChoreEvent>;
   dropId: string;
-  store: typeof AdminChartEventsState | typeof UserChoreEventsState;
+  store: typeof AdminChoreEventsState | typeof UserChoreEventsState;
   user?: typeof UserState;
 }
 const DropColumnComponent: React.FC<DropColumnProps> = (
