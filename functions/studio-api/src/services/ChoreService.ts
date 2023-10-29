@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import moment from 'moment';
 import { Includeable, Op, Transaction, WhereOptions } from 'sequelize';
 import { inject, singleton } from 'tsyringe';
@@ -211,11 +211,11 @@ export class ChoreService {
           return; // no need for recurring event creation
         }
 
-        // flatten out the events from the query
-        const currentEvents = _.flatMap(
-          chart.chores,
-          ({ events }) => events || []
-        );
+        // // flatten out the events from the query
+        // const currentEvents = _.flatMap(
+        //   chart.chores,
+        //   ({ events }) => events || []
+        // );
 
         // create the events for this week
         for (const chore of chart.chores) {
@@ -229,16 +229,13 @@ export class ChoreService {
     return hasCreatedEvents;
   }
 
-  private twelveToTwentyFour(lTTime: String): { hour: number; minute: number } {
-    const hourStr = lTTime.substring(0, 2);
-    const minStr = lTTime.substring(3, 5);
-    const amPmStr = lTTime.substring(6, lTTime.length);
-
-    if (amPmStr === 'AM') {
-      return { hour: parseInt(hourStr, 10), minute: parseInt(minStr, 10) };
-    } else {
-      return { hour: parseInt(hourStr, 10) + 12, minute: parseInt(minStr, 10) };
-    }
+  /*
+    Convert an LT formatted time string (ex: '08:00 PM') to a result with an
+    hour and minute representation with number values using 24 hour time format.
+  */
+  private twelveToTwentyFour(lTTime: string): { hour: number; minute: number } {
+    const m = moment(lTTime, 'hh:mm a');
+    return { hour: m.hour(), minute: m.minute() };
   }
 
   /*
@@ -258,7 +255,7 @@ export class ChoreService {
       S: 6,
       U: 0 // note: using 7 here will create an event in next weeks range, which we don't want
     };
-    const cleanDayInput = (str: String) => (str || '').trim().toUpperCase();
+    const cleanDayInput = (str: string) => (str || '').trim().toUpperCase();
     const days = chore.scheduleDays
       .split(',')
       .map(cleanDayInput)
